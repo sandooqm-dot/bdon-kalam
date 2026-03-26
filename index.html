@@ -7,27 +7,26 @@
 
   <style>
     :root{
-      --bg:#08386f;
-      --gold:#f3b314;
+      --bg:#083b73;
+      --gold:#f4b512;
       --white:#f6f6f6;
-      --purple:#4156c2;
+      --purple:#4658c8;
       --green:#08c968;
       --black:#101010;
-      --input-bg:#f4f4f4;
-      --line:#f3b314;
-      --brown:#6c4333;
-      --skin:#f2c180;
-      --hair:#f0b55d;
-      --shadow:0 6px 0 rgba(0,0,0,.95);
+      --input-bg:#f3f3f3;
+      --line:#f4b512;
     }
 
-    *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+    }
 
     html,body{
       margin:0;
       min-height:100%;
       background:var(--bg);
-      font-family: Tahoma, Arial, "Segoe UI", sans-serif;
+      font-family:Tahoma, Arial, "Segoe UI", sans-serif;
       color:var(--white);
     }
 
@@ -39,60 +38,35 @@
     .page{
       position:relative;
       min-height:100vh;
-      padding:18px 14px 82px;
-      overflow:hidden;
       background:var(--bg);
+      overflow:hidden;
+      padding:12px 14px 90px;
     }
 
     .top-logo{
       position:absolute;
-      top:14px;
-      left:12px;
-      display:flex;
-      align-items:flex-start;
-      gap:8px;
+      top:10px;
+      left:10px;
       z-index:3;
       user-select:none;
+      pointer-events:none;
     }
 
-    .gift{
-      width:52px;
-      height:52px;
-      flex:0 0 52px;
-    }
-
-    .brand{
-      line-height:.9;
-      transform:translateY(-1px);
-    }
-
-    .brand .box{
-      display:inline-block;
-      background:#2c4cae;
-      color:#fff;
-      padding:4px 10px 6px;
-      border-radius:2px;
-      font-weight:900;
-      font-size:18px;
-    }
-
-    .brand .sub{
+    .top-logo img{
+      width:min(125px, 24vw);
+      height:auto;
       display:block;
-      color:var(--gold);
-      font-weight:900;
-      font-size:18px;
-      margin-top:5px;
     }
 
     .shell{
       width:min(100%, 980px);
+      min-height:calc(100vh - 40px);
       margin:0 auto;
-      min-height:calc(100vh - 100px);
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:flex-start;
-      gap:26px;
+      gap:18px;
       padding-top:96px;
       position:relative;
       z-index:2;
@@ -104,17 +78,17 @@
       font-weight:900;
       line-height:1;
       text-align:center;
-      font-size:clamp(56px, 12vw, 118px);
+      font-size:clamp(68px, 13vw, 150px);
       letter-spacing:.2px;
     }
 
     .center{
-      width:min(100%, 640px);
+      width:min(100%, 700px);
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:22px;
-      margin-top:12px;
+      gap:34px;
+      margin-top:16px;
     }
 
     .field{
@@ -122,33 +96,34 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:10px;
+      gap:14px;
     }
 
     .label{
-      font-size:clamp(24px, 5vw, 40px);
+      font-size:clamp(28px, 5vw, 48px);
       font-weight:900;
       color:var(--white);
       text-align:center;
+      line-height:1.2;
     }
 
     .input{
       width:100%;
-      height:78px;
-      border-radius:28px;
+      height:84px;
+      border-radius:30px;
       border:7px solid var(--line);
       background:var(--input-bg);
       color:#0f2540;
-      font-size:28px;
+      font-size:30px;
       font-weight:800;
       text-align:center;
       outline:none;
       padding:0 20px;
-      box-shadow:0 7px 0 rgba(0,0,0,.18);
+      box-shadow:0 8px 0 rgba(0,0,0,.14);
     }
 
     .input::placeholder{
-      color:#8a8a8a;
+      color:#9a9a9a;
       font-weight:700;
     }
 
@@ -157,8 +132,8 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:24px;
-      margin-top:18px;
+      gap:26px;
+      margin-top:12px;
     }
 
     .btn{
@@ -167,17 +142,13 @@
       cursor:pointer;
       color:#fff;
       font-weight:900;
-      font-size:clamp(24px, 5vw, 42px);
-      min-width:280px;
-      padding:16px 34px 18px;
-      border-radius:28px;
-      transition:transform .12s ease, opacity .12s ease, filter .12s ease;
       text-decoration:none;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      line-height:1;
       user-select:none;
+      line-height:1;
+      transition:transform .12s ease, opacity .12s ease, filter .12s ease;
     }
 
     .btn:active{
@@ -185,19 +156,23 @@
     }
 
     .btn-help{
+      min-width:285px;
+      padding:17px 36px 19px;
+      border-radius:30px;
       background:var(--purple);
       border:6px solid #ececec;
-      box-shadow:0 4px 0 rgba(0,0,0,.35);
-      min-width:270px;
+      box-shadow:0 5px 0 rgba(0,0,0,.35);
+      font-size:clamp(26px, 5vw, 42px);
     }
 
     .btn-start{
+      min-width:275px;
+      padding:18px 40px 20px;
+      border-radius:30px;
       background:var(--green);
       border:5px solid #000;
       box-shadow:0 6px 0 #000;
-      color:#fff;
-      min-width:260px;
-      font-size:clamp(28px, 5.4vw, 48px);
+      font-size:clamp(34px, 6vw, 54px);
     }
 
     .btn-start[disabled]{
@@ -208,28 +183,17 @@
 
     .person-wrap{
       position:absolute;
-      left:-18px;
-      bottom:-6px;
-      width:min(340px, 48vw);
+      left:0;
+      bottom:0;
       z-index:1;
       pointer-events:none;
       user-select:none;
     }
 
-    .person{
-      width:100%;
+    .person-wrap img{
+      width:min(340px, 43vw);
       height:auto;
       display:block;
-    }
-
-    .dots{
-      position:absolute;
-      left:26px;
-      top:180px;
-      color:#5d372d;
-      font-size:42px;
-      letter-spacing:6px;
-      font-weight:900;
     }
 
     .footer{
@@ -239,7 +203,7 @@
       z-index:2;
       color:#fff;
       font-weight:900;
-      font-size:clamp(16px, 3.1vw, 28px);
+      font-size:clamp(14px, 2.8vw, 28px);
       text-align:right;
       white-space:nowrap;
     }
@@ -252,7 +216,7 @@
       align-items:center;
       justify-content:center;
       padding:18px;
-      z-index:10;
+      z-index:20;
     }
 
     .modal.show{
@@ -307,58 +271,70 @@
 
     @media (max-width:700px){
       .page{
-        padding-top:12px;
+        padding:10px 14px 86px;
       }
 
       .shell{
-        padding-top:110px;
-        gap:20px;
+        padding-top:108px;
+        gap:16px;
       }
 
       .center{
-        width:min(100%, 610px);
+        width:min(100%, 640px);
+        gap:30px;
+      }
+
+      .label{
+        font-size:clamp(24px, 5.2vw, 40px);
       }
 
       .input{
-        height:72px;
-        font-size:25px;
+        height:76px;
+        font-size:27px;
         border-width:6px;
       }
 
-      .btn{
+      .btn-help{
         min-width:250px;
       }
 
-      .person-wrap{
-        width:min(300px, 50vw);
-        left:-18px;
+      .btn-start{
+        min-width:240px;
       }
 
-      .footer{
-        font-size:clamp(14px, 2.8vw, 22px);
+      .person-wrap img{
+        width:min(310px, 46vw);
       }
     }
 
     @media (orientation:landscape){
       .page{
-        padding:14px 20px 24px;
+        padding:10px 18px 28px;
+      }
+
+      .top-logo{
+        top:10px;
+        left:10px;
+      }
+
+      .top-logo img{
+        width:120px;
       }
 
       .shell{
-        width:min(1180px, 100%);
-        min-height:calc(100vh - 40px);
-        padding-top:72px;
+        min-height:calc(100vh - 20px);
+        padding-top:74px;
         gap:10px;
       }
 
       .title{
-        font-size:clamp(50px, 7vw, 102px);
+        font-size:clamp(56px, 8vw, 110px);
       }
 
       .center{
         width:min(100%, 760px);
-        gap:16px;
-        margin-top:0;
+        gap:18px;
+        margin-top:6px;
       }
 
       .field{
@@ -366,11 +342,11 @@
       }
 
       .label{
-        font-size:clamp(18px, 2.6vw, 34px);
+        font-size:clamp(18px, 2.8vw, 34px);
       }
 
       .input{
-        height:64px;
+        height:62px;
         font-size:24px;
         border-width:5px;
         border-radius:24px;
@@ -381,60 +357,50 @@
         margin-top:8px;
       }
 
-      .btn{
-        min-width:230px;
-        padding:14px 28px 16px;
+      .btn-help{
+        min-width:220px;
+        padding:13px 28px 15px;
         font-size:clamp(20px, 3vw, 34px);
       }
 
       .btn-start{
         min-width:220px;
-        font-size:clamp(22px, 3.2vw, 36px);
+        padding:13px 32px 15px;
+        font-size:clamp(22px, 3.2vw, 38px);
       }
 
-      .person-wrap{
-        width:min(250px, 26vw);
-        left:-4px;
-        bottom:-8px;
-      }
-
-      .dots{
-        left:18px;
-        top:128px;
-        font-size:34px;
+      .person-wrap img{
+        width:min(230px, 23vw);
       }
 
       .footer{
+        font-size:clamp(12px, 1.6vw, 22px);
         right:16px;
         bottom:10px;
-        font-size:clamp(12px, 1.6vw, 24px);
-      }
-
-      .top-logo{
-        top:10px;
-        left:10px;
       }
     }
 
     @media (orientation:landscape) and (max-height:500px){
       .shell{
-        padding-top:60px;
+        padding-top:58px;
       }
 
       .title{
-        font-size:56px;
+        font-size:58px;
       }
 
       .input{
-        height:56px;
+        height:54px;
       }
 
-      .btn{
-        padding:11px 24px 13px;
+      .btn-help,
+      .btn-start{
+        padding-top:11px;
+        padding-bottom:13px;
       }
 
-      .person-wrap{
-        width:185px;
+      .person-wrap img{
+        width:180px;
       }
     }
   </style>
@@ -442,19 +408,7 @@
 <body>
   <div class="page">
     <div class="top-logo" aria-label="صندوق المسابقات">
-      <svg class="gift" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 34h78v18H21z" fill="#f3b314"/>
-        <path d="M24 51h72v48l-36 13-36-13z" fill="#f3b314"/>
-        <path d="M56 34h8v78h-8z" fill="#2849ad"/>
-        <path d="M21 51h78" stroke="#2849ad" stroke-width="5" stroke-linecap="round"/>
-        <path d="M60 34c-8-18-28-17-25-3 2 10 15 13 25 3zm0 0c8-18 28-17 25-3-2 10-15 13-25 3z" fill="#f3b314" stroke="#2849ad" stroke-width="5" stroke-linejoin="round"/>
-        <path d="M32 63v5M32 78v5M88 63v5M88 78v5" stroke="#2849ad" stroke-width="4" stroke-linecap="round"/>
-      </svg>
-
-      <div class="brand">
-        <span class="box">صندوق</span>
-        <span class="sub">المسابقات</span>
-      </div>
+      <img src="logo.PNG" alt="صندوق المسابقات">
     </div>
 
     <main class="shell">
@@ -479,26 +433,7 @@
     </main>
 
     <div class="person-wrap" aria-hidden="true">
-      <svg class="person" viewBox="0 0 300 520" xmlns="http://www.w3.org/2000/svg">
-        <g>
-          <path d="M95 183c0-49 29-84 71-84 43 0 73 35 73 84v72H95z" fill="#f2c180"/>
-          <rect x="126" y="244" width="54" height="62" rx="20" fill="#efbd88"/>
-          <path d="M60 519v-90c0-61 34-105 92-105 57 0 92 44 92 105v90z" fill="#f2f2f2"/>
-          <path d="M95 183c8-38 33-60 72-60 38 0 63 23 70 60-15 20-39 31-70 31-32 0-57-11-72-31z" fill="#f1be74"/>
-          <path d="M115 159c10-26 30-40 55-40 23 0 41 11 53 30-11-3-24-5-37-5-25 0-50 6-71 15z" fill="#efbd64"/>
-          <circle cx="141" cy="188" r="5.3" fill="#654234"/>
-          <circle cx="192" cy="188" r="5.3" fill="#654234"/>
-          <path d="M163 194c-5 9-7 18-3 26" fill="none" stroke="#6c4333" stroke-width="3.4" stroke-linecap="round"/>
-          <path d="M150 226c8 5 17 5 26 0" fill="none" stroke="#6c4333" stroke-width="3.4" stroke-linecap="round"/>
-          <path d="M161 209h14" stroke="#6c4333" stroke-width="4.8" stroke-linecap="round"/>
-          <path d="M58 388c13-40 35-58 61-53 34 7 43 49 47 79l11 105H91L58 388z" fill="#ffe7ce" stroke="#6c4333" stroke-width="3.2"/>
-          <path d="M178 343c-10 7-17 19-22 33" fill="none" stroke="#6c4333" stroke-width="3.2" stroke-linecap="round"/>
-          <path d="M144 328c29 7 34 35 31 60" fill="none" stroke="#6c4333" stroke-width="3.2" stroke-linecap="round"/>
-          <path d="M166 198l-3 129" stroke="#6c4333" stroke-width="6.4" stroke-linecap="round"/>
-          <path d="M163 328c0 0-4 16-1 26" fill="none" stroke="#6c4333" stroke-width="2.8" stroke-linecap="round"/>
-        </g>
-        <text x="36" y="262" fill="#5a3328" font-size="44" font-weight="900">...</text>
-      </svg>
+      <img src="boy.PNG" alt="">
     </div>
 
     <div class="footer">جميع الحقوق محفوظة © صندوق المسابقات 2026</div>

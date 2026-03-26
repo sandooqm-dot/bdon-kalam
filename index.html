@@ -209,10 +209,13 @@
       bottom:12px;
       z-index:2;
       color:#fff;
+      font-family:Tahoma, Arial, "Segoe UI", sans-serif;
       font-weight:700;
-      font-size:clamp(14px, 2.8vw, 28px);
+      font-size:clamp(11px, 1.9vw, 20px);
+      line-height:1.15;
       text-align:right;
       white-space:nowrap;
+      max-width:58vw;
     }
 
     .modal{
@@ -312,6 +315,13 @@
       .person-wrap img{
         width:min(310px, 46vw);
       }
+
+      .footer{
+        right:10px;
+        bottom:10px;
+        font-size:12px;
+        max-width:54vw;
+      }
     }
 
     @media (orientation:landscape){
@@ -381,9 +391,10 @@
       }
 
       .footer{
-        font-size:clamp(12px, 1.6vw, 22px);
+        font-size:clamp(11px, 1.3vw, 18px);
         right:16px;
         bottom:10px;
+        max-width:none;
       }
     }
 

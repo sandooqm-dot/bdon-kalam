@@ -6,6 +6,14 @@
   <title>بدون كلام</title>
 
   <style>
+    @font-face{
+      font-family:"Caramel";
+      src:url("Caramel-Light.otf") format("opentype");
+      font-weight:400;
+      font-style:normal;
+      font-display:swap;
+    }
+
     :root{
       --bg:#083b73;
       --gold:#f4b512;
@@ -20,13 +28,13 @@
     *{
       box-sizing:border-box;
       -webkit-tap-highlight-color:transparent;
+      font-family:"Caramel", Tahoma, Arial, "Segoe UI", sans-serif;
     }
 
     html,body{
       margin:0;
       min-height:100%;
       background:var(--bg);
-      font-family:Tahoma, Arial, "Segoe UI", sans-serif;
       color:var(--white);
     }
 
@@ -75,7 +83,7 @@
     .title{
       margin:0;
       color:var(--gold);
-      font-weight:900;
+      font-weight:400;
       line-height:1;
       text-align:center;
       font-size:clamp(68px, 13vw, 150px);
@@ -101,7 +109,7 @@
 
     .label{
       font-size:clamp(28px, 5vw, 48px);
-      font-weight:900;
+      font-weight:400;
       color:var(--white);
       text-align:center;
       line-height:1.2;
@@ -115,7 +123,7 @@
       background:var(--input-bg);
       color:#0f2540;
       font-size:30px;
-      font-weight:800;
+      font-weight:400;
       text-align:center;
       outline:none;
       padding:0 20px;
@@ -124,7 +132,7 @@
 
     .input::placeholder{
       color:#9a9a9a;
-      font-weight:700;
+      font-weight:400;
     }
 
     .btns{
@@ -141,14 +149,13 @@
       outline:none;
       cursor:pointer;
       color:#fff;
-      font-weight:900;
-      text-decoration:none;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       user-select:none;
       line-height:1;
       transition:transform .12s ease, opacity .12s ease, filter .12s ease;
+      font-weight:400;
     }
 
     .btn:active{
@@ -202,7 +209,7 @@
       bottom:12px;
       z-index:2;
       color:#fff;
-      font-weight:900;
+      font-weight:400;
       font-size:clamp(14px, 2.8vw, 28px);
       text-align:right;
       white-space:nowrap;
@@ -238,7 +245,7 @@
       color:var(--gold);
       text-align:center;
       font-size:clamp(28px, 5vw, 42px);
-      font-weight:900;
+      font-weight:400;
     }
 
     .modal-text{
@@ -246,7 +253,7 @@
       color:#fff;
       line-height:1.9;
       font-size:clamp(16px, 3.7vw, 24px);
-      font-weight:700;
+      font-weight:400;
     }
 
     .modal-actions{
@@ -259,7 +266,7 @@
       border:none;
       background:var(--green);
       color:#fff;
-      font-weight:900;
+      font-weight:400;
       font-size:24px;
       min-width:170px;
       border-radius:20px;

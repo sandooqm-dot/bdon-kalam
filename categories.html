@@ -1,1 +1,484 @@
-.
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>بدون كلام - الكتاغوريات</title>
+
+  <style>
+    @font-face{
+      font-family:"Estedad";
+      src:url("Estedad-Bold.ttf") format("truetype");
+      font-style:normal;
+      font-weight:700;
+      font-display:swap;
+    }
+
+    :root{
+      --bg:#083b73;
+      --panel:#0e4a8a;
+      --panel-2:#0b427c;
+      --gold:#f4b512;
+      --white:#f6f6f6;
+      --green:#08c968;
+      --purple:#4658c8;
+      --black:#101010;
+      --card-bg:#f4f4f4;
+      --selected:#d9f6e7;
+      --shadow:0 10px 0 rgba(0,0,0,.22);
+      --shadow-soft:0 6px 18px rgba(0,0,0,.18);
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+      font-family:"Estedad", Tahoma, Arial, "Segoe UI", sans-serif;
+    }
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:var(--bg);
+      color:var(--white);
+    }
+
+    body{
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .page{
+      position:relative;
+      min-height:100vh;
+      background:var(--bg);
+      overflow:hidden;
+      padding:14px 14px 110px;
+    }
+
+    .top-logo{
+      position:absolute;
+      top:12px;
+      left:12px;
+      z-index:5;
+      user-select:none;
+      pointer-events:none;
+    }
+
+    .top-logo img{
+      width:min(128px, 24vw);
+      height:auto;
+      display:block;
+    }
+
+    .shell{
+      width:min(100%, 980px);
+      min-height:calc(100vh - 24px);
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:18px;
+      padding-top:96px;
+      position:relative;
+      z-index:2;
+    }
+
+    .title{
+      margin:0;
+      color:var(--gold);
+      font-weight:700;
+      line-height:1;
+      text-align:center;
+      font-size:clamp(54px, 10vw, 108px);
+      letter-spacing:.2px;
+    }
+
+    .board{
+      width:min(100%, 760px);
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border:6px solid var(--gold);
+      border-radius:34px;
+      padding:22px 18px;
+      box-shadow:var(--shadow-soft);
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:18px;
+    }
+
+    .cat{
+      appearance:none;
+      border:none;
+      background:var(--card-bg);
+      border:6px solid #000;
+      border-radius:28px;
+      min-height:235px;
+      padding:14px 12px 12px;
+      box-shadow:0 8px 0 rgba(0,0,0,.28);
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      gap:10px;
+      transition:transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+    }
+
+    .cat:active{
+      transform:translateY(2px) scale(.99);
+    }
+
+    .cat.selected{
+      background:var(--selected);
+      border-color:var(--gold);
+      box-shadow:0 0 0 4px rgba(244,181,18,.22), 0 8px 0 rgba(0,0,0,.28);
+    }
+
+    .cat-title{
+      width:100%;
+      text-align:center;
+      color:#0f2540;
+      font-size:clamp(24px, 4vw, 38px);
+      font-weight:700;
+      line-height:1.2;
+      min-height:48px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .cat-visual{
+      flex:1;
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 4px 2px;
+    }
+
+    .cat-visual img{
+      max-width:100%;
+      max-height:128px;
+      width:auto;
+      height:auto;
+      object-fit:contain;
+      display:block;
+      pointer-events:none;
+      user-select:none;
+    }
+
+    .actions{
+      width:min(100%, 760px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:14px;
+      margin-top:4px;
+      direction:ltr;
+    }
+
+    .home-btn{
+      width:96px;
+      height:96px;
+      border-radius:50%;
+      border:6px solid #000;
+      background:#9fd0ff;
+      box-shadow:0 8px 0 rgba(0,0,0,.28);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      flex:0 0 auto;
+      transition:transform .12s ease;
+    }
+
+    .home-btn:active{
+      transform:translateY(2px) scale(.99);
+    }
+
+    .home-btn svg{
+      width:46px;
+      height:46px;
+      fill:#111;
+    }
+
+    .start-btn{
+      border:none;
+      min-width:min(560px, calc(100vw - 150px));
+      max-width:100%;
+      min-height:92px;
+      border-radius:999px;
+      border:6px solid #000;
+      background:var(--green);
+      color:#fff;
+      font-size:clamp(34px, 6vw, 54px);
+      font-weight:700;
+      box-shadow:0 8px 0 rgba(0,0,0,.28);
+      cursor:pointer;
+      transition:transform .12s ease, opacity .12s ease, filter .12s ease;
+    }
+
+    .start-btn:active{
+      transform:translateY(2px) scale(.99);
+    }
+
+    .start-btn[disabled]{
+      opacity:.55;
+      filter:grayscale(.12);
+      cursor:not-allowed;
+    }
+
+    @media (max-width:700px){
+      .page{
+        padding:12px 12px 110px;
+      }
+
+      .shell{
+        padding-top:96px;
+        gap:16px;
+      }
+
+      .title{
+        font-size:clamp(42px, 11vw, 76px);
+      }
+
+      .board{
+        padding:16px 14px;
+        gap:14px;
+        border-radius:28px;
+      }
+
+      .cat{
+        min-height:208px;
+        border-radius:24px;
+        padding:12px 10px 10px;
+      }
+
+      .cat-title{
+        font-size:clamp(20px, 5.2vw, 31px);
+        min-height:42px;
+      }
+
+      .cat-visual img{
+        max-height:105px;
+      }
+
+      .actions{
+        gap:12px;
+      }
+
+      .home-btn{
+        width:82px;
+        height:82px;
+      }
+
+      .home-btn svg{
+        width:38px;
+        height:38px;
+      }
+
+      .start-btn{
+        min-height:80px;
+        min-width:calc(100vw - 126px);
+        font-size:clamp(28px, 7vw, 44px);
+      }
+    }
+
+    @media (max-width:430px){
+      .cat{
+        min-height:190px;
+      }
+
+      .cat-visual img{
+        max-height:92px;
+      }
+    }
+
+    @media (orientation:landscape){
+      .page{
+        padding:10px 18px 32px;
+      }
+
+      .top-logo{
+        top:10px;
+        left:10px;
+      }
+
+      .top-logo img{
+        width:118px;
+      }
+
+      .shell{
+        padding-top:74px;
+        gap:14px;
+      }
+
+      .title{
+        font-size:clamp(40px, 6.4vw, 78px);
+      }
+
+      .board{
+        width:min(100%, 930px);
+        grid-template-columns:repeat(3, minmax(0, 1fr));
+        gap:16px;
+        padding:18px;
+      }
+
+      .cat{
+        min-height:184px;
+        padding:12px 10px 10px;
+      }
+
+      .cat-title{
+        font-size:clamp(18px, 2vw, 28px);
+        min-height:40px;
+      }
+
+      .cat-visual img{
+        max-height:82px;
+      }
+
+      .actions{
+        width:min(100%, 930px);
+        gap:12px;
+      }
+
+      .home-btn{
+        width:80px;
+        height:80px;
+      }
+
+      .home-btn svg{
+        width:35px;
+        height:35px;
+      }
+
+      .start-btn{
+        min-height:76px;
+        min-width:min(620px, calc(100vw - 170px));
+        font-size:clamp(28px, 3.2vw, 42px);
+      }
+    }
+
+    @media (orientation:landscape) and (max-height:500px){
+      .shell{
+        padding-top:62px;
+      }
+
+      .title{
+        font-size:42px;
+      }
+
+      .cat{
+        min-height:160px;
+      }
+
+      .cat-visual img{
+        max-height:66px;
+      }
+
+      .start-btn{
+        min-height:68px;
+      }
+
+      .home-btn{
+        width:72px;
+        height:72px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top-logo" aria-label="صندوق المسابقات">
+      <img src="logo.PNG" alt="صندوق المسابقات">
+    </div>
+
+    <main class="shell">
+      <h1 class="title">بدون كلام</h1>
+
+      <section class="board" aria-label="الكتاغوريات">
+        <button class="cat" type="button" data-key="hkm" data-name="حكم وأمثال">
+          <div class="cat-title">حكم وأمثال</div>
+          <div class="cat-visual"><img src="hkm.PNG" alt="حكم وأمثال"></div>
+        </button>
+
+        <button class="cat" type="button" data-key="ram" data-name="مسلسلات رمضانية">
+          <div class="cat-title">مسلسلات رمضانية</div>
+          <div class="cat-visual"><img src="ram.PNG" alt="مسلسلات رمضانية"></div>
+        </button>
+
+        <button class="cat" type="button" data-key="job" data-name="وظائف ومهن">
+          <div class="cat-title">وظائف ومهن</div>
+          <div class="cat-visual"><img src="job.PNG" alt="وظائف ومهن"></div>
+        </button>
+
+        <button class="cat" type="button" data-key="kit" data-name="أدوات المطبخ">
+          <div class="cat-title">أدوات المطبخ</div>
+          <div class="cat-visual"><img src="kit.PNG" alt="أدوات المطبخ"></div>
+        </button>
+
+        <button class="cat" type="button" data-key="song" data-name="أغاني">
+          <div class="cat-title">أغاني</div>
+          <div class="cat-visual"><img src="song.PNG" alt="أغاني"></div>
+        </button>
+
+        <button class="cat" type="button" data-key="place" data-name="أماكن ومواقع">
+          <div class="cat-title">أماكن ومواقع</div>
+          <div class="cat-visual"><img src="place.PNG" alt="أماكن ومواقع"></div>
+        </button>
+      </section>
+
+      <div class="actions">
+        <button class="home-btn" id="homeBtn" type="button" aria-label="الرئيسية" title="الرئيسية">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 3.2 3.2 10.5a1 1 0 0 0 .64 1.77h1.41v7.05A1.68 1.68 0 0 0 6.93 21h3.74a1 1 0 0 0 1-1v-4.1h.66V20a1 1 0 0 0 1 1h3.74a1.68 1.68 0 0 0 1.68-1.68v-7.05h1.41a1 1 0 0 0 .64-1.77L12 3.2z"/>
+          </svg>
+        </button>
+
+        <button class="start-btn" id="startBtn" type="button" disabled>ابدأ اللعب</button>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const cards = Array.from(document.querySelectorAll(".cat"));
+    const startBtn = document.getElementById("startBtn");
+    const homeBtn = document.getElementById("homeBtn");
+
+    const savedKey = sessionStorage.getItem("bdonKalam_categoryKey") || "";
+    let selectedKey = savedKey;
+
+    function applySelection(key) {
+      selectedKey = key || "";
+      cards.forEach(card => {
+        card.classList.toggle("selected", card.dataset.key === selectedKey);
+      });
+      startBtn.disabled = !selectedKey;
+    }
+
+    cards.forEach(card => {
+      card.addEventListener("click", () => {
+        const key = card.dataset.key;
+        const name = card.dataset.name;
+
+        sessionStorage.setItem("bdonKalam_categoryKey", key);
+        sessionStorage.setItem("bdonKalam_categoryName", name);
+        sessionStorage.removeItem("bdonKalam_selectedNumber");
+
+        applySelection(key);
+      });
+    });
+
+    startBtn.addEventListener("click", () => {
+      if (!selectedKey) return;
+      window.location.href = "numbers.html";
+    });
+
+    homeBtn.addEventListener("click", () => {
+      window.location.href = "index.html";
+    });
+
+    applySelection(savedKey);
+  </script>
+</body>
+</html>

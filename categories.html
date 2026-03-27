@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>بدون كلام - الكتاغوريات</title>
+  <title>لعبة بدون كلام - الكتاغوريات</title>
 
   <style>
     @font-face{
@@ -16,32 +16,32 @@
 
     :root{
       --bg:#083b73;
-      --panel:#0e4a8a;
-      --panel-2:#0b427c;
+      --panel:#184d94;
+      --panel-2:#113f7d;
       --gold:#f4b512;
       --white:#f6f6f6;
-      --green:#08c968;
+      --green:#199579;
       --black:#101010;
-
-      --card-bg:#edf2ec;
+      --card-bg:#eef1eb;
       --selected:#dcebdc;
       --shadow-soft:0 6px 18px rgba(0,0,0,.18);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
 
       /* =========================================================
-         ========== تحكم عام بالعنوان الرئيسي "بدون كلام" ==========
+         ========== تحكم عام بالعنوان الرئيسي "لعبة بدون كلام" ==========
          -p = عمودي
          -l = أفقي
          size = حجم الخط
          x = تحريك يمين/يسار
          y = تحريك أعلى/أسفل
          ========================================================= */
-      --game-title-size-p: 82px;
+      --game-title-size-p: 76px;
       --game-title-x-p: 0px;
-      --game-title-y-p: -15px;
+      --game-title-y-p: -6px;
 
-      --game-title-size-l: 54px;
+      --game-title-size-l: 56px;
       --game-title-x-l: 0px;
-      --game-title-y-l: -15px;
+      --game-title-y-l: -4px;
 
       /* =========================================================
          ========== تحكم بزر ابدأ اللعب ==========
@@ -50,15 +50,15 @@
          font   = حجم النص
          x/y    = تحريك الزر
          ========================================================= */
-      --start-width-p: 250px;
-      --start-height-p: 92px;
-      --start-font-p: 50px;
-      --start-x-p: -15px;
+      --start-width-p: 290px;
+      --start-height-p: 84px;
+      --start-font-p: 44px;
+      --start-x-p: 0px;
       --start-y-p: 0px;
 
-      --start-width-l: 560px;
-      --start-height-l: 54px;
-      --start-font-l: 28px;
+      --start-width-l: 620px;
+      --start-height-l: 66px;
+      --start-font-l: 30px;
       --start-x-l: 0px;
       --start-y-l: 0px;
 
@@ -68,28 +68,41 @@
          icon-size = حجم الأيقونة داخلها
          x/y       = تحريك الزر
          ========================================================= */
-      --home-size-p: 60px;
-      --home-icon-size-p: 26px;
-      --home-x-p: -70px;
-      --home-y-p: 20px;
+      --home-size-p: 76px;
+      --home-icon-size-p: 32px;
+      --home-x-p: 0px;
+      --home-y-p: 0px;
 
-      --home-size-l: 58px;
-      --home-icon-size-l: 28px;
-      --home-x-l: -90px;
+      --home-size-l: 66px;
+      --home-icon-size-l: 30px;
+      --home-x-l: 0px;
       --home-y-l: 0px;
 
       /* =========================================================
-         ========== تحكم بالصف السفلي (زر ابدأ + المنزل) ==========
-         gap = المسافة بين الزرين
-         x/y = تحريك الصف كاملًا
+         ========== تحكم بالشريط السفلي الثابت ==========
+         width  = عرض منطقة الأزرار السفلية
+         height = ارتفاعها
+         bottom = بعدها عن أسفل الشاشة
          ========================================================= */
-      --actions-gap-p: 14px;
-      --actions-x-p: 0px;
-      --actions-y-p: 0px;
+      --actions-width-p: 820px;
+      --actions-height-p: 110px;
+      --actions-bottom-p: 16px;
 
-      --actions-gap-l: 10px;
-      --actions-x-l: 0px;
-      --actions-y-l: 0px;
+      --actions-width-l: 1600px;
+      --actions-height-l: 88px;
+      --actions-bottom-l: 12px;
+
+      /* =========================================================
+         ========== تحكم عام بلوحة الكتاغوريات ==========
+         ========================================================= */
+      --board-width-p: 820px;
+      --board-width-l: 1600px;
+      --board-gap-p: 16px;
+      --board-gap-l: 16px;
+      --board-pad-p: 16px;
+      --board-pad-l: 14px;
+      --board-radius-p: 34px;
+      --board-radius-l: 34px;
 
       /* =========================================================
          ========== مكان التحكم الكامل بكل كتاغوري ==========
@@ -103,110 +116,103 @@
          title-y    = رفع/تنزيل عنوان الكتاغوري
          scale      = تكبير إضافي للصورة
          y          = رفع/تنزيل الصورة
-
-         ملاحظات:
-         - زيادة card-h = تكبير المربع
-         - زيادة img-h  = تكبير الصورة
-         - تقليل title-h = تقليل الفراغ بين النص والصورة
-         - title-y: 10px ينزل النص تحت / -10px يرفع النص فوق
-         - y: 10px تنزل الصورة تحت / -10px ترفع الصورة فوق
          ========================================================= */
 
       /* ===== حكم وأمثال ===== */
       --hkm-card-h-p: 210px;
-      --hkm-img-h-p: 110px;
-      --hkm-title-h-p: 46px;
+      --hkm-img-h-p: 104px;
+      --hkm-title-h-p: 44px;
       --hkm-title-size-p: 28px;
       --hkm-title-y-p: 0px;
 
-      --hkm-card-h-l: 200px;
-      --hkm-img-h-l: 100px;
-      --hkm-title-h-l: 30px;
-      --hkm-title-size-l: 35px;
+      --hkm-card-h-l: 178px;
+      --hkm-img-h-l: 96px;
+      --hkm-title-h-l: 34px;
+      --hkm-title-size-l: 26px;
       --hkm-title-y-l: 0px;
 
-      --hkm-scale: 2.10;
-      --hkm-y: 7px;
+      --hkm-scale: 2.00;
+      --hkm-y: 6px;
 
       /* ===== مسلسلات رمضانية ===== */
       --ram-card-h-p: 210px;
-      --ram-img-h-p: 90px;
-      --ram-title-h-p: 46px;
+      --ram-img-h-p: 104px;
+      --ram-title-h-p: 44px;
       --ram-title-size-p: 28px;
       --ram-title-y-p: 0px;
 
-      --ram-card-h-l: 200px;
-      --ram-img-h-l: 100px;
-      --ram-title-h-l: 30px;
-      --ram-title-size-l: 35px;
+      --ram-card-h-l: 178px;
+      --ram-img-h-l: 96px;
+      --ram-title-h-l: 34px;
+      --ram-title-size-l: 26px;
       --ram-title-y-l: 0px;
 
-      --ram-scale: 2.50;
-      --ram-y: 0px;
+      --ram-scale: 2.00;
+      --ram-y: 4px;
 
       /* ===== وظائف ومهن ===== */
       --job-card-h-p: 210px;
-      --job-img-h-p: 110px;
-      --job-title-h-p: 46px;
+      --job-img-h-p: 104px;
+      --job-title-h-p: 44px;
       --job-title-size-p: 28px;
       --job-title-y-p: 0px;
 
-      --job-card-h-l: 200px;
-      --job-img-h-l: 100px;
-      --job-title-h-l: 30px;
-      --job-title-size-l: 35px;
+      --job-card-h-l: 178px;
+      --job-img-h-l: 96px;
+      --job-title-h-l: 34px;
+      --job-title-size-l: 26px;
       --job-title-y-l: 0px;
 
-      --job-scale: 2.35;
-      --job-y: 7px;
+      --job-scale: 2.05;
+      --job-y: 6px;
 
       /* ===== أدوات المطبخ ===== */
       --kit-card-h-p: 210px;
-      --kit-img-h-p: 110px;
-      --kit-title-h-p: 46px;
+      --kit-img-h-p: 104px;
+      --kit-title-h-p: 44px;
       --kit-title-size-p: 28px;
       --kit-title-y-p: 0px;
 
-      --kit-card-h-l: 200px;
-      --kit-img-h-l: 100px;
-      --kit-title-h-l: 30px;
-      --kit-title-size-l: 35px;
+      --kit-card-h-l: 178px;
+      --kit-img-h-l: 96px;
+      --kit-title-h-l: 34px;
+      --kit-title-size-l: 26px;
       --kit-title-y-l: 0px;
 
-      --kit-scale: 2.00;
-      --kit-y: 7px;
+      --kit-scale: 1.95;
+      --kit-y: 6px;
 
       /* ===== أغاني ===== */
       --song-card-h-p: 210px;
-      --song-img-h-p: 110px;
-      --song-title-h-p: 46px;
+      --song-img-h-p: 104px;
+      --song-title-h-p: 44px;
       --song-title-size-p: 28px;
       --song-title-y-p: 0px;
 
-      --song-card-h-l: 200px;
-      --song-img-h-l: 100px;
-      --song-title-h-l: 30px;
-      --song-title-size-l: 35px;
+      --song-card-h-l: 178px;
+      --song-img-h-l: 96px;
+      --song-title-h-l: 34px;
+      --song-title-size-l: 26px;
       --song-title-y-l: 0px;
 
-      --song-scale: 2.30;
-      --song-y: 7px;
+      --song-scale: 2.00;
+      --song-y: 8px;
 
       /* ===== أماكن ومواقع ===== */
       --place-card-h-p: 210px;
-      --place-img-h-p: 75px;
-      --place-title-h-p: 46px;
+      --place-img-h-p: 82px;
+      --place-title-h-p: 44px;
       --place-title-size-p: 28px;
       --place-title-y-p: 0px;
 
-      --place-card-h-l: 200px;
-      --place-img-h-l: 80px;
-      --place-title-h-l: 30px;
-      --place-title-size-l: 35px;
+      --place-card-h-l: 178px;
+      --place-img-h-l: 76px;
+      --place-title-h-l: 34px;
+      --place-title-size-l: 26px;
       --place-title-y-l: 0px;
 
-      --place-scale: 3.50;
-      --place-y: 26px;
+      --place-scale: 2.90;
+      --place-y: 12px;
     }
 
     *{
@@ -229,17 +235,18 @@
 
     .page{
       position:relative;
-      min-height:100vh;
+      min-height:100dvh;
       background:var(--bg);
-      overflow:hidden;
-      padding:14px 14px 110px;
+      overflow-x:hidden;
+      overflow-y:auto;
+      padding:14px 14px calc(var(--actions-height-p) + var(--actions-bottom-p) + 26px + var(--safe-bottom));
     }
 
     .top-logo{
       position:absolute;
       top:12px;
       left:12px;
-      z-index:5;
+      z-index:20;
       user-select:none;
       pointer-events:none;
     }
@@ -252,13 +259,12 @@
 
     .shell{
       width:min(100%, 980px);
-      min-height:calc(100vh - 24px);
       margin:0 auto;
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:18px;
-      padding-top:96px;
+      gap:14px;
+      padding-top:88px;
       position:relative;
       z-index:2;
     }
@@ -275,15 +281,15 @@
     }
 
     .board{
-      width:min(100%, 760px);
+      width:min(100%, var(--board-width-p));
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
       border:none;
-      border-radius:34px;
-      padding:18px 16px;
+      border-radius:var(--board-radius-p);
+      padding:var(--board-pad-p);
       box-shadow:var(--shadow-soft);
       display:grid;
       grid-template-columns:repeat(2, minmax(0, 1fr));
-      gap:16px;
+      gap:var(--board-gap-p);
     }
 
     .cat{
@@ -302,6 +308,7 @@
       transition:transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
       padding:8px 8px 6px;
       height:var(--card-h);
+      overflow:hidden;
     }
 
     .cat:active{
@@ -319,7 +326,7 @@
       text-align:center;
       color:#0f2540;
       font-weight:700;
-      line-height:1.15;
+      line-height:1.12;
       min-height:var(--title-h);
       display:flex;
       align-items:flex-start;
@@ -415,18 +422,22 @@
       --img-y: var(--place-y);
     }
 
+    /* ===== الشريط السفلي الثابت ===== */
     .actions{
-      width:min(100%, 760px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      gap:var(--actions-gap-p);
-      margin-top:4px;
-      direction:ltr;
-      transform:translate(var(--actions-x-p), var(--actions-y-p));
+      position:fixed;
+      left:50%;
+      bottom:calc(var(--actions-bottom-p) + var(--safe-bottom));
+      transform:translate(calc(-50% + var(--actions-x-p)), var(--actions-y-p));
+      width:min(calc(100vw - 24px), var(--actions-width-p));
+      height:var(--actions-height-p);
+      z-index:30;
+      pointer-events:none;
     }
 
     .home-btn{
+      position:absolute;
+      left:0;
+      bottom:0;
       width:var(--home-size-p);
       height:var(--home-size-p);
       border-radius:50%;
@@ -437,8 +448,8 @@
       align-items:center;
       justify-content:center;
       cursor:pointer;
-      flex:0 0 auto;
       transition:transform .12s ease;
+      pointer-events:auto;
       transform:translate(var(--home-x-p), var(--home-y-p));
     }
 
@@ -453,8 +464,12 @@
     }
 
     .start-btn{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      transform:translate(calc(-50% + var(--start-x-p)), var(--start-y-p));
       border:none;
-      width:min(var(--start-width-p), calc(100vw - 150px));
+      width:min(calc(100vw - 130px), var(--start-width-p));
       max-width:100%;
       height:var(--start-height-p);
       border-radius:999px;
@@ -466,11 +481,11 @@
       box-shadow:0 8px 0 rgba(0,0,0,.28);
       cursor:pointer;
       transition:transform .12s ease, opacity .12s ease, filter .12s ease;
-      transform:translate(var(--start-x-p), var(--start-y-p));
+      pointer-events:auto;
     }
 
     .start-btn:active{
-      transform:translate(var(--start-x-p), calc(var(--start-y-p) + 2px)) scale(.99);
+      transform:translate(calc(-50% + var(--start-x-p)), calc(var(--start-y-p) + 2px)) scale(.99);
     }
 
     .start-btn[disabled]{
@@ -481,15 +496,16 @@
 
     @media (max-width:700px){
       .page{
-        padding:12px 12px 110px;
+        padding:12px 12px calc(var(--actions-height-p) + var(--actions-bottom-p) + 26px + var(--safe-bottom));
       }
 
       .shell{
-        padding-top:96px;
-        gap:16px;
+        padding-top:92px;
+        gap:14px;
       }
 
       .board{
+        width:min(100%, var(--board-width-p));
         padding:14px 12px;
         gap:14px;
         border-radius:28px;
@@ -507,35 +523,24 @@
 
     /* ===== الوضع الأفقي ===== */
     @media (orientation:landscape){
-      body{
-        overflow:hidden;
-      }
-
       .page{
-        height:100vh;
-        min-height:100vh;
-        padding:8px 12px 10px;
-        overflow:hidden;
+        min-height:100dvh;
+        padding:8px 12px calc(var(--actions-height-l) + var(--actions-bottom-l) + 18px + var(--safe-bottom));
       }
 
       .top-logo{
-        top:8px;
-        left:8px;
+        top:10px;
+        left:10px;
       }
 
       .top-logo img{
-        width:86px;
+        width:90px;
       }
 
       .shell{
-        width:min(100%, 1120px);
-        height:100%;
-        min-height:0;
-        padding-top:10px;
-        display:grid;
-        grid-template-rows:auto 1fr auto;
-        gap:8px;
-        align-items:stretch;
+        width:min(100%, 1700px);
+        padding-top:18px;
+        gap:10px;
       }
 
       .title{
@@ -544,15 +549,11 @@
       }
 
       .board{
-        width:100%;
-        min-height:0;
-        height:100%;
+        width:min(100%, var(--board-width-l));
         grid-template-columns:repeat(3, minmax(0, 1fr));
-        grid-template-rows:repeat(2, minmax(0, 1fr));
-        gap:10px;
-        padding:10px;
-        border-radius:24px;
-        align-content:stretch;
+        gap:var(--board-gap-l);
+        padding:var(--board-pad-l);
+        border-radius:var(--board-radius-l);
       }
 
       /* ===== ربط كل كتاغوري بقيم الأفقي ===== */
@@ -608,7 +609,7 @@
         border-width:4px;
         border-radius:20px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
-        padding:5px 7px 4px;
+        padding:6px 8px 5px;
       }
 
       .cat-visual img{
@@ -616,8 +617,10 @@
       }
 
       .actions{
-        gap:var(--actions-gap-l);
-        transform:translate(var(--actions-x-l), var(--actions-y-l));
+        bottom:calc(var(--actions-bottom-l) + var(--safe-bottom));
+        transform:translate(calc(-50% + var(--actions-x-l)), var(--actions-y-l));
+        width:min(calc(100vw - 24px), var(--actions-width-l));
+        height:var(--actions-height-l);
       }
 
       .home-btn{
@@ -638,16 +641,16 @@
       }
 
       .start-btn{
-        width:min(var(--start-width-l), calc(100vw - 110px));
+        width:min(calc(100vw - 160px), var(--start-width-l));
         height:var(--start-height-l);
         font-size:var(--start-font-l);
         border-width:4px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
-        transform:translate(var(--start-x-l), var(--start-y-l));
+        transform:translate(calc(-50% + var(--start-x-l)), var(--start-y-l));
       }
 
       .start-btn:active{
-        transform:translate(var(--start-x-l), calc(var(--start-y-l) + 2px)) scale(.99);
+        transform:translate(calc(-50% + var(--start-x-l)), calc(var(--start-y-l) + 2px)) scale(.99);
       }
     }
   </style>
@@ -659,7 +662,7 @@
     </div>
 
     <main class="shell">
-      <h1 class="title">بدون كلام</h1>
+      <h1 class="title">لعبة بدون كلام</h1>
 
       <section class="board" aria-label="الكتاغوريات">
         <button class="cat" type="button" data-key="hkm" data-name="حكم وأمثال">
@@ -692,17 +695,17 @@
           <div class="cat-visual"><img src="place.PNG" alt="أماكن ومواقع"></div>
         </button>
       </section>
-
-      <div class="actions">
-        <button class="home-btn" id="homeBtn" type="button" aria-label="الرئيسية" title="الرئيسية">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M12 3.2 3.2 10.5a1 1 0 0 0 .64 1.77h1.41v7.05A1.68 1.68 0 0 0 6.93 21h3.74a1 1 0 0 0 1-1v-4.1h.66V20a1 1 0 0 0 1 1h3.74a1.68 1.68 0 0 0 1.68-1.68v-7.05h1.41a1 1 0 0 0 .64-1.77L12 3.2z"/>
-          </svg>
-        </button>
-
-        <button class="start-btn" id="startBtn" type="button" disabled>ابدأ اللعب</button>
-      </div>
     </main>
+
+    <div class="actions">
+      <button class="home-btn" id="homeBtn" type="button" aria-label="الرئيسية" title="الرئيسية">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3.2 3.2 10.5a1 1 0 0 0 .64 1.77h1.41v7.05A1.68 1.68 0 0 0 6.93 21h3.74a1 1 0 0 0 1-1v-4.1h.66V20a1 1 0 0 0 1 1h3.74a1.68 1.68 0 0 0 1.68-1.68v-7.05h1.41a1 1 0 0 0 .64-1.77L12 3.2z"/>
+        </svg>
+      </button>
+
+      <button class="start-btn" id="startBtn" type="button" disabled>ابدأ اللعب</button>
+    </div>
   </div>
 
   <script>

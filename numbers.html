@@ -18,68 +18,64 @@
       --bg:#083b73;
       --panel:#184d94;
       --panel-2:#113f7d;
-      --gold:#e5b63f;
       --white:#f6f6f6;
       --black:#111111;
-      --card:#f3eadb;
-      --opened:#d9c29a;
+      --gold:#e2bb57;
+      --gold-dark:#c79c2a;
+      --tile-bg:#e7d5a7;
+      --tile-opened:#1b3f73;
+      --tile-opened-text:#ffffff;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
 
       --page-max-p: 920px;
-      --page-max-l: 1820px;
+      --page-max-l: 1860px;
 
-      --title-size-p: 58px;
+      --title-size-p: 64px;
       --title-size-l: 42px;
-
-      --title-shadow: 0 4px 10px rgba(0,0,0,.30);
-
-      --header-top-p: 14px;
-      --header-top-l: 12px;
+      --title-shadow:0 4px 10px rgba(0,0,0,.30);
 
       --logo-width-p: 118px;
-      --logo-width-l: 96px;
+      --logo-width-l: 92px;
 
-      --scores-width-p: 250px;
-      --scores-width-l: 320px;
-
-      --team-box-height-p: 44px;
-      --team-box-height-l: 42px;
-
+      --scores-width-p: 318px;
+      --team-box-height-p: 46px;
       --team-font-p: 20px;
-      --team-font-l: 22px;
+      --score-box-size-p: 46px;
 
-      --score-box-size-p: 44px;
+      --team-box-height-l: 42px;
+      --team-font-l: 19px;
       --score-box-size-l: 42px;
+      --team-box-width-l: 170px;
+
+      --header-min-h-p: 170px;
+      --header-gap-p: 22px;
+      --header-gap-l: 18px;
 
       --board-gap-p: 12px;
       --board-gap-l: 12px;
-
       --board-pad-p: 14px;
       --board-pad-l: 14px;
-
       --board-radius-p: 30px;
       --board-radius-l: 30px;
 
       --tile-radius-p: 22px;
       --tile-radius-l: 20px;
+      --tile-font-p: 32px;
+      --tile-font-l: 26px;
 
-      --tile-font-p: 34px;
-      --tile-font-l: 28px;
-
-      --back-width-p: 88px;
-      --back-height-p: 68px;
+      --back-width-p: 110px;
+      --back-height-p: 74px;
       --back-left-p: 18px;
       --back-bottom-p: 18px;
+      --back-icon-p: 30px;
 
-      --back-width-l: 98px;
-      --back-height-l: 70px;
+      --back-width-l: 108px;
+      --back-height-l: 72px;
       --back-left-l: 20px;
       --back-bottom-l: 14px;
-
-      --back-icon-p: 28px;
       --back-icon-l: 30px;
 
-      --footer-space-p: 110px;
+      --footer-space-p: 112px;
       --footer-space-l: 96px;
     }
 
@@ -106,45 +102,66 @@
       background:var(--bg);
       overflow-x:hidden;
       overflow-y:auto;
-      padding:
-        calc(var(--header-top-p) + 92px)
-        14px
-        calc(var(--footer-space-p) + var(--safe-bottom))
-        14px;
-      position:relative;
+      padding:14px 14px calc(var(--footer-space-p) + var(--safe-bottom));
     }
 
-    .top-logo{
+    .shell{
+      width:min(100%, var(--page-max-p));
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+      gap:var(--header-gap-p);
+    }
+
+    .top-area{
+      position:relative;
+      min-height:var(--header-min-h-p);
+      width:100%;
+    }
+
+    .brand{
       position:absolute;
-      top:var(--header-top-p);
-      left:14px;
-      z-index:10;
+      top:0;
+      left:0;
+      z-index:2;
       user-select:none;
       pointer-events:none;
     }
 
-    .top-logo img{
+    .brand img{
       width:min(var(--logo-width-p), 26vw);
       height:auto;
       display:block;
     }
 
-    .score-wrap{
+    .scores-portrait{
       position:absolute;
-      top:var(--header-top-p);
-      right:14px;
-      z-index:10;
+      top:0;
+      right:0;
       width:min(var(--scores-width-p), 42vw);
       display:flex;
       flex-direction:column;
-      gap:8px;
+      gap:10px;
+    }
+
+    .scores-landscape{
+      display:none;
     }
 
     .team-row{
       display:flex;
       align-items:center;
-      justify-content:flex-start;
       gap:8px;
+    }
+
+    .team-name,
+    .team-score{
+      border:4px solid #000;
+      background:#fff;
+      color:#111;
+      box-shadow:0 6px 0 rgba(0,0,0,.24);
+      line-height:1;
+      text-align:center;
     }
 
     .team-name{
@@ -152,19 +169,13 @@
       min-width:0;
       height:var(--team-box-height-p);
       border-radius:16px;
-      border:4px solid #000;
-      background:#fff;
-      color:#111;
-      box-shadow:0 6px 0 rgba(0,0,0,.24);
       display:flex;
       align-items:center;
       justify-content:center;
-      text-align:center;
       padding:0 10px;
       font-size:var(--team-font-p);
-      line-height:1;
-      overflow:hidden;
       white-space:nowrap;
+      overflow:hidden;
       text-overflow:ellipsis;
     }
 
@@ -173,34 +184,21 @@
       height:var(--score-box-size-p);
       flex:0 0 auto;
       border-radius:14px;
-      border:4px solid #000;
-      background:#fff;
-      color:#111;
-      box-shadow:0 6px 0 rgba(0,0,0,.24);
       display:flex;
       align-items:center;
       justify-content:center;
       font-size:20px;
-      line-height:1;
-    }
-
-    .shell{
-      width:min(100%, var(--page-max-p));
-      margin:0 auto;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:14px;
     }
 
     .title{
       margin:0;
-      color:#ffffff;
+      padding-top:86px;
+      color:#fff;
       text-shadow:var(--title-shadow);
       text-align:center;
       line-height:1;
+      font-size:min(var(--title-size-p), 15vw);
       letter-spacing:.2px;
-      font-size:min(var(--title-size-p), 14vw);
     }
 
     .numbers-board{
@@ -212,12 +210,13 @@
       grid-template-columns:repeat(5, minmax(0, 1fr));
       gap:var(--board-gap-p);
       box-shadow:0 6px 18px rgba(0,0,0,.18);
+      direction:rtl;
     }
 
     .num-btn{
       appearance:none;
       border:none;
-      background:var(--card);
+      background:var(--tile-bg);
       color:#152b4f;
       border:5px solid #000;
       border-radius:var(--tile-radius-p);
@@ -230,7 +229,7 @@
       font-size:clamp(28px, 6vw, var(--tile-font-p));
       line-height:1;
       cursor:pointer;
-      transition:transform .12s ease, background .12s ease, box-shadow .12s ease;
+      transition:transform .12s ease, background .12s ease, color .12s ease, box-shadow .12s ease;
       user-select:none;
     }
 
@@ -239,14 +238,24 @@
     }
 
     .num-btn.opened{
-      background:var(--opened);
-      color:#111;
+      background:var(--tile-opened);
+      color:var(--tile-opened-text);
+    }
+
+    .bottom-bar{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:calc(var(--safe-bottom));
+      height:calc(var(--footer-space-p));
+      pointer-events:none;
+      z-index:35;
     }
 
     .back-btn{
-      position:fixed;
+      position:absolute;
       left:var(--back-left-p);
-      bottom:calc(var(--back-bottom-p) + var(--safe-bottom));
+      bottom:var(--back-bottom-p);
       width:var(--back-width-p);
       height:var(--back-height-p);
       border:none;
@@ -258,9 +267,9 @@
       align-items:center;
       justify-content:center;
       cursor:pointer;
-      z-index:30;
       transition:transform .12s ease;
       padding:0;
+      pointer-events:auto;
     }
 
     .back-btn:active{
@@ -277,48 +286,80 @@
       stroke-linejoin:round;
     }
 
+    @media (max-width:700px){
+      .page{
+        padding:12px 12px calc(var(--footer-space-p) + var(--safe-bottom));
+      }
+
+      .shell{
+        gap:18px;
+      }
+
+      .numbers-board{
+        padding:12px;
+        gap:12px;
+      }
+
+      .num-btn{
+        border-width:5px;
+      }
+    }
+
     @media (orientation:landscape){
       .page{
-        padding:
-          calc(var(--header-top-l) + 68px)
-          20px
-          calc(var(--footer-space-l) + var(--safe-bottom))
-          20px;
-      }
-
-      .top-logo{
-        top:var(--header-top-l);
-        left:20px;
-      }
-
-      .top-logo img{
-        width:var(--logo-width-l);
-      }
-
-      .score-wrap{
-        top:var(--header-top-l);
-        right:20px;
-        width:min(var(--scores-width-l), 26vw);
-      }
-
-      .team-name{
-        height:var(--team-box-height-l);
-        font-size:var(--team-font-l);
-      }
-
-      .team-score{
-        width:var(--score-box-size-l);
-        height:var(--score-box-size-l);
-        font-size:19px;
+        padding:12px 20px calc(var(--footer-space-l) + var(--safe-bottom));
       }
 
       .shell{
         width:min(100%, var(--page-max-l));
+        gap:14px;
+      }
+
+      .top-area{
+        min-height:auto;
+        display:grid;
+        grid-template-columns:auto 1fr auto;
+        align-items:center;
+        gap:var(--header-gap-l);
+      }
+
+      .brand{
+        position:static;
+      }
+
+      .brand img{
+        width:var(--logo-width-l);
+      }
+
+      .scores-portrait{
+        display:none;
+      }
+
+      .scores-landscape{
+        display:flex;
+        align-items:center;
         gap:10px;
+        direction:rtl;
+      }
+
+      .scores-landscape .team-name{
+        width:var(--team-box-width-l);
+        height:var(--team-box-height-l);
+        flex:0 0 auto;
+        font-size:var(--team-font-l);
+      }
+
+      .scores-landscape .team-score{
+        width:var(--score-box-size-l);
+        height:var(--score-box-size-l);
+        font-size:19px;
+        border-radius:13px;
       }
 
       .title{
-        font-size:min(var(--title-size-l), 4.2vw);
+        padding-top:0;
+        font-size:min(var(--title-size-l), 4vw);
+        align-self:center;
       }
 
       .numbers-board{
@@ -330,14 +371,18 @@
 
       .num-btn{
         border-radius:var(--tile-radius-l);
-        font-size:min(var(--tile-font-l), 2vw);
+        font-size:min(var(--tile-font-l), 1.95vw);
         border-width:4px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
       }
 
+      .bottom-bar{
+        height:var(--footer-space-l);
+      }
+
       .back-btn{
         left:var(--back-left-l);
-        bottom:calc(var(--back-bottom-l) + var(--safe-bottom));
+        bottom:var(--back-bottom-l);
         width:var(--back-width-l);
         height:var(--back-height-l);
         border-width:4px;
@@ -353,33 +398,44 @@
 </head>
 <body>
   <div class="page">
-    <div class="top-logo" aria-label="صندوق المسابقات">
-      <img src="logo.PNG" alt="صندوق المسابقات">
-    </div>
-
-    <div class="score-wrap" aria-label="نتائج الفريقين">
-      <div class="team-row">
-        <div class="team-name" id="team1Name">الفريق الأول</div>
-        <div class="team-score" id="team1Score">0</div>
-      </div>
-      <div class="team-row">
-        <div class="team-name" id="team2Name">الفريق الثاني</div>
-        <div class="team-score" id="team2Score">0</div>
-      </div>
-    </div>
-
     <main class="shell">
-      <h1 class="title">لعبة بدون كلام</h1>
+      <header class="top-area">
+        <div class="brand" aria-label="صندوق المسابقات">
+          <img src="logo.PNG" alt="صندوق المسابقات">
+        </div>
+
+        <div class="scores-portrait" aria-label="نتائج الفريقين">
+          <div class="team-row">
+            <div class="team-name" id="team1NamePortrait">الفريق الأول</div>
+            <div class="team-score" id="team1ScorePortrait">0</div>
+          </div>
+          <div class="team-row">
+            <div class="team-name" id="team2NamePortrait">الفريق الثاني</div>
+            <div class="team-score" id="team2ScorePortrait">0</div>
+          </div>
+        </div>
+
+        <h1 class="title">لعبة بدون كلام</h1>
+
+        <div class="scores-landscape" aria-label="نتائج الفريقين">
+          <div class="team-name" id="team1NameLandscape">الفريق الأول</div>
+          <div class="team-score" id="team1ScoreLandscape">0</div>
+          <div class="team-score" id="team2ScoreLandscape">0</div>
+          <div class="team-name" id="team2NameLandscape">الفريق الثاني</div>
+        </div>
+      </header>
 
       <section class="numbers-board" id="numbersBoard" aria-label="أرقام اللعبة"></section>
     </main>
 
-    <button class="back-btn" id="backBtn" type="button" aria-label="الرجوع للكتاغوريات" title="الرجوع للكتاغوريات">
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M9 7 4 12l5 5"></path>
-        <path d="M5 12h9a6 6 0 0 0 6-6"></path>
-      </svg>
-    </button>
+    <div class="bottom-bar">
+      <button class="back-btn" id="backBtn" type="button" aria-label="الرجوع للكتاغوريات" title="الرجوع للكتاغوريات">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M9 7 4 12l5 5"></path>
+          <path d="M5 12h9a6 6 0 0 0 6-6"></path>
+        </svg>
+      </button>
+    </div>
   </div>
 
   <script>
@@ -407,8 +463,10 @@
       "الفريق الثاني"
     );
 
-    document.getElementById("team1Name").textContent = team1;
-    document.getElementById("team2Name").textContent = team2;
+    document.getElementById("team1NamePortrait").textContent = team1;
+    document.getElementById("team2NamePortrait").textContent = team2;
+    document.getElementById("team1NameLandscape").textContent = team1;
+    document.getElementById("team2NameLandscape").textContent = team2;
 
     const categoryKey = sessionStorage.getItem("bdonKalam_categoryKey") || "default";
     const categoryName = sessionStorage.getItem("bdonKalam_categoryName") || "";

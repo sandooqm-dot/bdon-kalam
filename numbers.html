@@ -21,7 +21,6 @@
       --white:#f6f6f6;
       --black:#111111;
       --gold:#e2bb57;
-      --gold-dark:#c79c2a;
       --tile-bg:#e7d5a7;
       --tile-opened:#1b3f73;
       --tile-opened-text:#ffffff;
@@ -47,7 +46,7 @@
       --score-box-size-l: 42px;
       --team-box-width-l: 170px;
 
-      --header-min-h-p: 170px;
+      --header-min-h-p: 220px; /* تم تكبيرها لتنزيل العنوان */
       --header-gap-p: 22px;
       --header-gap-l: 18px;
 
@@ -192,7 +191,7 @@
 
     .title{
       margin:0;
-      padding-top:86px;
+      padding-top:126px; /* تنزيل العنوان */
       color:#fff;
       text-shadow:var(--title-shadow);
       text-align:center;
@@ -318,28 +317,19 @@
       .top-area{
         min-height:auto;
         display:grid;
-        grid-template-columns:auto 1fr auto;
+        grid-template-columns:max-content 1fr max-content;
         align-items:center;
         gap:var(--header-gap-l);
       }
 
-      .brand{
-        position:static;
-      }
-
-      .brand img{
-        width:var(--logo-width-l);
-      }
-
-      .scores-portrait{
-        display:none;
-      }
-
+      /* ✅ النتائج يسار */
       .scores-landscape{
         display:flex;
         align-items:center;
         gap:10px;
-        direction:rtl;
+        direction:ltr;
+        grid-column:1;
+        justify-self:start;
       }
 
       .scores-landscape .team-name{
@@ -356,13 +346,31 @@
         border-radius:13px;
       }
 
+      /* ✅ العنوان وسط */
       .title{
+        grid-column:2;
+        justify-self:center;
         padding-top:0;
         font-size:min(var(--title-size-l), 4vw);
-        align-self:center;
+      }
+
+      /* ✅ اللوجو يمين */
+      .brand{
+        position:static;
+        grid-column:3;
+        justify-self:end;
+      }
+
+      .brand img{
+        width:var(--logo-width-l);
+      }
+
+      .scores-portrait{
+        display:none;
       }
 
       .numbers-board{
+        width:min(100%, var(--page-max-l));
         grid-template-columns:repeat(10, minmax(0, 1fr));
         gap:var(--board-gap-l);
         padding:var(--board-pad-l);
@@ -418,10 +426,10 @@
         <h1 class="title">لعبة بدون كلام</h1>
 
         <div class="scores-landscape" aria-label="نتائج الفريقين">
-          <div class="team-name" id="team1NameLandscape">الفريق الأول</div>
-          <div class="team-score" id="team1ScoreLandscape">0</div>
-          <div class="team-score" id="team2ScoreLandscape">0</div>
           <div class="team-name" id="team2NameLandscape">الفريق الثاني</div>
+          <div class="team-score" id="team2ScoreLandscape">0</div>
+          <div class="team-score" id="team1ScoreLandscape">0</div>
+          <div class="team-name" id="team1NameLandscape">الفريق الأول</div>
         </div>
       </header>
 
@@ -440,7 +448,9 @@
 
   <script>
     const BARCODE_PAGE = "barcode.html";
-    const OPENED_STORAGE_KEY = "bdonKalam_openedNumbers_v1";
+
+    /* ✅ صار داخل الجلسة الحالية فقط، وليس دائمًا بين الأيام */
+    const OPENED_STORAGE_KEY = "bdonKalam_openedNumbers_session_v1";
 
     const board = document.getElementById("numbersBoard");
     const backBtn = document.getElementById("backBtn");
@@ -473,14 +483,14 @@
 
     function readOpenedMap() {
       try {
-        return JSON.parse(localStorage.getItem(OPENED_STORAGE_KEY) || "{}");
+        return JSON.parse(sessionStorage.getItem(OPENED_STORAGE_KEY) || "{}");
       } catch {
         return {};
       }
     }
 
     function writeOpenedMap(map) {
-      localStorage.setItem(OPENED_STORAGE_KEY, JSON.stringify(map));
+      sessionStorage.setItem(OPENED_STORAGE_KEY, JSON.stringify(map));
     }
 
     function getOpenedSet() {

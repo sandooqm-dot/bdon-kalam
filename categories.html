@@ -20,7 +20,7 @@
       --panel-2:#113f7d;
       --gold:#f4b512;
       --white:#f6f6f6;
-      --green:#199579;
+      --green:#1b9478;
       --black:#101010;
       --card-bg:#eef1eb;
       --selected:#dcebdc;
@@ -28,75 +28,74 @@
       --safe-bottom: env(safe-area-inset-bottom, 0px);
 
       /* =========================================================
-         ========== تحكم عام بالعنوان الرئيسي "لعبة بدون كلام" ==========
-         -p = عمودي
-         -l = أفقي
+         ========== تحكم عام بالعنوان الرئيسي ==========
          size = حجم الخط
-         x = تحريك يمين/يسار
-         y = تحريك أعلى/أسفل
+         x    = يمين/يسار
+         y    = أعلى/أسفل
          ========================================================= */
       --game-title-size-p: 76px;
       --game-title-x-p: 0px;
       --game-title-y-p: -6px;
 
-      --game-title-size-l: 56px;
+      --game-title-size-l: 54px;
       --game-title-x-l: 0px;
       --game-title-y-l: -4px;
 
       /* =========================================================
          ========== تحكم بزر ابدأ اللعب ==========
-         width  = عرض الزر
-         height = ارتفاع الزر
+         width  = العرض
+         height = الارتفاع
          font   = حجم النص
-         x/y    = تحريك الزر
+         x/y    = التحريك
+         bottom = البعد عن أسفل الشاشة
          ========================================================= */
       --start-width-p: 290px;
       --start-height-p: 84px;
       --start-font-p: 44px;
       --start-x-p: 0px;
       --start-y-p: 0px;
+      --start-bottom-p: 18px;
 
-      --start-width-l: 620px;
-      --start-height-l: 66px;
+      --start-width-l: 720px;
+      --start-height-l: 64px;
       --start-font-l: 30px;
       --start-x-l: 0px;
       --start-y-l: 0px;
+      --start-bottom-l: 14px;
 
       /* =========================================================
          ========== تحكم بزر المنزل ==========
          size      = حجم الدائرة
-         icon-size = حجم الأيقونة داخلها
-         x/y       = تحريك الزر
+         icon-size = حجم الأيقونة
+         x/y       = التحريك
+         bottom    = البعد عن أسفل الشاشة
+         left      = البعد عن يسار الشاشة
          ========================================================= */
       --home-size-p: 76px;
       --home-icon-size-p: 32px;
       --home-x-p: 0px;
       --home-y-p: 0px;
+      --home-left-p: 18px;
+      --home-bottom-p: 18px;
 
       --home-size-l: 66px;
       --home-icon-size-l: 30px;
       --home-x-l: 0px;
       --home-y-l: 0px;
+      --home-left-l: 20px;
+      --home-bottom-l: 14px;
 
       /* =========================================================
-         ========== تحكم بالشريط السفلي الثابت ==========
-         width  = عرض منطقة الأزرار السفلية
-         height = ارتفاعها
-         bottom = بعدها عن أسفل الشاشة
+         ========== مساحة سفلية حتى لا يغطي الزر المحتوى ==========
          ========================================================= */
-      --actions-width-p: 820px;
-      --actions-height-p: 110px;
-      --actions-bottom-p: 16px;
-
-      --actions-width-l: 1600px;
-      --actions-height-l: 88px;
-      --actions-bottom-l: 12px;
+      --footer-space-p: 136px;
+      --footer-space-l: 96px;
 
       /* =========================================================
-         ========== تحكم عام بلوحة الكتاغوريات ==========
+         ========== تحكم بلوحة الكتاغوريات ==========
          ========================================================= */
       --board-width-p: 820px;
-      --board-width-l: 1600px;
+      --board-width-l: 1720px;
       --board-gap-p: 16px;
       --board-gap-l: 16px;
       --board-pad-p: 16px;
@@ -105,17 +104,14 @@
       --board-radius-l: 34px;
 
       /* =========================================================
-         ========== مكان التحكم الكامل بكل كتاغوري ==========
-         p = Portrait  = الوضع العمودي
-         l = Landscape = الوضع الأفقي
-
+         ========== تحكم بكل كتاغوري ==========
          card-h     = ارتفاع المربع
-         img-h      = ارتفاع الصورة داخل المربع
+         img-h      = ارتفاع الصورة
          title-h    = ارتفاع منطقة العنوان
-         title-size = حجم خط عنوان الكتاغوري
-         title-y    = رفع/تنزيل عنوان الكتاغوري
+         title-size = حجم خط العنوان
+         title-y    = تحريك عنوان الكتاغوري
          scale      = تكبير إضافي للصورة
-         y          = رفع/تنزيل الصورة
+         y          = تحريك الصورة
          ========================================================= */
 
       /* ===== حكم وأمثال ===== */
@@ -125,7 +121,7 @@
       --hkm-title-size-p: 28px;
       --hkm-title-y-p: 0px;
 
-      --hkm-card-h-l: 178px;
+      --hkm-card-h-l: 168px;
       --hkm-img-h-l: 96px;
       --hkm-title-h-l: 34px;
       --hkm-title-size-l: 26px;
@@ -141,7 +137,7 @@
       --ram-title-size-p: 28px;
       --ram-title-y-p: 0px;
 
-      --ram-card-h-l: 178px;
+      --ram-card-h-l: 168px;
       --ram-img-h-l: 96px;
       --ram-title-h-l: 34px;
       --ram-title-size-l: 26px;
@@ -157,7 +153,7 @@
       --job-title-size-p: 28px;
       --job-title-y-p: 0px;
 
-      --job-card-h-l: 178px;
+      --job-card-h-l: 168px;
       --job-img-h-l: 96px;
       --job-title-h-l: 34px;
       --job-title-size-l: 26px;
@@ -173,7 +169,7 @@
       --kit-title-size-p: 28px;
       --kit-title-y-p: 0px;
 
-      --kit-card-h-l: 178px;
+      --kit-card-h-l: 168px;
       --kit-img-h-l: 96px;
       --kit-title-h-l: 34px;
       --kit-title-size-l: 26px;
@@ -189,7 +185,7 @@
       --song-title-size-p: 28px;
       --song-title-y-p: 0px;
 
-      --song-card-h-l: 178px;
+      --song-card-h-l: 168px;
       --song-img-h-l: 96px;
       --song-title-h-l: 34px;
       --song-title-size-l: 26px;
@@ -205,7 +201,7 @@
       --place-title-size-p: 28px;
       --place-title-y-p: 0px;
 
-      --place-card-h-l: 178px;
+      --place-card-h-l: 168px;
       --place-img-h-l: 76px;
       --place-title-h-l: 34px;
       --place-title-size-l: 26px;
@@ -239,7 +235,7 @@
       background:var(--bg);
       overflow-x:hidden;
       overflow-y:auto;
-      padding:14px 14px calc(var(--actions-height-p) + var(--actions-bottom-p) + 26px + var(--safe-bottom));
+      padding:14px 14px calc(var(--footer-space-p) + var(--safe-bottom));
     }
 
     .top-logo{
@@ -276,7 +272,7 @@
       line-height:1;
       text-align:center;
       letter-spacing:.2px;
-      font-size:var(--game-title-size-p);
+      font-size:min(var(--game-title-size-p), 18vw);
       transform:translate(var(--game-title-x-p), var(--game-title-y-p));
     }
 
@@ -333,7 +329,7 @@
       justify-content:center;
       padding-top:4px;
       margin:0;
-      font-size:var(--title-size);
+      font-size:min(var(--title-size), 8vw);
       transform:translateY(var(--title-y));
     }
 
@@ -422,22 +418,11 @@
       --img-y: var(--place-y);
     }
 
-    /* ===== الشريط السفلي الثابت ===== */
-    .actions{
-      position:fixed;
-      left:50%;
-      bottom:calc(var(--actions-bottom-p) + var(--safe-bottom));
-      transform:translate(calc(-50% + var(--actions-x-p)), var(--actions-y-p));
-      width:min(calc(100vw - 24px), var(--actions-width-p));
-      height:var(--actions-height-p);
-      z-index:30;
-      pointer-events:none;
-    }
-
+    /* ===== الأزرار السفلية الثابتة ===== */
     .home-btn{
-      position:absolute;
-      left:0;
-      bottom:0;
+      position:fixed;
+      left:var(--home-left-p);
+      bottom:calc(var(--home-bottom-p) + var(--safe-bottom));
       width:var(--home-size-p);
       height:var(--home-size-p);
       border-radius:50%;
@@ -448,8 +433,8 @@
       align-items:center;
       justify-content:center;
       cursor:pointer;
+      z-index:40;
       transition:transform .12s ease;
-      pointer-events:auto;
       transform:translate(var(--home-x-p), var(--home-y-p));
     }
 
@@ -464,12 +449,12 @@
     }
 
     .start-btn{
-      position:absolute;
+      position:fixed;
       left:50%;
-      bottom:0;
+      bottom:calc(var(--start-bottom-p) + var(--safe-bottom));
       transform:translate(calc(-50% + var(--start-x-p)), var(--start-y-p));
       border:none;
-      width:min(calc(100vw - 130px), var(--start-width-p));
+      width:min(var(--start-width-p), calc(100vw - 130px));
       max-width:100%;
       height:var(--start-height-p);
       border-radius:999px;
@@ -480,8 +465,8 @@
       font-weight:700;
       box-shadow:0 8px 0 rgba(0,0,0,.28);
       cursor:pointer;
+      z-index:40;
       transition:transform .12s ease, opacity .12s ease, filter .12s ease;
-      pointer-events:auto;
     }
 
     .start-btn:active{
@@ -496,7 +481,7 @@
 
     @media (max-width:700px){
       .page{
-        padding:12px 12px calc(var(--actions-height-p) + var(--actions-bottom-p) + 26px + var(--safe-bottom));
+        padding:12px 12px calc(var(--footer-space-p) + var(--safe-bottom));
       }
 
       .shell{
@@ -505,7 +490,6 @@
       }
 
       .board{
-        width:min(100%, var(--board-width-p));
         padding:14px 12px;
         gap:14px;
         border-radius:28px;
@@ -525,12 +509,12 @@
     @media (orientation:landscape){
       .page{
         min-height:100dvh;
-        padding:8px 12px calc(var(--actions-height-l) + var(--actions-bottom-l) + 18px + var(--safe-bottom));
+        padding:10px 14px calc(var(--footer-space-l) + var(--safe-bottom));
       }
 
       .top-logo{
-        top:10px;
-        left:10px;
+        top:12px;
+        left:12px;
       }
 
       .top-logo img{
@@ -538,13 +522,13 @@
       }
 
       .shell{
-        width:min(100%, 1700px);
+        width:min(100%, 1800px);
         padding-top:18px;
         gap:10px;
       }
 
       .title{
-        font-size:var(--game-title-size-l);
+        font-size:min(var(--game-title-size-l), 5vw);
         transform:translate(var(--game-title-x-l), var(--game-title-y-l));
       }
 
@@ -616,14 +600,9 @@
         max-width:78%;
       }
 
-      .actions{
-        bottom:calc(var(--actions-bottom-l) + var(--safe-bottom));
-        transform:translate(calc(-50% + var(--actions-x-l)), var(--actions-y-l));
-        width:min(calc(100vw - 24px), var(--actions-width-l));
-        height:var(--actions-height-l);
-      }
-
       .home-btn{
+        left:var(--home-left-l);
+        bottom:calc(var(--home-bottom-l) + var(--safe-bottom));
         width:var(--home-size-l);
         height:var(--home-size-l);
         border-width:4px;
@@ -641,7 +620,8 @@
       }
 
       .start-btn{
-        width:min(calc(100vw - 160px), var(--start-width-l));
+        bottom:calc(var(--start-bottom-l) + var(--safe-bottom));
+        width:min(var(--start-width-l), calc(100vw - 170px));
         height:var(--start-height-l);
         font-size:var(--start-font-l);
         border-width:4px;
@@ -697,15 +677,13 @@
       </section>
     </main>
 
-    <div class="actions">
-      <button class="home-btn" id="homeBtn" type="button" aria-label="الرئيسية" title="الرئيسية">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M12 3.2 3.2 10.5a1 1 0 0 0 .64 1.77h1.41v7.05A1.68 1.68 0 0 0 6.93 21h3.74a1 1 0 0 0 1-1v-4.1h.66V20a1 1 0 0 0 1 1h3.74a1.68 1.68 0 0 0 1.68-1.68v-7.05h1.41a1 1 0 0 0 .64-1.77L12 3.2z"/>
-        </svg>
-      </button>
+    <button class="home-btn" id="homeBtn" type="button" aria-label="الرئيسية" title="الرئيسية">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M12 3.2 3.2 10.5a1 1 0 0 0 .64 1.77h1.41v7.05A1.68 1.68 0 0 0 6.93 21h3.74a1 1 0 0 0 1-1v-4.1h.66V20a1 1 0 0 0 1 1h3.74a1.68 1.68 0 0 0 1.68-1.68v-7.05h1.41a1 1 0 0 0 .64-1.77L12 3.2z"/>
+      </svg>
+    </button>
 
-      <button class="start-btn" id="startBtn" type="button" disabled>ابدأ اللعب</button>
-    </div>
+    <button class="start-btn" id="startBtn" type="button" disabled>ابدأ اللعب</button>
   </div>
 
   <script>

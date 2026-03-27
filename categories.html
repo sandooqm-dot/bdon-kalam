@@ -29,47 +29,34 @@
 
       /* =========================================================
          ========== تحكم عام بالعنوان الرئيسي ==========
-         size = حجم الخط
-         x    = يمين/يسار
-         y    = أعلى/أسفل
          ========================================================= */
-      --game-title-size-p: 76px;
+      --game-title-size-p: 62px;
       --game-title-x-p: 0px;
       --game-title-y-p: -6px;
 
-      --game-title-size-l: 54px;
+      --game-title-size-l: 42px;
       --game-title-x-l: 0px;
-      --game-title-y-l: -4px;
+      --game-title-y-l: -2px;
 
       /* =========================================================
-         ========== تحكم بزر ابدأ اللعب ==========
-         width  = العرض
-         height = الارتفاع
-         font   = حجم النص
-         x/y    = التحريك
-         bottom = البعد عن أسفل الشاشة
+         ========== تحكم بزر التالي ==========
          ========================================================= */
-      --start-width-p: 290px;
-      --start-height-p: 84px;
-      --start-font-p: 44px;
+      --start-width-p: 230px;
+      --start-height-p: 74px;
+      --start-font-p: 34px;
       --start-x-p: 0px;
       --start-y-p: 0px;
       --start-bottom-p: 18px;
 
-      --start-width-l: 720px;
-      --start-height-l: 64px;
-      --start-font-l: 30px;
+      --start-width-l: 420px;
+      --start-height-l: 56px;
+      --start-font-l: 26px;
       --start-x-l: 0px;
       --start-y-l: 0px;
       --start-bottom-l: 14px;
 
       /* =========================================================
          ========== تحكم بزر المنزل ==========
-         size      = حجم الدائرة
-         icon-size = حجم الأيقونة
-         x/y       = التحريك
-         bottom    = البعد عن أسفل الشاشة
-         left      = البعد عن يسار الشاشة
          ========================================================= */
       --home-size-p: 76px;
       --home-icon-size-p: 32px;
@@ -105,13 +92,6 @@
 
       /* =========================================================
          ========== تحكم بكل كتاغوري ==========
-         card-h     = ارتفاع المربع
-         img-h      = ارتفاع الصورة
-         title-h    = ارتفاع منطقة العنوان
-         title-size = حجم خط العنوان
-         title-y    = تحريك عنوان الكتاغوري
-         scale      = تكبير إضافي للصورة
-         y          = تحريك الصورة
          ========================================================= */
 
       /* ===== حكم وأمثال ===== */
@@ -267,12 +247,13 @@
 
     .title{
       margin:0;
-      color:var(--gold);
+      color:#ffffff;
+      text-shadow:0 4px 10px rgba(0,0,0,.35);
       font-weight:700;
       line-height:1;
       text-align:center;
       letter-spacing:.2px;
-      font-size:min(var(--game-title-size-p), 18vw);
+      font-size:min(var(--game-title-size-p), 15vw);
       transform:translate(var(--game-title-x-p), var(--game-title-y-p));
     }
 
@@ -357,7 +338,6 @@
       transform:translateY(var(--img-y)) scale(var(--img-scale));
     }
 
-    /* ===== ربط كل كتاغوري بقيم العمودي ===== */
     .cat[data-key="hkm"]{
       --card-h: var(--hkm-card-h-p);
       --img-h: var(--hkm-img-h-p);
@@ -418,7 +398,6 @@
       --img-y: var(--place-y);
     }
 
-    /* ===== الأزرار السفلية الثابتة ===== */
     .home-btn{
       position:fixed;
       left:var(--home-left-p);
@@ -459,14 +438,19 @@
       height:var(--start-height-p);
       border-radius:999px;
       border:6px solid #000;
-      background:var(--green);
-      color:#fff;
+      background:var(--gold);
+      color:#111;
       font-size:var(--start-font-p);
       font-weight:700;
       box-shadow:0 8px 0 rgba(0,0,0,.28);
       cursor:pointer;
       z-index:40;
       transition:transform .12s ease, opacity .12s ease, filter .12s ease;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:0;
     }
 
     .start-btn:active{
@@ -505,7 +489,6 @@
       }
     }
 
-    /* ===== الوضع الأفقي ===== */
     @media (orientation:landscape){
       .page{
         min-height:100dvh;
@@ -528,7 +511,7 @@
       }
 
       .title{
-        font-size:min(var(--game-title-size-l), 5vw);
+        font-size:min(var(--game-title-size-l), 4.2vw);
         transform:translate(var(--game-title-x-l), var(--game-title-y-l));
       }
 
@@ -540,7 +523,6 @@
         border-radius:var(--board-radius-l);
       }
 
-      /* ===== ربط كل كتاغوري بقيم الأفقي ===== */
       .cat[data-key="hkm"]{
         --card-h: var(--hkm-card-h-l);
         --img-h: var(--hkm-img-h-l);
@@ -683,7 +665,7 @@
       </svg>
     </button>
 
-    <button class="start-btn" id="startBtn" type="button" disabled>ابدأ اللعب</button>
+    <button class="start-btn" id="startBtn" type="button" disabled>التالي</button>
   </div>
 
   <script>

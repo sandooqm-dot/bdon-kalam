@@ -322,40 +322,14 @@
         gap:var(--header-gap-l);
       }
 
-      /* اللوجو يسار وعلى نفس خط الباقي */
-      .brand{
-        position:static;
-        grid-column:1;
-        justify-self:start;
-        align-self:center;
-      }
-
-      .brand img{
-        width:var(--logo-width-l);
-      }
-
-      .scores-portrait{
-        display:none;
-      }
-
-      /* العنوان وسط وعلى نفس الخط */
-      .title{
-        grid-column:2;
-        justify-self:center;
-        align-self:center;
-        padding-top:0;
-        margin:0;
-        font-size:min(var(--title-size-l), 4vw);
-      }
-
-      /* النتائج يمين وعلى نفس الخط */
+      /* ✅ النتائج يسار */
       .scores-landscape{
         display:flex;
         align-items:center;
         gap:10px;
         direction:ltr;
-        grid-column:3;
-        justify-self:end;
+        grid-column:1;
+        justify-self:start;
         align-self:center;
       }
 
@@ -371,6 +345,32 @@
         height:var(--score-box-size-l);
         font-size:19px;
         border-radius:13px;
+      }
+
+      /* ✅ العنوان وسط */
+      .title{
+        grid-column:2;
+        justify-self:center;
+        align-self:center;
+        padding-top:0;
+        margin:0;
+        font-size:min(var(--title-size-l), 4vw);
+      }
+
+      /* ✅ اللوقو يمين */
+      .brand{
+        position:static;
+        grid-column:3;
+        justify-self:end;
+        align-self:center;
+      }
+
+      .brand img{
+        width:var(--logo-width-l);
+      }
+
+      .scores-portrait{
+        display:none;
       }
 
       .numbers-board{
@@ -430,10 +430,10 @@
         <h1 class="title">لعبة بدون كلام</h1>
 
         <div class="scores-landscape" aria-label="نتائج الفريقين">
-          <div class="team-name" id="team2NameLandscape">الفريق الثاني</div>
-          <div class="team-score" id="team2ScoreLandscape">0</div>
-          <div class="team-score" id="team1ScoreLandscape">0</div>
           <div class="team-name" id="team1NameLandscape">الفريق الأول</div>
+          <div class="team-score" id="team1ScoreLandscape">0</div>
+          <div class="team-score" id="team2ScoreLandscape">0</div>
+          <div class="team-name" id="team2NameLandscape">الفريق الثاني</div>
         </div>
       </header>
 

@@ -28,30 +28,102 @@
       --shadow-soft:0 6px 18px rgba(0,0,0,.18);
 
       /* =========================================================
-         ========== مكان التحكم الكامل بالمقاسات ==========
+         ========== تحكم عام بالعنوان الرئيسي "بدون كلام" ==========
+         -p = عمودي
+         -l = أفقي
+         size = حجم الخط
+         x = تحريك يمين/يسار
+         y = تحريك أعلى/أسفل
+         ========================================================= */
+      --game-title-size-p: 82px;
+      --game-title-x-p: 0px;
+      --game-title-y-p: -15px;
 
+      --game-title-size-l: 54px;
+      --game-title-x-l: 0px;
+      --game-title-y-l: -15px;
+
+      /* =========================================================
+         ========== تحكم بزر ابدأ اللعب ==========
+         width  = عرض الزر
+         height = ارتفاع الزر
+         font   = حجم النص
+         x/y    = تحريك الزر
+         ========================================================= */
+      --start-width-p: 250px;
+      --start-height-p: 92px;
+      --start-font-p: 50px;
+      --start-x-p: 0px;
+      --start-y-p: 0px;
+
+      --start-width-l: 560px;
+      --start-height-l: 54px;
+      --start-font-l: 28px;
+      --start-x-l: 0px;
+      --start-y-l: 0px;
+
+      /* =========================================================
+         ========== تحكم بزر المنزل ==========
+         size      = حجم الدائرة
+         icon-size = حجم الأيقونة داخلها
+         x/y       = تحريك الزر
+         ========================================================= */
+      --home-size-p: 96px;
+      --home-icon-size-p: 46px;
+      --home-x-p: 0px;
+      --home-y-p: 0px;
+
+      --home-size-l: 58px;
+      --home-icon-size-l: 28px;
+      --home-x-l: -90px;
+      --home-y-l: 0px;
+
+      /* =========================================================
+         ========== تحكم بالصف السفلي (زر ابدأ + المنزل) ==========
+         gap = المسافة بين الزرين
+         x/y = تحريك الصف كاملًا
+         ========================================================= */
+      --actions-gap-p: 14px;
+      --actions-x-p: 0px;
+      --actions-y-p: 0px;
+
+      --actions-gap-l: 10px;
+      --actions-x-l: 0px;
+      --actions-y-l: 0px;
+
+      /* =========================================================
+         ========== مكان التحكم الكامل بكل كتاغوري ==========
          p = Portrait  = الوضع العمودي
          l = Landscape = الوضع الأفقي
 
-         card-h  = ارتفاع المربع
-         img-h   = ارتفاع الصورة داخل المربع
-         title-h = ارتفاع منطقة عنوان الكتاغوري
+         card-h     = ارتفاع المربع
+         img-h      = ارتفاع الصورة داخل المربع
+         title-h    = ارتفاع منطقة العنوان
+         title-size = حجم خط عنوان الكتاغوري
+         title-y    = رفع/تنزيل عنوان الكتاغوري
+         scale      = تكبير إضافي للصورة
+         y          = رفع/تنزيل الصورة
 
-         scale   = تكبير إضافي للصورة بدون تغيير ملف الصورة
-         y       = رفع/تنزيل الصورة
-                   0px   = مكانها الطبيعي
-                   10px  = تنزل تحت
-                   -10px = تطلع فوق
+         ملاحظات:
+         - زيادة card-h = تكبير المربع
+         - زيادة img-h  = تكبير الصورة
+         - تقليل title-h = تقليل الفراغ بين النص والصورة
+         - title-y: 10px ينزل النص تحت / -10px يرفع النص فوق
+         - y: 10px تنزل الصورة تحت / -10px ترفع الصورة فوق
          ========================================================= */
 
       /* ===== حكم وأمثال ===== */
       --hkm-card-h-p: 210px;
       --hkm-img-h-p: 110px;
       --hkm-title-h-p: 46px;
+      --hkm-title-size-p: 28px;
+      --hkm-title-y-p: 0px;
 
       --hkm-card-h-l: 200px;
       --hkm-img-h-l: 100px;
       --hkm-title-h-l: 30px;
+      --hkm-title-size-l: 22px;
+      --hkm-title-y-l: 0px;
 
       --hkm-scale: 2.10;
       --hkm-y: 7px;
@@ -60,10 +132,14 @@
       --ram-card-h-p: 210px;
       --ram-img-h-p: 90px;
       --ram-title-h-p: 46px;
+      --ram-title-size-p: 28px;
+      --ram-title-y-p: 0px;
 
       --ram-card-h-l: 200px;
       --ram-img-h-l: 100px;
       --ram-title-h-l: 30px;
+      --ram-title-size-l: 22px;
+      --ram-title-y-l: 0px;
 
       --ram-scale: 2.50;
       --ram-y: 0px;
@@ -72,10 +148,14 @@
       --job-card-h-p: 210px;
       --job-img-h-p: 110px;
       --job-title-h-p: 46px;
+      --job-title-size-p: 28px;
+      --job-title-y-p: 0px;
 
       --job-card-h-l: 200px;
       --job-img-h-l: 100px;
       --job-title-h-l: 30px;
+      --job-title-size-l: 22px;
+      --job-title-y-l: 0px;
 
       --job-scale: 2.35;
       --job-y: 7px;
@@ -84,10 +164,14 @@
       --kit-card-h-p: 210px;
       --kit-img-h-p: 110px;
       --kit-title-h-p: 46px;
+      --kit-title-size-p: 28px;
+      --kit-title-y-p: 0px;
 
       --kit-card-h-l: 200px;
       --kit-img-h-l: 100px;
       --kit-title-h-l: 30px;
+      --kit-title-size-l: 22px;
+      --kit-title-y-l: 0px;
 
       --kit-scale: 2.00;
       --kit-y: 7px;
@@ -96,10 +180,14 @@
       --song-card-h-p: 210px;
       --song-img-h-p: 110px;
       --song-title-h-p: 46px;
+      --song-title-size-p: 28px;
+      --song-title-y-p: 0px;
 
       --song-card-h-l: 200px;
       --song-img-h-l: 100px;
       --song-title-h-l: 30px;
+      --song-title-size-l: 22px;
+      --song-title-y-l: 0px;
 
       --song-scale: 2.30;
       --song-y: 7px;
@@ -108,10 +196,14 @@
       --place-card-h-p: 210px;
       --place-img-h-p: 75px;
       --place-title-h-p: 46px;
+      --place-title-size-p: 28px;
+      --place-title-y-p: 0px;
 
       --place-card-h-l: 200px;
       --place-img-h-l: 80px;
       --place-title-h-l: 30px;
+      --place-title-size-l: 22px;
+      --place-title-y-l: 0px;
 
       --place-scale: 3.50;
       --place-y: 26px;
@@ -177,8 +269,9 @@
       font-weight:700;
       line-height:1;
       text-align:center;
-      font-size:clamp(54px, 10vw, 108px);
       letter-spacing:.2px;
+      font-size:var(--game-title-size-p);
+      transform:translate(var(--game-title-x-p), var(--game-title-y-p));
     }
 
     .board{
@@ -225,7 +318,6 @@
       width:100%;
       text-align:center;
       color:#0f2540;
-      font-size:clamp(24px, 4vw, 38px);
       font-weight:700;
       line-height:1.15;
       min-height:var(--title-h);
@@ -234,6 +326,8 @@
       justify-content:center;
       padding-top:4px;
       margin:0;
+      font-size:var(--title-size);
+      transform:translateY(var(--title-y));
     }
 
     .cat-visual{
@@ -265,6 +359,8 @@
       --card-h: var(--hkm-card-h-p);
       --img-h: var(--hkm-img-h-p);
       --title-h: var(--hkm-title-h-p);
+      --title-size: var(--hkm-title-size-p);
+      --title-y: var(--hkm-title-y-p);
       --img-scale: var(--hkm-scale);
       --img-y: var(--hkm-y);
     }
@@ -273,6 +369,8 @@
       --card-h: var(--ram-card-h-p);
       --img-h: var(--ram-img-h-p);
       --title-h: var(--ram-title-h-p);
+      --title-size: var(--ram-title-size-p);
+      --title-y: var(--ram-title-y-p);
       --img-scale: var(--ram-scale);
       --img-y: var(--ram-y);
     }
@@ -281,6 +379,8 @@
       --card-h: var(--job-card-h-p);
       --img-h: var(--job-img-h-p);
       --title-h: var(--job-title-h-p);
+      --title-size: var(--job-title-size-p);
+      --title-y: var(--job-title-y-p);
       --img-scale: var(--job-scale);
       --img-y: var(--job-y);
     }
@@ -289,6 +389,8 @@
       --card-h: var(--kit-card-h-p);
       --img-h: var(--kit-img-h-p);
       --title-h: var(--kit-title-h-p);
+      --title-size: var(--kit-title-size-p);
+      --title-y: var(--kit-title-y-p);
       --img-scale: var(--kit-scale);
       --img-y: var(--kit-y);
     }
@@ -297,6 +399,8 @@
       --card-h: var(--song-card-h-p);
       --img-h: var(--song-img-h-p);
       --title-h: var(--song-title-h-p);
+      --title-size: var(--song-title-size-p);
+      --title-y: var(--song-title-y-p);
       --img-scale: var(--song-scale);
       --img-y: var(--song-y);
     }
@@ -305,6 +409,8 @@
       --card-h: var(--place-card-h-p);
       --img-h: var(--place-img-h-p);
       --title-h: var(--place-title-h-p);
+      --title-size: var(--place-title-size-p);
+      --title-y: var(--place-title-y-p);
       --img-scale: var(--place-scale);
       --img-y: var(--place-y);
     }
@@ -314,14 +420,15 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      gap:14px;
+      gap:var(--actions-gap-p);
       margin-top:4px;
       direction:ltr;
+      transform:translate(var(--actions-x-p), var(--actions-y-p));
     }
 
     .home-btn{
-      width:96px;
-      height:96px;
+      width:var(--home-size-p);
+      height:var(--home-size-p);
       border-radius:50%;
       border:6px solid #000;
       background:#9fd0ff;
@@ -332,36 +439,38 @@
       cursor:pointer;
       flex:0 0 auto;
       transition:transform .12s ease;
+      transform:translate(var(--home-x-p), var(--home-y-p));
     }
 
     .home-btn:active{
-      transform:translateY(2px) scale(.99);
+      transform:translate(var(--home-x-p), calc(var(--home-y-p) + 2px)) scale(.99);
     }
 
     .home-btn svg{
-      width:46px;
-      height:46px;
+      width:var(--home-icon-size-p);
+      height:var(--home-icon-size-p);
       fill:#111;
     }
 
     .start-btn{
       border:none;
-      min-width:min(560px, calc(100vw - 150px));
+      width:min(var(--start-width-p), calc(100vw - 150px));
       max-width:100%;
-      min-height:92px;
+      height:var(--start-height-p);
       border-radius:999px;
       border:6px solid #000;
       background:var(--green);
       color:#fff;
-      font-size:clamp(34px, 6vw, 54px);
+      font-size:var(--start-font-p);
       font-weight:700;
       box-shadow:0 8px 0 rgba(0,0,0,.28);
       cursor:pointer;
       transition:transform .12s ease, opacity .12s ease, filter .12s ease;
+      transform:translate(var(--start-x-p), var(--start-y-p));
     }
 
     .start-btn:active{
-      transform:translateY(2px) scale(.99);
+      transform:translate(var(--start-x-p), calc(var(--start-y-p) + 2px)) scale(.99);
     }
 
     .start-btn[disabled]{
@@ -380,10 +489,6 @@
         gap:16px;
       }
 
-      .title{
-        font-size:clamp(42px, 11vw, 76px);
-      }
-
       .board{
         padding:14px 12px;
         gap:14px;
@@ -395,32 +500,8 @@
         border-width:5px;
       }
 
-      .cat-title{
-        font-size:clamp(20px, 5.2vw, 31px);
-      }
-
       .cat-visual img{
         max-width:84%;
-      }
-
-      .actions{
-        gap:12px;
-      }
-
-      .home-btn{
-        width:82px;
-        height:82px;
-      }
-
-      .home-btn svg{
-        width:38px;
-        height:38px;
-      }
-
-      .start-btn{
-        min-height:80px;
-        min-width:calc(100vw - 126px);
-        font-size:clamp(28px, 7vw, 44px);
       }
     }
 
@@ -458,8 +539,8 @@
       }
 
       .title{
-        font-size:clamp(24px, 3.2vw, 46px);
-        line-height:.95;
+        font-size:var(--game-title-size-l);
+        transform:translate(var(--game-title-x-l), var(--game-title-y-l));
       }
 
       .board{
@@ -479,36 +560,48 @@
         --card-h: var(--hkm-card-h-l);
         --img-h: var(--hkm-img-h-l);
         --title-h: var(--hkm-title-h-l);
+        --title-size: var(--hkm-title-size-l);
+        --title-y: var(--hkm-title-y-l);
       }
 
       .cat[data-key="ram"]{
         --card-h: var(--ram-card-h-l);
         --img-h: var(--ram-img-h-l);
         --title-h: var(--ram-title-h-l);
+        --title-size: var(--ram-title-size-l);
+        --title-y: var(--ram-title-y-l);
       }
 
       .cat[data-key="job"]{
         --card-h: var(--job-card-h-l);
         --img-h: var(--job-img-h-l);
         --title-h: var(--job-title-h-l);
+        --title-size: var(--job-title-size-l);
+        --title-y: var(--job-title-y-l);
       }
 
       .cat[data-key="kit"]{
         --card-h: var(--kit-card-h-l);
         --img-h: var(--kit-img-h-l);
         --title-h: var(--kit-title-h-l);
+        --title-size: var(--kit-title-size-l);
+        --title-y: var(--kit-title-y-l);
       }
 
       .cat[data-key="song"]{
         --card-h: var(--song-card-h-l);
         --img-h: var(--song-img-h-l);
         --title-h: var(--song-title-h-l);
+        --title-size: var(--song-title-size-l);
+        --title-y: var(--song-title-y-l);
       }
 
       .cat[data-key="place"]{
         --card-h: var(--place-card-h-l);
         --img-h: var(--place-img-h-l);
         --title-h: var(--place-title-h-l);
+        --title-size: var(--place-title-size-l);
+        --title-y: var(--place-title-y-l);
       }
 
       .cat{
@@ -518,39 +611,43 @@
         padding:5px 7px 4px;
       }
 
-      .cat-title{
-        font-size:clamp(14px, 1.4vw, 24px);
-        padding-top:3px;
-      }
-
       .cat-visual img{
         max-width:78%;
       }
 
       .actions{
-        width:100%;
-        gap:10px;
-        margin-top:0;
+        gap:var(--actions-gap-l);
+        transform:translate(var(--actions-x-l), var(--actions-y-l));
       }
 
       .home-btn{
-        width:58px;
-        height:58px;
+        width:var(--home-size-l);
+        height:var(--home-size-l);
         border-width:4px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
+        transform:translate(var(--home-x-l), var(--home-y-l));
+      }
+
+      .home-btn:active{
+        transform:translate(var(--home-x-l), calc(var(--home-y-l) + 2px)) scale(.99);
       }
 
       .home-btn svg{
-        width:28px;
-        height:28px;
+        width:var(--home-icon-size-l);
+        height:var(--home-icon-size-l);
       }
 
       .start-btn{
-        min-height:54px;
-        min-width:min(560px, calc(100vw - 110px));
-        font-size:clamp(18px, 2vw, 30px);
+        width:min(var(--start-width-l), calc(100vw - 110px));
+        height:var(--start-height-l);
+        font-size:var(--start-font-l);
         border-width:4px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
+        transform:translate(var(--start-x-l), var(--start-y-l));
+      }
+
+      .start-btn:active{
+        transform:translate(var(--start-x-l), calc(var(--start-y-l) + 2px)) scale(.99);
       }
     }
   </style>

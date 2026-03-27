@@ -46,7 +46,7 @@
       --score-box-size-l: 42px;
       --team-box-width-l: 170px;
 
-      --header-min-h-p: 220px; /* تم تكبيرها لتنزيل العنوان */
+      --header-min-h-p: 220px;
       --header-gap-p: 22px;
       --header-gap-l: 18px;
 
@@ -191,7 +191,7 @@
 
     .title{
       margin:0;
-      padding-top:126px; /* تنزيل العنوان */
+      padding-top:126px;
       color:#fff;
       text-shadow:var(--title-shadow);
       text-align:center;
@@ -317,12 +317,12 @@
       .top-area{
         min-height:auto;
         display:grid;
-        grid-template-columns:max-content 1fr max-content;
+        grid-template-columns:1fr auto 1fr;
         align-items:center;
         gap:var(--header-gap-l);
       }
 
-      /* ✅ النتائج يسار */
+      /* النتائج يسار */
       .scores-landscape{
         display:flex;
         align-items:center;
@@ -330,6 +330,7 @@
         direction:ltr;
         grid-column:1;
         justify-self:start;
+        align-self:center;
       }
 
       .scores-landscape .team-name{
@@ -346,19 +347,22 @@
         border-radius:13px;
       }
 
-      /* ✅ العنوان وسط */
+      /* العنوان في الوسط وعلى نفس المستوى */
       .title{
         grid-column:2;
         justify-self:center;
+        align-self:center;
         padding-top:0;
+        margin:0;
         font-size:min(var(--title-size-l), 4vw);
       }
 
-      /* ✅ اللوجو يمين */
+      /* اللوجو يمين وعلى نفس المستوى */
       .brand{
         position:static;
         grid-column:3;
         justify-self:end;
+        align-self:center;
       }
 
       .brand img{
@@ -448,8 +452,6 @@
 
   <script>
     const BARCODE_PAGE = "barcode.html";
-
-    /* ✅ صار داخل الجلسة الحالية فقط، وليس دائمًا بين الأيام */
     const OPENED_STORAGE_KEY = "bdonKalam_openedNumbers_session_v1";
 
     const board = document.getElementById("numbersBoard");

@@ -315,21 +315,47 @@
       }
 
       .top-area{
-        min-height:auto;
+        min-height:90px;
         display:grid;
-        grid-template-columns:1fr auto 1fr;
+        grid-template-columns:max-content 1fr max-content;
         align-items:center;
         gap:var(--header-gap-l);
       }
 
-      /* النتائج يسار */
+      /* اللوجو يسار وعلى نفس خط الباقي */
+      .brand{
+        position:static;
+        grid-column:1;
+        justify-self:start;
+        align-self:center;
+      }
+
+      .brand img{
+        width:var(--logo-width-l);
+      }
+
+      .scores-portrait{
+        display:none;
+      }
+
+      /* العنوان وسط وعلى نفس الخط */
+      .title{
+        grid-column:2;
+        justify-self:center;
+        align-self:center;
+        padding-top:0;
+        margin:0;
+        font-size:min(var(--title-size-l), 4vw);
+      }
+
+      /* النتائج يمين وعلى نفس الخط */
       .scores-landscape{
         display:flex;
         align-items:center;
         gap:10px;
         direction:ltr;
-        grid-column:1;
-        justify-self:start;
+        grid-column:3;
+        justify-self:end;
         align-self:center;
       }
 
@@ -345,32 +371,6 @@
         height:var(--score-box-size-l);
         font-size:19px;
         border-radius:13px;
-      }
-
-      /* العنوان في الوسط وعلى نفس المستوى */
-      .title{
-        grid-column:2;
-        justify-self:center;
-        align-self:center;
-        padding-top:0;
-        margin:0;
-        font-size:min(var(--title-size-l), 4vw);
-      }
-
-      /* اللوجو يمين وعلى نفس المستوى */
-      .brand{
-        position:static;
-        grid-column:3;
-        justify-self:end;
-        align-self:center;
-      }
-
-      .brand img{
-        width:var(--logo-width-l);
-      }
-
-      .scores-portrait{
-        display:none;
       }
 
       .numbers-board{

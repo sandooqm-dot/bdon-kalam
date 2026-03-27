@@ -1,0 +1,475 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>لعبة بدون كلام - الأرقام</title>
+
+  <style>
+    @font-face{
+      font-family:"Estedad";
+      src:url("Estedad-Bold.ttf") format("truetype");
+      font-style:normal;
+      font-weight:700;
+      font-display:swap;
+    }
+
+    :root{
+      --bg:#083b73;
+      --panel:#184d94;
+      --panel-2:#113f7d;
+      --gold:#e5b63f;
+      --white:#f6f6f6;
+      --black:#111111;
+      --card:#f3eadb;
+      --opened:#d9c29a;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+      --page-max-p: 920px;
+      --page-max-l: 1820px;
+
+      --title-size-p: 58px;
+      --title-size-l: 42px;
+
+      --title-shadow: 0 4px 10px rgba(0,0,0,.30);
+
+      --header-top-p: 14px;
+      --header-top-l: 12px;
+
+      --logo-width-p: 118px;
+      --logo-width-l: 96px;
+
+      --scores-width-p: 250px;
+      --scores-width-l: 320px;
+
+      --team-box-height-p: 44px;
+      --team-box-height-l: 42px;
+
+      --team-font-p: 20px;
+      --team-font-l: 22px;
+
+      --score-box-size-p: 44px;
+      --score-box-size-l: 42px;
+
+      --board-gap-p: 12px;
+      --board-gap-l: 12px;
+
+      --board-pad-p: 14px;
+      --board-pad-l: 14px;
+
+      --board-radius-p: 30px;
+      --board-radius-l: 30px;
+
+      --tile-radius-p: 22px;
+      --tile-radius-l: 20px;
+
+      --tile-font-p: 34px;
+      --tile-font-l: 28px;
+
+      --back-width-p: 88px;
+      --back-height-p: 68px;
+      --back-left-p: 18px;
+      --back-bottom-p: 18px;
+
+      --back-width-l: 98px;
+      --back-height-l: 70px;
+      --back-left-l: 20px;
+      --back-bottom-l: 14px;
+
+      --back-icon-p: 28px;
+      --back-icon-l: 30px;
+
+      --footer-space-p: 110px;
+      --footer-space-l: 96px;
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+      font-family:"Estedad", Tahoma, Arial, "Segoe UI", sans-serif;
+    }
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:var(--bg);
+      color:var(--white);
+    }
+
+    body{
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .page{
+      min-height:100dvh;
+      background:var(--bg);
+      overflow-x:hidden;
+      overflow-y:auto;
+      padding:
+        calc(var(--header-top-p) + 92px)
+        14px
+        calc(var(--footer-space-p) + var(--safe-bottom))
+        14px;
+      position:relative;
+    }
+
+    .top-logo{
+      position:absolute;
+      top:var(--header-top-p);
+      left:14px;
+      z-index:10;
+      user-select:none;
+      pointer-events:none;
+    }
+
+    .top-logo img{
+      width:min(var(--logo-width-p), 26vw);
+      height:auto;
+      display:block;
+    }
+
+    .score-wrap{
+      position:absolute;
+      top:var(--header-top-p);
+      right:14px;
+      z-index:10;
+      width:min(var(--scores-width-p), 42vw);
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .team-row{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      gap:8px;
+    }
+
+    .team-name{
+      flex:1;
+      min-width:0;
+      height:var(--team-box-height-p);
+      border-radius:16px;
+      border:4px solid #000;
+      background:#fff;
+      color:#111;
+      box-shadow:0 6px 0 rgba(0,0,0,.24);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:0 10px;
+      font-size:var(--team-font-p);
+      line-height:1;
+      overflow:hidden;
+      white-space:nowrap;
+      text-overflow:ellipsis;
+    }
+
+    .team-score{
+      width:var(--score-box-size-p);
+      height:var(--score-box-size-p);
+      flex:0 0 auto;
+      border-radius:14px;
+      border:4px solid #000;
+      background:#fff;
+      color:#111;
+      box-shadow:0 6px 0 rgba(0,0,0,.24);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      line-height:1;
+    }
+
+    .shell{
+      width:min(100%, var(--page-max-p));
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+    }
+
+    .title{
+      margin:0;
+      color:#ffffff;
+      text-shadow:var(--title-shadow);
+      text-align:center;
+      line-height:1;
+      letter-spacing:.2px;
+      font-size:min(var(--title-size-p), 14vw);
+    }
+
+    .numbers-board{
+      width:100%;
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border-radius:var(--board-radius-p);
+      padding:var(--board-pad-p);
+      display:grid;
+      grid-template-columns:repeat(5, minmax(0, 1fr));
+      gap:var(--board-gap-p);
+      box-shadow:0 6px 18px rgba(0,0,0,.18);
+    }
+
+    .num-btn{
+      appearance:none;
+      border:none;
+      background:var(--card);
+      color:#152b4f;
+      border:5px solid #000;
+      border-radius:var(--tile-radius-p);
+      box-shadow:0 7px 0 rgba(0,0,0,.26);
+      aspect-ratio:1/1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      font-size:clamp(28px, 6vw, var(--tile-font-p));
+      line-height:1;
+      cursor:pointer;
+      transition:transform .12s ease, background .12s ease, box-shadow .12s ease;
+      user-select:none;
+    }
+
+    .num-btn:active{
+      transform:translateY(2px) scale(.99);
+    }
+
+    .num-btn.opened{
+      background:var(--opened);
+      color:#111;
+    }
+
+    .back-btn{
+      position:fixed;
+      left:var(--back-left-p);
+      bottom:calc(var(--back-bottom-p) + var(--safe-bottom));
+      width:var(--back-width-p);
+      height:var(--back-height-p);
+      border:none;
+      border-radius:999px;
+      border:5px solid #000;
+      background:var(--gold);
+      box-shadow:0 7px 0 rgba(0,0,0,.26);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      z-index:30;
+      transition:transform .12s ease;
+      padding:0;
+    }
+
+    .back-btn:active{
+      transform:translateY(2px) scale(.99);
+    }
+
+    .back-btn svg{
+      width:var(--back-icon-p);
+      height:var(--back-icon-p);
+      stroke:#fff;
+      fill:none;
+      stroke-width:2.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
+    @media (orientation:landscape){
+      .page{
+        padding:
+          calc(var(--header-top-l) + 68px)
+          20px
+          calc(var(--footer-space-l) + var(--safe-bottom))
+          20px;
+      }
+
+      .top-logo{
+        top:var(--header-top-l);
+        left:20px;
+      }
+
+      .top-logo img{
+        width:var(--logo-width-l);
+      }
+
+      .score-wrap{
+        top:var(--header-top-l);
+        right:20px;
+        width:min(var(--scores-width-l), 26vw);
+      }
+
+      .team-name{
+        height:var(--team-box-height-l);
+        font-size:var(--team-font-l);
+      }
+
+      .team-score{
+        width:var(--score-box-size-l);
+        height:var(--score-box-size-l);
+        font-size:19px;
+      }
+
+      .shell{
+        width:min(100%, var(--page-max-l));
+        gap:10px;
+      }
+
+      .title{
+        font-size:min(var(--title-size-l), 4.2vw);
+      }
+
+      .numbers-board{
+        grid-template-columns:repeat(10, minmax(0, 1fr));
+        gap:var(--board-gap-l);
+        padding:var(--board-pad-l);
+        border-radius:var(--board-radius-l);
+      }
+
+      .num-btn{
+        border-radius:var(--tile-radius-l);
+        font-size:min(var(--tile-font-l), 2vw);
+        border-width:4px;
+        box-shadow:0 5px 0 rgba(0,0,0,.24);
+      }
+
+      .back-btn{
+        left:var(--back-left-l);
+        bottom:calc(var(--back-bottom-l) + var(--safe-bottom));
+        width:var(--back-width-l);
+        height:var(--back-height-l);
+        border-width:4px;
+        box-shadow:0 5px 0 rgba(0,0,0,.24);
+      }
+
+      .back-btn svg{
+        width:var(--back-icon-l);
+        height:var(--back-icon-l);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="top-logo" aria-label="صندوق المسابقات">
+      <img src="logo.PNG" alt="صندوق المسابقات">
+    </div>
+
+    <div class="score-wrap" aria-label="نتائج الفريقين">
+      <div class="team-row">
+        <div class="team-name" id="team1Name">الفريق الأول</div>
+        <div class="team-score" id="team1Score">0</div>
+      </div>
+      <div class="team-row">
+        <div class="team-name" id="team2Name">الفريق الثاني</div>
+        <div class="team-score" id="team2Score">0</div>
+      </div>
+    </div>
+
+    <main class="shell">
+      <h1 class="title">لعبة بدون كلام</h1>
+
+      <section class="numbers-board" id="numbersBoard" aria-label="أرقام اللعبة"></section>
+    </main>
+
+    <button class="back-btn" id="backBtn" type="button" aria-label="الرجوع للكتاغوريات" title="الرجوع للكتاغوريات">
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M9 7 4 12l5 5"></path>
+        <path d="M5 12h9a6 6 0 0 0 6-6"></path>
+      </svg>
+    </button>
+  </div>
+
+  <script>
+    const BARCODE_PAGE = "barcode.html";
+    const OPENED_STORAGE_KEY = "bdonKalam_openedNumbers_v1";
+
+    const board = document.getElementById("numbersBoard");
+    const backBtn = document.getElementById("backBtn");
+
+    function getStoredValue(keys, fallback) {
+      for (const key of keys) {
+        const value = sessionStorage.getItem(key) || localStorage.getItem(key);
+        if (value && String(value).trim()) return String(value).trim();
+      }
+      return fallback;
+    }
+
+    const team1 = getStoredValue(
+      ["bdonKalam_team1", "bdonKalam_team1Name", "team1", "team1Name"],
+      "الفريق الأول"
+    );
+
+    const team2 = getStoredValue(
+      ["bdonKalam_team2", "bdonKalam_team2Name", "team2", "team2Name"],
+      "الفريق الثاني"
+    );
+
+    document.getElementById("team1Name").textContent = team1;
+    document.getElementById("team2Name").textContent = team2;
+
+    const categoryKey = sessionStorage.getItem("bdonKalam_categoryKey") || "default";
+    const categoryName = sessionStorage.getItem("bdonKalam_categoryName") || "";
+
+    function readOpenedMap() {
+      try {
+        return JSON.parse(localStorage.getItem(OPENED_STORAGE_KEY) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function writeOpenedMap(map) {
+      localStorage.setItem(OPENED_STORAGE_KEY, JSON.stringify(map));
+    }
+
+    function getOpenedSet() {
+      const map = readOpenedMap();
+      const list = Array.isArray(map[categoryKey]) ? map[categoryKey] : [];
+      return new Set(list.map(Number));
+    }
+
+    function markOpened(num) {
+      const map = readOpenedMap();
+      const list = Array.isArray(map[categoryKey]) ? map[categoryKey].map(Number) : [];
+      if (!list.includes(num)) list.push(num);
+      map[categoryKey] = list;
+      writeOpenedMap(map);
+    }
+
+    function openBarcode(num) {
+      sessionStorage.setItem("bdonKalam_selectedNumber", String(num));
+      markOpened(num);
+
+      const url =
+        `${BARCODE_PAGE}?cat=${encodeURIComponent(categoryKey)}&catName=${encodeURIComponent(categoryName)}&num=${encodeURIComponent(num)}`;
+
+      window.location.href = url;
+    }
+
+    function renderNumbers() {
+      const opened = getOpenedSet();
+      board.innerHTML = "";
+
+      for (let i = 1; i <= 30; i++) {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "num-btn";
+        if (opened.has(i)) btn.classList.add("opened");
+        btn.textContent = i;
+        btn.setAttribute("aria-label", `الرقم ${i}`);
+        btn.addEventListener("click", () => openBarcode(i));
+        board.appendChild(btn);
+      }
+    }
+
+    backBtn.addEventListener("click", () => {
+      window.location.href = "categories.html";
+    });
+
+    renderNumbers();
+  </script>
+</body>
+</html>

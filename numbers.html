@@ -76,6 +76,12 @@
 
       --footer-space-p: 112px;
       --footer-space-l: 96px;
+
+      /* تحكم إضافي لمحاذاة الشريط العلوي في الوضع الأفقي */
+      --land-header-height: 110px;
+      --land-logo-y: 12px;
+      --land-title-y: 12px;
+      --land-scores-y: 0px;
     }
 
     *{
@@ -315,14 +321,14 @@
       }
 
       .top-area{
-        min-height:90px;
+        min-height:var(--land-header-height);
         display:grid;
         grid-template-columns:max-content 1fr max-content;
-        align-items:center;
+        align-items:start;
         gap:var(--header-gap-l);
       }
 
-      /* ✅ النتائج يسار */
+      /* النتائج يسار */
       .scores-landscape{
         display:flex;
         align-items:center;
@@ -330,7 +336,8 @@
         direction:ltr;
         grid-column:1;
         justify-self:start;
-        align-self:center;
+        align-self:start;
+        transform:translateY(var(--land-scores-y));
       }
 
       .scores-landscape .team-name{
@@ -347,22 +354,24 @@
         border-radius:13px;
       }
 
-      /* ✅ العنوان وسط */
+      /* العنوان وسط وعلى نفس مستوى النتائج */
       .title{
         grid-column:2;
         justify-self:center;
-        align-self:center;
+        align-self:start;
         padding-top:0;
         margin:0;
         font-size:min(var(--title-size-l), 4vw);
+        transform:translateY(var(--land-title-y));
       }
 
-      /* ✅ اللوقو يمين */
+      /* اللوقو يمين وعلى نفس مستوى النتائج */
       .brand{
         position:static;
         grid-column:3;
         justify-self:end;
-        align-self:center;
+        align-self:start;
+        transform:translateY(var(--land-logo-y));
       }
 
       .brand img{

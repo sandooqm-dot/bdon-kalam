@@ -23,30 +23,98 @@
       --green:#08c968;
       --black:#101010;
 
-      /* خلفية مربعات الكتاغوريات */
       --card-bg:#edf2ec;
       --selected:#dcebdc;
-
       --shadow-soft:0 6px 18px rgba(0,0,0,.18);
 
-      /* التحكم بالصور */
-      --ram-scale: 1.45;
-      --ram-y: 0px;
+      /* =========================================================
+         ========== مكان التحكم الكامل بالمقاسات ==========
 
-      --hkm-scale: 1.45;
+         p = Portrait  = الوضع العمودي
+         l = Landscape = الوضع الأفقي
+
+         card-h  = ارتفاع المربع
+         img-h   = ارتفاع الصورة داخل المربع
+         title-h = ارتفاع منطقة عنوان الكتاغوري
+
+         scale   = تكبير إضافي للصورة بدون تغيير ملف الصورة
+         y       = رفع/تنزيل الصورة
+                   0px   = مكانها الطبيعي
+                   10px  = تنزل تحت
+                   -10px = تطلع فوق
+         ========================================================= */
+
+      /* ===== حكم وأمثال ===== */
+      --hkm-card-h-p: 180px;
+      --hkm-img-h-p: 120px;
+      --hkm-title-h-p: 46px;
+
+      --hkm-card-h-l: 128px;
+      --hkm-img-h-l: 72px;
+      --hkm-title-h-l: 24px;
+
+      --hkm-scale: 1.00;
       --hkm-y: 0px;
 
-      --kit-scale: 1.45;
-      --kit-y: 0px;
+      /* ===== مسلسلات رمضانية ===== */
+      --ram-card-h-p: 180px;
+      --ram-img-h-p: 120px;
+      --ram-title-h-p: 46px;
 
-      --job-scale: 1.45;
+      --ram-card-h-l: 128px;
+      --ram-img-h-l: 72px;
+      --ram-title-h-l: 24px;
+
+      --ram-scale: 1.00;
+      --ram-y: 0px;
+
+      /* ===== وظائف ومهن ===== */
+      --job-card-h-p: 235px;
+      --job-img-h-p: 120px;
+      --job-title-h-p: 46px;
+
+      --job-card-h-l: 128px;
+      --job-img-h-l: 72px;
+      --job-title-h-l: 24px;
+
+      --job-scale: 1.00;
       --job-y: 0px;
 
-      --place-scale: 1.45;
-      --place-y: 0px;
+      /* ===== أدوات المطبخ ===== */
+      --kit-card-h-p: 235px;
+      --kit-img-h-p: 120px;
+      --kit-title-h-p: 46px;
 
-      --song-scale: 1.45;
+      --kit-card-h-l: 128px;
+      --kit-img-h-l: 72px;
+      --kit-title-h-l: 24px;
+
+      --kit-scale: 1.00;
+      --kit-y: 0px;
+
+      /* ===== أغاني ===== */
+      --song-card-h-p: 235px;
+      --song-img-h-p: 120px;
+      --song-title-h-p: 46px;
+
+      --song-card-h-l: 128px;
+      --song-img-h-l: 72px;
+      --song-title-h-l: 24px;
+
+      --song-scale: 1.00;
       --song-y: 0px;
+
+      /* ===== أماكن ومواقع ===== */
+      --place-card-h-p: 235px;
+      --place-img-h-p: 120px;
+      --place-title-h-p: 46px;
+
+      --place-card-h-l: 128px;
+      --place-img-h-l: 72px;
+      --place-title-h-l: 24px;
+
+      --place-scale: 1.00;
+      --place-y: 0px;
     }
 
     *{
@@ -131,16 +199,16 @@
       background:var(--card-bg);
       border:6px solid #000;
       border-radius:28px;
-      min-height:198px;
-      padding:10px 10px 8px;
       box-shadow:0 8px 0 rgba(0,0,0,.28);
       cursor:pointer;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:flex-start;
-      gap:4px;
+      gap:2px;
       transition:transform .12s ease, background .12s ease, border-color .12s ease, box-shadow .12s ease;
+      padding:8px 8px 6px;
+      height:var(--card-h);
     }
 
     .cat:active{
@@ -159,18 +227,19 @@
       color:#0f2540;
       font-size:clamp(24px, 4vw, 38px);
       font-weight:700;
-      line-height:1.2;
-      min-height:40px;
+      line-height:1.15;
+      min-height:var(--title-h);
       display:flex;
       align-items:flex-start;
       justify-content:center;
-      padding-top:8px;
+      padding-top:4px;
+      margin:0;
     }
 
     .cat-visual{
       flex:1 1 auto;
       width:100%;
-      min-height:94px;
+      min-height:0;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -179,39 +248,65 @@
     }
 
     .cat-visual img{
-      max-width:76%;
-      max-height:76%;
       width:auto;
       height:auto;
+      max-width:82%;
+      max-height:var(--img-h);
       object-fit:contain;
       display:block;
       pointer-events:none;
       user-select:none;
       transform-origin:center center;
+      transform:translateY(var(--img-y)) scale(var(--img-scale));
     }
 
-    .cat[data-key="ram"] .cat-visual img{
-      transform:translateY(var(--ram-y)) scale(var(--ram-scale));
+    /* ===== ربط كل كتاغوري بقيم العمودي ===== */
+    .cat[data-key="hkm"]{
+      --card-h: var(--hkm-card-h-p);
+      --img-h: var(--hkm-img-h-p);
+      --title-h: var(--hkm-title-h-p);
+      --img-scale: var(--hkm-scale);
+      --img-y: var(--hkm-y);
     }
 
-    .cat[data-key="hkm"] .cat-visual img{
-      transform:translateY(var(--hkm-y)) scale(var(--hkm-scale));
+    .cat[data-key="ram"]{
+      --card-h: var(--ram-card-h-p);
+      --img-h: var(--ram-img-h-p);
+      --title-h: var(--ram-title-h-p);
+      --img-scale: var(--ram-scale);
+      --img-y: var(--ram-y);
     }
 
-    .cat[data-key="kit"] .cat-visual img{
-      transform:translateY(var(--kit-y)) scale(var(--kit-scale));
+    .cat[data-key="job"]{
+      --card-h: var(--job-card-h-p);
+      --img-h: var(--job-img-h-p);
+      --title-h: var(--job-title-h-p);
+      --img-scale: var(--job-scale);
+      --img-y: var(--job-y);
     }
 
-    .cat[data-key="job"] .cat-visual img{
-      transform:translateY(var(--job-y)) scale(var(--job-scale));
+    .cat[data-key="kit"]{
+      --card-h: var(--kit-card-h-p);
+      --img-h: var(--kit-img-h-p);
+      --title-h: var(--kit-title-h-p);
+      --img-scale: var(--kit-scale);
+      --img-y: var(--kit-y);
     }
 
-    .cat[data-key="place"] .cat-visual img{
-      transform:translateY(var(--place-y)) scale(var(--place-scale));
+    .cat[data-key="song"]{
+      --card-h: var(--song-card-h-p);
+      --img-h: var(--song-img-h-p);
+      --title-h: var(--song-title-h-p);
+      --img-scale: var(--song-scale);
+      --img-y: var(--song-y);
     }
 
-    .cat[data-key="song"] .cat-visual img{
-      transform:translateY(var(--song-y)) scale(var(--song-scale));
+    .cat[data-key="place"]{
+      --card-h: var(--place-card-h-p);
+      --img-h: var(--place-img-h-p);
+      --title-h: var(--place-title-h-p);
+      --img-scale: var(--place-scale);
+      --img-y: var(--place-y);
     }
 
     .actions{
@@ -296,25 +391,16 @@
       }
 
       .cat{
-        min-height:186px;
         border-radius:24px;
-        padding:10px 8px 8px;
-        gap:4px;
+        border-width:5px;
       }
 
       .cat-title{
         font-size:clamp(20px, 5.2vw, 31px);
-        min-height:40px;
-        padding-top:8px;
-      }
-
-      .cat-visual{
-        min-height:86px;
       }
 
       .cat-visual img{
-        max-width:78%;
-        max-height:78%;
+        max-width:84%;
       }
 
       .actions{
@@ -338,22 +424,7 @@
       }
     }
 
-    @media (max-width:430px){
-      .cat{
-        min-height:176px;
-      }
-
-      .cat-title{
-        min-height:36px;
-        padding-top:8px;
-      }
-
-      .cat-visual{
-        min-height:78px;
-      }
-    }
-
-    /* الوضع الأفقي */
+    /* ===== الوضع الأفقي ===== */
     @media (orientation:landscape){
       body{
         overflow:hidden;
@@ -403,30 +474,57 @@
         align-content:stretch;
       }
 
+      /* ===== ربط كل كتاغوري بقيم الأفقي ===== */
+      .cat[data-key="hkm"]{
+        --card-h: var(--hkm-card-h-l);
+        --img-h: var(--hkm-img-h-l);
+        --title-h: var(--hkm-title-h-l);
+      }
+
+      .cat[data-key="ram"]{
+        --card-h: var(--ram-card-h-l);
+        --img-h: var(--ram-img-h-l);
+        --title-h: var(--ram-title-h-l);
+      }
+
+      .cat[data-key="job"]{
+        --card-h: var(--job-card-h-l);
+        --img-h: var(--job-img-h-l);
+        --title-h: var(--job-title-h-l);
+      }
+
+      .cat[data-key="kit"]{
+        --card-h: var(--kit-card-h-l);
+        --img-h: var(--kit-img-h-l);
+        --title-h: var(--kit-title-h-l);
+      }
+
+      .cat[data-key="song"]{
+        --card-h: var(--song-card-h-l);
+        --img-h: var(--song-img-h-l);
+        --title-h: var(--song-title-h-l);
+      }
+
+      .cat[data-key="place"]{
+        --card-h: var(--place-card-h-l);
+        --img-h: var(--place-img-h-l);
+        --title-h: var(--place-title-h-l);
+      }
+
       .cat{
-        min-height:0;
-        height:100%;
-        padding:6px 8px 6px;
-        gap:2px;
         border-width:4px;
         border-radius:20px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
+        padding:5px 7px 4px;
       }
 
       .cat-title{
         font-size:clamp(14px, 1.4vw, 24px);
-        min-height:24px;
-        padding-top:4px;
-      }
-
-      .cat-visual{
-        flex:1 1 auto;
-        min-height:0;
+        padding-top:3px;
       }
 
       .cat-visual img{
-        max-width:62%;
-        max-height:62%;
+        max-width:78%;
       }
 
       .actions{
@@ -453,62 +551,6 @@
         font-size:clamp(18px, 2vw, 30px);
         border-width:4px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
-      }
-    }
-
-    @media (orientation:landscape) and (max-height:500px){
-      .page{
-        padding:6px 10px 8px;
-      }
-
-      .top-logo img{
-        width:76px;
-      }
-
-      .shell{
-        padding-top:8px;
-        gap:6px;
-      }
-
-      .title{
-        font-size:clamp(20px, 2.7vw, 34px);
-      }
-
-      .board{
-        gap:8px;
-        padding:8px;
-      }
-
-      .cat{
-        padding:5px 6px 4px;
-        border-width:3px;
-        box-shadow:0 4px 0 rgba(0,0,0,.22);
-      }
-
-      .cat-title{
-        font-size:clamp(12px, 1.1vw, 18px);
-        min-height:20px;
-        padding-top:3px;
-      }
-
-      .cat-visual img{
-        max-width:56%;
-        max-height:56%;
-      }
-
-      .home-btn{
-        width:50px;
-        height:50px;
-      }
-
-      .home-btn svg{
-        width:22px;
-        height:22px;
-      }
-
-      .start-btn{
-        min-height:46px;
-        font-size:clamp(16px, 1.5vw, 24px);
       }
     }
   </style>

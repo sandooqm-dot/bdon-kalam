@@ -33,9 +33,9 @@
       --green-2:#46c763;
       --green-dark:#23592f;
 
-      --start:#f49a72;
-      --start-2:#ef8458;
-      --start-dark:#7a3c28;
+      --start:#f0b75b;
+      --start-2:#e8ab46;
+      --start-dark:#7a5420;
 
       --gold:#f2b84a;
       --gold-dark:#d9981e;
@@ -233,7 +233,7 @@
       align-items:center;
       line-height:.83;
       color:#11101a;
-      font-size:clamp(84px, 15.5vw, 152px);
+      font-size:clamp(101px, 18.6vw, 182px);
       transform:translateY(-48px) rotate(-7deg);
       letter-spacing:-1px;
       text-shadow:
@@ -257,11 +257,19 @@
       display:block;
     }
 
+    .title-sticker .word-top{
+      transform:translateY(-20px);
+    }
+
+    .title-sticker .word-bottom{
+      transform:translateY(4px);
+    }
+
     .boy-stage{
       position:absolute;
-      right:28px;
+      right:22px;
       bottom:-44px;
-      width:min(220px, 28vw);
+      width:min(242px, 31vw);
       z-index:3;
       animation:boyBob 3.6s ease-in-out infinite;
       user-select:none;
@@ -306,7 +314,7 @@
       display:grid;
       grid-template-columns:1fr 1fr;
       gap:18px;
-      margin-top:2px;
+      margin-top:12px;
     }
 
     .field{
@@ -320,7 +328,7 @@
       gap:8px;
       margin-bottom:16px;
       color:#214a86;
-      font-size:clamp(22px, 3.2vw, 34px);
+      font-size:clamp(22px, 3.85vw, 41px);
       line-height:1.2;
     }
 
@@ -390,7 +398,7 @@
     }
 
     .actions{
-      margin-top:32px;
+      margin-top:24px;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -463,6 +471,7 @@
       justify-content:center;
       gap:12px;
       padding:0 24px;
+      margin-top:-8px;
     }
 
     .action-btn .btn-icon{
@@ -899,48 +908,50 @@
     }
 
     .range-slider{
+      --progress:70%;
       width:100%;
+      height:22px;
       appearance:none;
-      background:transparent;
       outline:none;
       margin:0;
-    }
-
-    .range-slider::-webkit-slider-runnable-track{
-      height:22px;
       border-radius:999px;
       border:4px solid var(--line);
       background:
-        linear-gradient(90deg, #59ce70 0%, #59ce70 var(--progress, 70%), #fff6df var(--progress, 70%), #fff6df 100%);
+        linear-gradient(90deg, #59ce70 0%, #59ce70 var(--progress), #fff6df var(--progress), #fff6df 100%);
       box-shadow:0 5px 0 rgba(0,0,0,.18);
+      cursor:pointer;
+    }
+
+    .range-slider::-webkit-slider-runnable-track{
+      height:14px;
+      background:transparent;
+      border:none;
     }
 
     .range-slider::-moz-range-track{
-      height:22px;
-      border-radius:999px;
-      border:4px solid var(--line);
-      background:#fff6df;
-      box-shadow:0 5px 0 rgba(0,0,0,.18);
+      height:14px;
+      background:transparent;
+      border:none;
     }
 
     .range-slider::-webkit-slider-thumb{
       appearance:none;
-      width:42px;
-      height:42px;
+      width:34px;
+      height:34px;
       border-radius:50%;
       border:4px solid var(--line);
-      background:#6ad36e;
+      background:linear-gradient(180deg, #6fe07b 0%, #48c95d 100%);
       box-shadow:0 4px 0 rgba(0,0,0,.18);
-      margin-top:-14px;
+      margin-top:-10px;
       cursor:pointer;
     }
 
     .range-slider::-moz-range-thumb{
-      width:42px;
-      height:42px;
+      width:34px;
+      height:34px;
       border-radius:50%;
       border:4px solid var(--line);
-      background:#6ad36e;
+      background:linear-gradient(180deg, #6fe07b 0%, #48c95d 100%);
       box-shadow:0 4px 0 rgba(0,0,0,.18);
       cursor:pointer;
     }
@@ -1052,7 +1063,7 @@
       }
 
       .boy-stage{
-        width:min(198px, 27vw);
+        width:min(214px, 29vw);
         right:16px;
         bottom:-40px;
       }
@@ -1076,7 +1087,7 @@
       }
 
       .boy-stage{
-        width:min(178px, 28vw);
+        width:min(192px, 30vw);
         right:10px;
         bottom:-34px;
       }
@@ -1138,12 +1149,12 @@
       }
 
       .title-sticker{
-        font-size:clamp(78px, 10.2vw, 130px);
+        font-size:clamp(92px, 12vw, 156px);
         transform:translateY(-30px) rotate(-7deg);
       }
 
       .boy-stage{
-        width:min(172px, 18vw);
+        width:min(188px, 20vw);
         bottom:-28px;
       }
 
@@ -1167,12 +1178,12 @@
       }
 
       .title-sticker{
-        font-size:84px;
+        font-size:98px;
         transform:translateY(-18px) rotate(-7deg);
       }
 
       .boy-stage{
-        width:134px;
+        width:146px;
         right:16px;
         bottom:-20px;
       }
@@ -1260,8 +1271,8 @@
         <div class="showcase">
           <div class="logo-stage" aria-hidden="true">
             <div class="title-sticker">
-              <span>بدون</span>
-              <span>كلام</span>
+              <span class="word-top">بدون</span>
+              <span class="word-bottom">كلام</span>
             </div>
 
             <div class="boy-stage">

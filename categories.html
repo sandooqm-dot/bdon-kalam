@@ -37,7 +37,6 @@
       --black:#101010;
       --line:#1d1922;
       --shadow:#17131d;
-      --shadow-soft:0 10px 0 rgba(0,0,0,.28);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
 
       /* =========================================================
@@ -54,7 +53,7 @@
       /* =========================================================
          ========== تحكم بزر التالي ==========
          ========================================================= */
-      --start-width-p: 230px;
+      --start-width-p: 280px;
       --start-height-p: 74px;
       --start-font-p: 34px;
       --start-x-p: 0px;
@@ -312,44 +311,137 @@
       animation-delay:-3s;
     }
 
-    .top-logo{
-      position:absolute;
-      top:12px;
-      left:12px;
-      z-index:20;
-      user-select:none;
-      pointer-events:none;
-      filter:drop-shadow(0 4px 0 rgba(255,255,255,.38));
-    }
-
-    .top-logo img{
-      width:min(156px, 32vw);
-      height:auto;
-      display:block;
-    }
-
     .shell{
       width:min(100%, 980px);
       margin:0 auto;
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap:14px;
-      padding-top:94px;
+      gap:16px;
+      padding-top:18px;
       position:relative;
       z-index:2;
     }
 
-    .title{
-      margin:0;
-      color:var(--ink);
-      text-shadow:0 2px 0 rgba(255,255,255,.55);
-      font-weight:700;
-      line-height:1;
-      text-align:center;
-      letter-spacing:.2px;
-      font-size:min(var(--game-title-size-p), 15vw);
-      transform:translate(var(--game-title-x-p), var(--game-title-y-p));
+    .top-strip{
+      width:min(100%, 960px);
+      min-height:108px;
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border:4px solid var(--line);
+      border-radius:34px;
+      box-shadow:0 10px 0 rgba(0,0,0,.28);
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .strip-title{
+      min-width:140px;
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+    }
+
+    .strip-title-text{
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      line-height:.84;
+      color:#11101a;
+      font-size:clamp(34px, 6vw, 54px);
+      letter-spacing:-.5px;
+      transform:rotate(-6deg);
+      text-shadow:
+        -4px -4px 0 #fff,
+         4px -4px 0 #fff,
+        -4px  4px 0 #fff,
+         4px  4px 0 #fff,
+         0   -4px 0 #fff,
+         0    4px 0 #fff,
+        -4px  0   0 #fff,
+         4px  0   0 #fff,
+         0    7px 0 rgba(0,0,0,.05);
+      filter:drop-shadow(0 6px 0 rgba(0,0,0,.04));
+      user-select:none;
+      pointer-events:none;
+    }
+
+    .strip-title-text .word-top{
+      transform:translateY(-6px);
+    }
+
+    .strip-title-text .word-bottom{
+      transform:translateY(2px);
+    }
+
+    .strip-scores{
+      flex:1 1 auto;
+      min-width:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .score-chip{
+      min-width:150px;
+      max-width:260px;
+      min-height:58px;
+      padding:8px 12px;
+      border-radius:22px;
+      border:3px solid var(--line);
+      background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
+      box-shadow:0 6px 0 rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:space-between;
+    }
+
+    .score-chip-name{
+      flex:1 1 auto;
+      min-width:0;
+      color:#173e73;
+      font-size:22px;
+      line-height:1.1;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      text-align:right;
+    }
+
+    .score-chip-num{
+      width:38px;
+      height:38px;
+      border-radius:14px;
+      border:3px solid var(--line);
+      background:var(--gold);
+      box-shadow:0 4px 0 rgba(0,0,0,.16);
+      color:#3f2b0c;
+      display:grid;
+      place-items:center;
+      font-size:20px;
+      flex:0 0 auto;
+      direction:ltr;
+    }
+
+    .strip-logo{
+      min-width:110px;
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      user-select:none;
+      pointer-events:none;
+      filter:drop-shadow(0 4px 0 rgba(255,255,255,.38));
+    }
+
+    .strip-logo img{
+      width:min(146px, 30vw);
+      height:auto;
+      display:block;
     }
 
     .board{
@@ -533,7 +625,7 @@
       height:var(--start-height-p);
       border-radius:28px;
       border:6px solid #000;
-      background:linear-gradient(180deg, var(--start) 0%, var(--start-2) 100%);
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
       color:#fff;
       font-size:var(--start-font-p);
       font-weight:700;
@@ -545,7 +637,7 @@
       align-items:center;
       justify-content:center;
       text-align:center;
-      padding:0;
+      padding:0 18px;
       text-shadow:0 3px 0 rgba(0,0,0,.16);
     }
 
@@ -569,14 +661,56 @@
       50%{ transform:translateY(-10px); }
     }
 
-    @media (max-width:700px){
+    @media (max-width:760px){
       .page{
         padding:12px 12px calc(var(--footer-space-p) + var(--safe-bottom));
       }
 
       .shell{
-        padding-top:92px;
         gap:14px;
+        padding-top:14px;
+      }
+
+      .top-strip{
+        padding:14px 12px;
+        border-radius:28px;
+        gap:10px;
+      }
+
+      .strip-title{
+        min-width:106px;
+      }
+
+      .strip-title-text{
+        font-size:clamp(26px, 6vw, 42px);
+      }
+
+      .strip-scores{
+        gap:8px;
+      }
+
+      .score-chip{
+        min-width:126px;
+        min-height:52px;
+        padding:6px 10px;
+      }
+
+      .score-chip-name{
+        font-size:18px;
+      }
+
+      .score-chip-num{
+        width:34px;
+        height:34px;
+        font-size:18px;
+      }
+
+      .strip-logo{
+        min-width:76px;
+      }
+
+      .strip-logo img{
+        width:min(110px, 24vw);
       }
 
       .board{
@@ -593,10 +727,6 @@
       .cat-visual img{
         max-width:84%;
       }
-
-      .top-logo img{
-        width:min(142px, 30vw);
-      }
     }
 
     @media (orientation:landscape){
@@ -605,24 +735,47 @@
         padding:10px 14px calc(var(--footer-space-l) + var(--safe-bottom));
       }
 
-      .top-logo{
-        top:12px;
-        left:12px;
-      }
-
-      .top-logo img{
-        width:118px;
-      }
-
       .shell{
         width:min(100%, 1800px);
-        padding-top:22px;
-        gap:10px;
+        padding-top:16px;
+        gap:12px;
       }
 
-      .title{
-        font-size:min(var(--game-title-size-l), 4.2vw);
-        transform:translate(var(--game-title-x-l), var(--game-title-y-l));
+      .top-strip{
+        width:min(100%, 1780px);
+        min-height:88px;
+        padding:10px 16px;
+        border-radius:30px;
+      }
+
+      .strip-title{
+        min-width:120px;
+      }
+
+      .strip-title-text{
+        font-size:34px;
+      }
+
+      .strip-logo img{
+        width:104px;
+      }
+
+      .score-chip{
+        min-width:132px;
+        max-width:220px;
+        min-height:48px;
+        border-width:3px;
+        box-shadow:0 5px 0 rgba(0,0,0,.16);
+      }
+
+      .score-chip-name{
+        font-size:18px;
+      }
+
+      .score-chip-num{
+        width:32px;
+        height:32px;
+        font-size:16px;
       }
 
       .board{
@@ -736,12 +889,31 @@
       <span class="floater f4"></span>
     </div>
 
-    <div class="top-logo" aria-label="صندوق المسابقات">
-      <img src="logo.PNG" alt="صندوق المسابقات">
-    </div>
-
     <main class="shell">
-      <h1 class="title">لعبة بدون كلام</h1>
+      <section class="top-strip" aria-label="معلومات اللعبة">
+        <div class="strip-title" aria-hidden="true">
+          <div class="strip-title-text">
+            <span class="word-top">بدون</span>
+            <span class="word-bottom">كلام</span>
+          </div>
+        </div>
+
+        <div class="strip-scores" aria-label="نتائج الفريقين">
+          <div class="score-chip">
+            <div class="score-chip-name" id="team1Name">الفريق الأول</div>
+            <div class="score-chip-num" id="team1Score">0</div>
+          </div>
+
+          <div class="score-chip">
+            <div class="score-chip-name" id="team2Name">الفريق الثاني</div>
+            <div class="score-chip-num" id="team2Score">0</div>
+          </div>
+        </div>
+
+        <div class="strip-logo" aria-label="صندوق المسابقات">
+          <img src="logo.PNG" alt="صندوق المسابقات">
+        </div>
+      </section>
 
       <section class="board" aria-label="الكتاغوريات">
         <button class="cat" type="button" data-key="hkm" data-name="حكم وأمثال">
@@ -790,8 +962,25 @@
     const startBtn = document.getElementById("startBtn");
     const homeBtn = document.getElementById("homeBtn");
 
+    const team1NameEl = document.getElementById("team1Name");
+    const team2NameEl = document.getElementById("team2Name");
+    const team1ScoreEl = document.getElementById("team1Score");
+    const team2ScoreEl = document.getElementById("team2Score");
+
     const savedKey = sessionStorage.getItem("bdonKalam_categoryKey") || "";
     let selectedKey = savedKey;
+
+    function loadHeaderData() {
+      const team1 = sessionStorage.getItem("bdonKalam_team1") || "الفريق الأول";
+      const team2 = sessionStorage.getItem("bdonKalam_team2") || "الفريق الثاني";
+      const score1 = sessionStorage.getItem("bdonKalam_score1") || "0";
+      const score2 = sessionStorage.getItem("bdonKalam_score2") || "0";
+
+      team1NameEl.textContent = team1;
+      team2NameEl.textContent = team2;
+      team1ScoreEl.textContent = score1;
+      team2ScoreEl.textContent = score2;
+    }
 
     function applySelection(key) {
       selectedKey = key || "";
@@ -823,6 +1012,7 @@
       window.location.href = "index.html";
     });
 
+    loadHeaderData();
     applySelection(savedKey);
   </script>
 </body>

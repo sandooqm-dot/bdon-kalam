@@ -31,9 +31,11 @@
       --blue-2:#67b8ff;
       --blue-dark:#2d3f68;
 
-      /* ✅ تم تغميق خلفية بطاقات الصور قليلاً أكثر */
       --card-bg:#A9784C;
-      --selected:#D2A268;
+
+      /* ✅ لون اختيار أوضح بكثير */
+      --selected:#D8A55A;
+      --selected-ring:#F6D37A;
 
       --black:#101010;
       --line:#1d1922;
@@ -465,16 +467,30 @@
       padding:8px 8px 6px;
       height:var(--card-h);
       overflow:hidden;
+      position:relative;
     }
 
     .cat:active{
       transform:translateY(2px) scale(.99);
     }
 
+    /* ✅ تحسين وضوح الاختيار */
     .cat.selected{
       background:var(--selected);
-      border-color:var(--gold);
-      box-shadow:0 0 0 4px rgba(244,181,18,.22), 0 8px 0 rgba(0,0,0,.28);
+      border-color:#f3c14f;
+      box-shadow:
+        0 0 0 6px rgba(246,211,122,.85),
+        0 0 0 12px rgba(246,211,122,.25),
+        0 8px 0 rgba(0,0,0,.28);
+    }
+
+    .cat.selected::after{
+      content:"";
+      position:absolute;
+      inset:8px;
+      border-radius:22px;
+      border:3px solid rgba(255,244,207,.85);
+      pointer-events:none;
     }
 
     .cat-title{
@@ -720,6 +736,18 @@
         border-width:5px;
       }
 
+      .cat.selected{
+        box-shadow:
+          0 0 0 5px rgba(246,211,122,.85),
+          0 0 0 10px rgba(246,211,122,.22),
+          0 8px 0 rgba(0,0,0,.28);
+      }
+
+      .cat.selected::after{
+        inset:7px;
+        border-radius:19px;
+      }
+
       .cat-visual img{
         max-width:84%;
       }
@@ -836,6 +864,18 @@
         border-radius:20px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
         padding:6px 8px 5px;
+      }
+
+      .cat.selected{
+        box-shadow:
+          0 0 0 5px rgba(246,211,122,.82),
+          0 0 0 10px rgba(246,211,122,.18),
+          0 5px 0 rgba(0,0,0,.24);
+      }
+
+      .cat.selected::after{
+        inset:6px;
+        border-radius:15px;
       }
 
       .cat-visual img{

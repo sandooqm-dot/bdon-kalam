@@ -39,9 +39,6 @@
       --shadow:#17131d;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-      /* =========================================================
-         ========== تحكم عام بالعنوان الرئيسي ==========
-         ========================================================= */
       --game-title-size-p: 62px;
       --game-title-x-p: 0px;
       --game-title-y-p: -6px;
@@ -50,9 +47,6 @@
       --game-title-x-l: 0px;
       --game-title-y-l: -2px;
 
-      /* =========================================================
-         ========== تحكم بزر التالي ==========
-         ========================================================= */
       --start-width-p: 280px;
       --start-height-p: 74px;
       --start-font-p: 34px;
@@ -67,9 +61,6 @@
       --start-y-l: 0px;
       --start-bottom-l: 14px;
 
-      /* =========================================================
-         ========== تحكم بزر المنزل ==========
-         ========================================================= */
       --home-size-p: 76px;
       --home-icon-size-p: 32px;
       --home-x-p: 0px;
@@ -84,15 +75,9 @@
       --home-left-l: 20px;
       --home-bottom-l: 14px;
 
-      /* =========================================================
-         ========== مساحة سفلية حتى لا يغطي الزر المحتوى ==========
-         ========================================================= */
       --footer-space-p: 136px;
       --footer-space-l: 96px;
 
-      /* =========================================================
-         ========== تحكم بلوحة الكتاغوريات ==========
-         ========================================================= */
       --board-width-p: 820px;
       --board-width-l: 1720px;
       --board-gap-p: 16px;
@@ -102,11 +87,6 @@
       --board-radius-p: 34px;
       --board-radius-l: 34px;
 
-      /* =========================================================
-         ========== تحكم بكل كتاغوري ==========
-         ========================================================= */
-
-      /* ===== حكم وأمثال ===== */
       --hkm-card-h-p: 210px;
       --hkm-img-h-p: 104px;
       --hkm-title-h-p: 44px;
@@ -122,7 +102,6 @@
       --hkm-scale: 2.00;
       --hkm-y: 6px;
 
-      /* ===== مسلسلات رمضانية ===== */
       --ram-card-h-p: 210px;
       --ram-img-h-p: 104px;
       --ram-title-h-p: 44px;
@@ -138,7 +117,6 @@
       --ram-scale: 2.00;
       --ram-y: 4px;
 
-      /* ===== وظائف ومهن ===== */
       --job-card-h-p: 210px;
       --job-img-h-p: 104px;
       --job-title-h-p: 44px;
@@ -154,7 +132,6 @@
       --job-scale: 2.05;
       --job-y: 6px;
 
-      /* ===== أدوات المطبخ ===== */
       --kit-card-h-p: 210px;
       --kit-img-h-p: 104px;
       --kit-title-h-p: 44px;
@@ -170,7 +147,6 @@
       --kit-scale: 1.95;
       --kit-y: 6px;
 
-      /* ===== أغاني ===== */
       --song-card-h-p: 210px;
       --song-img-h-p: 104px;
       --song-title-h-p: 44px;
@@ -186,7 +162,6 @@
       --song-scale: 2.00;
       --song-y: 8px;
 
-      /* ===== أماكن ومواقع ===== */
       --place-card-h-p: 210px;
       --place-img-h-p: 82px;
       --place-title-h-p: 44px;
@@ -421,11 +396,22 @@
       background:var(--gold);
       box-shadow:0 4px 0 rgba(0,0,0,.16);
       color:#3f2b0c;
-      display:grid;
-      place-items:center;
-      font-size:20px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       flex:0 0 auto;
+      padding:0;
       direction:ltr;
+      text-align:center;
+      line-height:1;
+      font-weight:700;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .score-chip-num span{
+      display:block;
+      line-height:1;
+      transform:translateY(0);
     }
 
     .strip-logo{
@@ -901,12 +887,12 @@
         <div class="strip-scores" aria-label="نتائج الفريقين">
           <div class="score-chip">
             <div class="score-chip-name" id="team1Name">الفريق الأول</div>
-            <div class="score-chip-num" id="team1Score">0</div>
+            <div class="score-chip-num"><span id="team1Score">0</span></div>
           </div>
 
           <div class="score-chip">
             <div class="score-chip-name" id="team2Name">الفريق الثاني</div>
-            <div class="score-chip-num" id="team2Score">0</div>
+            <div class="score-chip-num"><span id="team2Score">0</span></div>
           </div>
         </div>
 

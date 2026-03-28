@@ -31,9 +31,9 @@
       --blue-2:#67b8ff;
       --blue-dark:#2d3f68;
 
-      /* ✅ تم تغميق خلفية بطاقات الصور قليلاً */
-      --card-bg:#CDB295;
-      --selected:#f8e2a0;
+      /* ✅ تم تغميق خلفية البطاقات بشكل أوضح إلى عودي/بني */
+      --card-bg:#B88C61;
+      --selected:#D2A268;
 
       --black:#101010;
       --line:#1d1922;
@@ -477,10 +477,11 @@
       box-shadow:0 0 0 4px rgba(244,181,18,.22), 0 8px 0 rgba(0,0,0,.28);
     }
 
+    /* ✅ لون النص صار أبيض مع ظل واضح */
     .cat-title{
       width:100%;
       text-align:center;
-      color:#12233f;
+      color:#fffdf7;
       font-weight:700;
       line-height:1.12;
       min-height:var(--title-h);
@@ -491,7 +492,9 @@
       margin:0;
       font-size:min(var(--title-size), 8vw);
       transform:translateY(var(--title-y));
-      text-shadow:0 1px 0 rgba(255,255,255,.18);
+      text-shadow:
+        0 2px 0 rgba(0,0,0,.28),
+        0 0 10px rgba(0,0,0,.10);
     }
 
     .cat-visual{

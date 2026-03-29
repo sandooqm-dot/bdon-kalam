@@ -1,1 +1,1284 @@
-.
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>لعبة بدون كلام - الباركود</title>
+
+  <style>
+    @font-face{
+      font-family:"Estedad";
+      src:url("Estedad-Bold.ttf") format("truetype");
+      font-style:normal;
+      font-weight:700;
+      font-display:swap;
+    }
+
+    :root{
+      --bg:#f7efd8;
+      --dot:#e7d8ae;
+      --ink:#18131d;
+      --white:#fffdf7;
+
+      --panel:#f8efd6;
+      --panel-2:#f0e0b9;
+
+      --gold:#f2b84a;
+      --gold-dark:#d9981e;
+
+      --blue:#8ecbff;
+      --blue-2:#67b8ff;
+
+      --green:#0b6a39;
+      --green-dark:#08582f;
+      --green-soft:#dfe8c8;
+
+      --line:#1d1922;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+
+      --footer-space-p: 122px;
+      --footer-space-l: 102px;
+    }
+
+    *{
+      box-sizing:border-box;
+      -webkit-tap-highlight-color:transparent;
+      font-family:"Estedad", Tahoma, Arial, "Segoe UI", sans-serif;
+    }
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:var(--bg);
+      color:var(--ink);
+    }
+
+    body{
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    .page{
+      position:relative;
+      min-height:100dvh;
+      overflow-x:hidden;
+      overflow-y:auto;
+      padding:14px 14px calc(var(--footer-space-p) + var(--safe-bottom));
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.34), transparent 18%),
+        radial-gradient(circle at 83% 16%, rgba(255,255,255,.22), transparent 18%),
+        radial-gradient(circle at 62% 82%, rgba(255,255,255,.16), transparent 20%),
+        linear-gradient(180deg, var(--bg), #f9f1dc 100%);
+    }
+
+    .page::before{
+      content:"";
+      position:absolute;
+      inset:-180px;
+      background-image:radial-gradient(var(--dot) 34%, transparent 36%);
+      background-size:36px 36px;
+      opacity:.68;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .shell{
+      width:min(100%, 980px);
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:16px;
+      padding-top:18px;
+      position:relative;
+      z-index:2;
+    }
+
+    .top-strip{
+      width:min(100%, 960px);
+      min-height:108px;
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border:4px solid var(--line);
+      border-radius:34px;
+      box-shadow:0 10px 0 rgba(0,0,0,.28);
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+    }
+
+    .strip-title{
+      min-width:140px;
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+    }
+
+    .strip-title-text{
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      line-height:.84;
+      color:#11101a;
+      font-size:clamp(34px, 6vw, 54px);
+      letter-spacing:-.5px;
+      transform:rotate(-6deg);
+      text-shadow:
+        -4px -4px 0 #fff,
+         4px -4px 0 #fff,
+        -4px  4px 0 #fff,
+         4px  4px 0 #fff,
+         0   -4px 0 #fff,
+         0    4px 0 #fff,
+        -4px  0   0 #fff,
+         4px  0   0 #fff,
+         0    7px 0 rgba(0,0,0,.05);
+      filter:drop-shadow(0 6px 0 rgba(0,0,0,.04));
+      user-select:none;
+      pointer-events:none;
+    }
+
+    .strip-title-text .word-top{ transform:translateY(-6px); }
+    .strip-title-text .word-bottom{ transform:translateY(2px); }
+
+    .strip-scores{
+      flex:1 1 auto;
+      min-width:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .score-chip{
+      min-width:150px;
+      max-width:260px;
+      min-height:58px;
+      padding:8px 12px;
+      border-radius:22px;
+      border:3px solid var(--line);
+      background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
+      box-shadow:0 6px 0 rgba(0,0,0,.18);
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:space-between;
+    }
+
+    .score-chip-name{
+      flex:1 1 auto;
+      min-width:0;
+      color:#173e73;
+      font-size:22px;
+      line-height:1.15;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      text-align:right;
+      display:flex;
+      align-items:center;
+      min-height:100%;
+      transform:translateY(-1px);
+    }
+
+    .score-chip-num{
+      width:38px;
+      height:38px;
+      border-radius:14px;
+      border:3px solid var(--line);
+      background:var(--gold);
+      box-shadow:0 4px 0 rgba(0,0,0,.16);
+      color:#3f2b0c;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+      padding:0;
+      direction:ltr;
+      text-align:center;
+      line-height:1;
+      font-weight:700;
+      font-variant-numeric:tabular-nums;
+    }
+
+    .strip-logo{
+      min-width:110px;
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+      user-select:none;
+      pointer-events:none;
+      filter:drop-shadow(0 4px 0 rgba(255,255,255,.38));
+    }
+
+    .strip-logo img{
+      width:min(146px, 30vw);
+      height:auto;
+      display:block;
+    }
+
+    .timer-row{
+      width:min(100%, 960px);
+      display:flex;
+      justify-content:flex-start;
+      direction:ltr;
+    }
+
+    .timer-cluster{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .timer-dock{
+      min-width:230px;
+      height:72px;
+      padding:0 14px;
+      border-radius:999px;
+      border:4px solid var(--line);
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      box-shadow:0 8px 0 rgba(0,0,0,.22);
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .timer-icon,
+    .timer-settings{
+      width:42px;
+      height:42px;
+      border-radius:50%;
+      border:3px solid var(--green);
+      background:#f7f4e8;
+      color:var(--green);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex:0 0 auto;
+      font-size:22px;
+      line-height:1;
+    }
+
+    .timer-value{
+      min-width:84px;
+      text-align:center;
+      color:var(--green);
+      font-size:34px;
+      line-height:1;
+      font-variant-numeric:tabular-nums;
+      letter-spacing:.5px;
+    }
+
+    .duration-btn{
+      min-width:136px;
+      height:60px;
+      padding:0 18px;
+      border:none;
+      border-radius:999px;
+      border:4px solid var(--line);
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color:#fffdf7;
+      box-shadow:0 8px 0 rgba(0,0,0,.22);
+      cursor:pointer;
+      font-size:24px;
+      line-height:1;
+      text-shadow:0 2px 0 rgba(0,0,0,.16);
+    }
+
+    .duration-btn:active{
+      transform:translateY(2px) scale(.99);
+    }
+
+    .duration-menu{
+      position:absolute;
+      top:84px;
+      left:0;
+      display:none;
+      gap:8px;
+      flex-wrap:wrap;
+      width:min(420px, 92vw);
+      padding:12px;
+      border-radius:24px;
+      border:4px solid var(--line);
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      box-shadow:0 10px 0 rgba(0,0,0,.22);
+      z-index:10;
+    }
+
+    .duration-menu.show{
+      display:flex;
+    }
+
+    .duration-option{
+      min-width:88px;
+      height:50px;
+      border:none;
+      border-radius:16px;
+      border:3px solid var(--line);
+      background:#fff8e9;
+      color:#17426a;
+      box-shadow:0 4px 0 rgba(0,0,0,.18);
+      cursor:pointer;
+      font-size:21px;
+      line-height:1;
+    }
+
+    .duration-option.active{
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color:#fffdf7;
+    }
+
+    .barcode-stage{
+      width:min(100%, 960px);
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
+      border:4px solid var(--line);
+      border-radius:34px;
+      box-shadow:0 10px 0 rgba(0,0,0,.28);
+      padding:22px 18px 28px;
+    }
+
+    .barcode-head{
+      text-align:center;
+      margin-bottom:18px;
+    }
+
+    .barcode-title{
+      margin:0;
+      color:var(--green);
+      font-size:clamp(24px, 4.5vw, 42px);
+      line-height:1.5;
+    }
+
+    .barcode-sub{
+      margin:8px 0 0;
+      color:#17426a;
+      font-size:clamp(18px, 3.2vw, 24px);
+      opacity:.88;
+    }
+
+    .poster-trigger{
+      display:flex;
+      justify-content:center;
+      background:none;
+      border:none;
+      width:100%;
+      cursor:pointer;
+      padding:0;
+    }
+
+    .poster-trigger:active{
+      transform:scale(.99);
+    }
+
+    .qr-poster{
+      width:min(100%, 470px);
+      background:#e6edd2;
+      border-radius:28px;
+      box-shadow:0 10px 22px rgba(0,0,0,.12);
+      padding:18px 18px 16px;
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(0,0,0,.05);
+    }
+
+    .qr-poster.large{
+      width:min(100%, 1120px);
+      min-height:min(78vh, 760px);
+      border-radius:0;
+      box-shadow:none;
+      padding:28px 32px 26px;
+      background:#e6edd2;
+    }
+
+    .poster-inner{
+      display:grid;
+      grid-template-columns:1fr 110px;
+      grid-template-rows:auto auto 1fr auto;
+      gap:10px 12px;
+      align-items:start;
+    }
+
+    .qr-poster.large .poster-inner{
+      grid-template-columns:1fr 190px;
+      gap:14px 18px;
+    }
+
+    .poster-top-mark{
+      position:absolute;
+      top:18px;
+      left:20px;
+      width:42px;
+      height:42px;
+      object-fit:contain;
+      display:block;
+      opacity:.95;
+    }
+
+    .qr-poster.large .poster-top-mark{
+      top:28px;
+      left:34px;
+      width:70px;
+      height:70px;
+    }
+
+    .poster-headline{
+      grid-column:1 / -1;
+      margin:0;
+      text-align:center;
+      color:#f38b19;
+      font-size:clamp(24px, 4.6vw, 40px);
+      line-height:1.2;
+      padding-top:8px;
+    }
+
+    .qr-poster.large .poster-headline{
+      font-size:clamp(38px, 4.1vw, 68px);
+      padding-top:18px;
+    }
+
+    .poster-list{
+      grid-column:1 / -1;
+      margin:0;
+      padding:0 0 0 0;
+      list-style:none;
+      color:#f38b19;
+      font-size:clamp(13px, 2.5vw, 21px);
+      line-height:1.7;
+      text-align:right;
+    }
+
+    .poster-list li{
+      margin:2px 0;
+    }
+
+    .qr-poster.large .poster-list{
+      font-size:clamp(24px, 2.2vw, 40px);
+      line-height:1.55;
+    }
+
+    .poster-boy{
+      align-self:end;
+      justify-self:start;
+      width:112px;
+      max-width:100%;
+      display:block;
+      object-fit:contain;
+      filter:drop-shadow(0 2px 0 rgba(0,0,0,.06));
+    }
+
+    .qr-poster.large .poster-boy{
+      width:320px;
+    }
+
+    .poster-qr-wrap{
+      align-self:end;
+      justify-self:end;
+      text-align:center;
+    }
+
+    .poster-qr{
+      width:92px;
+      height:92px;
+      object-fit:cover;
+      border-radius:8px;
+      display:block;
+      margin:0 auto 8px;
+      background:#fff;
+      padding:4px;
+    }
+
+    .qr-poster.large .poster-qr{
+      width:156px;
+      height:156px;
+      padding:6px;
+      margin-bottom:10px;
+    }
+
+    .poster-qr-text{
+      color:#f38b19;
+      font-size:clamp(11px, 2vw, 18px);
+      line-height:1.2;
+      text-align:center;
+    }
+
+    .qr-poster.large .poster-qr-text{
+      font-size:clamp(22px, 1.7vw, 30px);
+    }
+
+    .poster-bottom{
+      grid-column:1 / -1;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      min-height:52px;
+    }
+
+    .poster-game-logo{
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      line-height:.84;
+      color:#0e5a30;
+      font-size:clamp(26px, 5vw, 44px);
+      letter-spacing:-.5px;
+      text-shadow:
+        -4px -4px 0 #fff,
+         4px -4px 0 #fff,
+        -4px  4px 0 #fff,
+         4px  4px 0 #fff,
+         0   -4px 0 #fff,
+         0    4px 0 #fff,
+        -4px  0   0 #fff,
+         4px  0   0 #fff,
+         0    6px 0 rgba(0,0,0,.06);
+      transform:rotate(-4deg);
+      user-select:none;
+    }
+
+    .qr-poster.large .poster-game-logo{
+      font-size:clamp(44px, 3.2vw, 78px);
+    }
+
+    .poster-game-logo .word-top{ transform:translateY(-3px); }
+    .poster-game-logo .word-bottom{ transform:translateY(2px); }
+
+    .poster-note{
+      margin-top:14px;
+      text-align:center;
+      color:#17426a;
+      font-size:clamp(15px, 2.7vw, 22px);
+    }
+
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,.58);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:90;
+    }
+
+    .overlay.show{
+      display:flex;
+    }
+
+    .modal-shell{
+      position:relative;
+      width:min(100%, 1200px);
+    }
+
+    .close-modal{
+      position:absolute;
+      top:-8px;
+      right:-8px;
+      width:56px;
+      height:56px;
+      border:none;
+      border-radius:50%;
+      border:4px solid #fff;
+      background:#151515;
+      color:#fff;
+      font-size:34px;
+      line-height:1;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:5;
+    }
+
+    .answer-card{
+      width:min(100%, 1120px);
+      min-height:min(78vh, 700px);
+      background:#ececec;
+      border-radius:34px;
+      border:6px solid var(--green);
+      box-shadow:0 16px 28px rgba(0,0,0,.22);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .answer-top{
+      height:28px;
+      background:var(--green);
+    }
+
+    .answer-content{
+      padding:34px 24px 120px;
+      text-align:center;
+    }
+
+    .answer-title{
+      margin:0 0 32px;
+      color:var(--green);
+      font-size:clamp(34px, 6vw, 76px);
+      line-height:1.15;
+    }
+
+    .answer-options{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:22px;
+      width:min(100%, 720px);
+      margin:0 auto;
+    }
+
+    .answer-btn{
+      min-height:90px;
+      border:none;
+      border-radius:999px;
+      border:5px solid var(--green);
+      background:#e3ead2;
+      color:var(--green);
+      box-shadow:0 8px 0 rgba(0,0,0,.18);
+      cursor:pointer;
+      font-size:clamp(28px, 4vw, 50px);
+      line-height:1;
+      padding:12px 18px;
+    }
+
+    .answer-btn.none{
+      grid-column:1 / -1;
+      width:min(100%, 280px);
+      margin:0 auto;
+      background:#d5eb7a;
+    }
+
+    .answer-back{
+      position:absolute;
+      right:18px;
+      bottom:18px;
+      min-width:220px;
+      height:72px;
+      border:none;
+      border-radius:999px;
+      border:5px solid var(--green);
+      background:linear-gradient(180deg, #f8f6e5 0%, #dfe8c8 100%);
+      color:var(--green);
+      box-shadow:0 8px 0 rgba(0,0,0,.18);
+      cursor:pointer;
+      font-size:clamp(24px, 3vw, 42px);
+      line-height:1;
+      padding:0 22px;
+    }
+
+    .bottom-bar{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:var(--safe-bottom);
+      height:var(--footer-space-p);
+      pointer-events:none;
+      z-index:35;
+    }
+
+    .main-action{
+      position:absolute;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      min-width:min(420px, calc(100vw - 48px));
+      height:82px;
+      border:none;
+      border-radius:28px;
+      border:6px solid #000;
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color:#fff;
+      font-size:clamp(34px, 5vw, 48px);
+      font-weight:700;
+      box-shadow:0 8px 0 rgba(0,0,0,.28);
+      cursor:pointer;
+      pointer-events:auto;
+      text-shadow:0 3px 0 rgba(0,0,0,.16);
+      padding:0 24px;
+    }
+
+    .main-action:active{
+      transform:translateX(-50%) translateY(2px) scale(.99);
+    }
+
+    .main-action.alt{
+      background:linear-gradient(180deg, var(--green) 0%, var(--green-dark) 100%);
+    }
+
+    @keyframes floaty{
+      0%,100%{ transform:translateY(0); }
+      50%{ transform:translateY(-10px); }
+    }
+
+    @media (max-width:700px){
+      .page{
+        padding:12px 12px calc(var(--footer-space-p) + var(--safe-bottom));
+      }
+
+      .shell{
+        gap:14px;
+        padding-top:14px;
+      }
+
+      .top-strip{
+        padding:14px 12px;
+        border-radius:28px;
+        gap:10px;
+      }
+
+      .strip-title{
+        min-width:106px;
+      }
+
+      .strip-title-text{
+        font-size:clamp(26px, 6vw, 42px);
+      }
+
+      .strip-scores{
+        gap:8px;
+      }
+
+      .score-chip{
+        min-width:126px;
+        min-height:52px;
+        padding:6px 10px;
+      }
+
+      .score-chip-name{
+        font-size:18px;
+      }
+
+      .score-chip-num{
+        width:34px;
+        height:34px;
+        font-size:18px;
+      }
+
+      .strip-logo{
+        min-width:76px;
+      }
+
+      .strip-logo img{
+        width:min(110px, 24vw);
+      }
+
+      .timer-dock{
+        min-width:210px;
+        height:66px;
+      }
+
+      .timer-value{
+        font-size:30px;
+      }
+
+      .duration-btn{
+        height:56px;
+        min-width:122px;
+        font-size:22px;
+      }
+
+      .barcode-stage{
+        padding:18px 12px 24px;
+        border-radius:28px;
+      }
+
+      .answer-options{
+        grid-template-columns:1fr;
+      }
+
+      .answer-btn.none{
+        width:100%;
+      }
+
+      .answer-back{
+        left:18px;
+        right:18px;
+        min-width:0;
+        width:auto;
+      }
+    }
+
+    @media (orientation:landscape){
+      .page{
+        padding:10px 14px calc(var(--footer-space-l) + var(--safe-bottom));
+      }
+
+      .shell{
+        width:min(100%, 1780px);
+        gap:12px;
+        padding-top:16px;
+      }
+
+      .top-strip,
+      .timer-row,
+      .barcode-stage{
+        width:min(100%, 1780px);
+      }
+
+      .top-strip{
+        min-height:88px;
+        padding:10px 16px;
+        border-radius:30px;
+      }
+
+      .strip-title{
+        min-width:120px;
+      }
+
+      .strip-title-text{
+        font-size:34px;
+      }
+
+      .strip-logo img{
+        width:104px;
+      }
+
+      .score-chip{
+        min-width:132px;
+        max-width:220px;
+        min-height:48px;
+        border-width:3px;
+        box-shadow:0 5px 0 rgba(0,0,0,.16);
+      }
+
+      .score-chip-name{
+        font-size:18px;
+      }
+
+      .score-chip-num{
+        width:32px;
+        height:32px;
+        font-size:16px;
+      }
+
+      .timer-dock{
+        min-width:250px;
+        height:64px;
+        border-width:3px;
+        box-shadow:0 5px 0 rgba(0,0,0,.20);
+      }
+
+      .timer-icon,
+      .timer-settings{
+        width:38px;
+        height:38px;
+        font-size:20px;
+      }
+
+      .timer-value{
+        font-size:30px;
+      }
+
+      .duration-btn{
+        height:54px;
+        border-width:3px;
+        box-shadow:0 5px 0 rgba(0,0,0,.20);
+        font-size:22px;
+      }
+
+      .barcode-stage{
+        padding:18px 18px 24px;
+        border-radius:30px;
+      }
+
+      .main-action{
+        height:74px;
+        min-width:360px;
+        border-width:4px;
+        box-shadow:0 5px 0 rgba(0,0,0,.24);
+        font-size:38px;
+        bottom:14px;
+      }
+
+      .bottom-bar{
+        height:var(--footer-space-l);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <main class="shell">
+      <section class="top-strip" aria-label="معلومات اللعبة">
+        <div class="strip-title" aria-hidden="true">
+          <div class="strip-title-text">
+            <span class="word-top">بدون</span>
+            <span class="word-bottom">كلام</span>
+          </div>
+        </div>
+
+        <div class="strip-scores" aria-label="نتائج الفريقين">
+          <div class="score-chip">
+            <div class="score-chip-name" id="team1Name">الفريق الأول</div>
+            <div class="score-chip-num"><span id="team1Score">0</span></div>
+          </div>
+
+          <div class="score-chip">
+            <div class="score-chip-name" id="team2Name">الفريق الثاني</div>
+            <div class="score-chip-num"><span id="team2Score">0</span></div>
+          </div>
+        </div>
+
+        <div class="strip-logo" aria-label="صندوق المسابقات">
+          <img src="logo.PNG" alt="صندوق المسابقات">
+        </div>
+      </section>
+
+      <div class="timer-row">
+        <div class="timer-cluster">
+          <div class="timer-dock" aria-label="المؤقت">
+            <div class="timer-icon">▶</div>
+            <div class="timer-value" id="timerDisplay">01:00</div>
+            <div class="timer-settings">⏱</div>
+          </div>
+
+          <button id="durationBtn" class="duration-btn" type="button">60 ثانية</button>
+
+          <div id="durationMenu" class="duration-menu">
+            <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
+            <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
+            <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
+            <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
+          </div>
+        </div>
+      </div>
+
+      <section class="barcode-stage">
+        <div class="barcode-head">
+          <h2 class="barcode-title">امسح الـ QR وحاول تشرح لفريقك بدون ولا كلمة</h2>
+          <p class="barcode-sub" id="metaLine"></p>
+        </div>
+
+        <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير البطاقة">
+          <div class="qr-poster">
+            <img class="poster-top-mark" src="logo.PNG" alt="">
+            <div class="poster-inner">
+              <h3 class="poster-headline">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
+
+              <ul class="poster-list">
+                <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
+                <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
+                <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
+                <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
+              </ul>
+
+              <img class="poster-boy" src="boy.PNG" alt="">
+              <div class="poster-qr-wrap">
+                <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
+                <div class="poster-qr-text">امسح الباركود</div>
+              </div>
+
+              <div class="poster-bottom">
+                <div class="poster-game-logo">
+                  <span class="word-top">بدون</span>
+                  <span class="word-bottom">كلام</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </button>
+
+        <div class="poster-note">اضغط على البطاقة لتكبيرها</div>
+      </section>
+    </main>
+
+    <div class="bottom-bar">
+      <button id="mainActionBtn" class="main-action" type="button">ابدأ</button>
+    </div>
+  </div>
+
+  <div id="posterModal" class="overlay" aria-hidden="true">
+    <div class="modal-shell">
+      <button id="closePosterBtn" class="close-modal" type="button" aria-label="إغلاق">×</button>
+
+      <div class="qr-poster large">
+        <img class="poster-top-mark" src="logo.PNG" alt="">
+        <div class="poster-inner">
+          <h3 class="poster-headline">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
+
+          <ul class="poster-list">
+            <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
+            <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
+            <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
+            <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
+          </ul>
+
+          <img class="poster-boy" src="boy.PNG" alt="">
+          <div class="poster-qr-wrap">
+            <img id="qrImageLarge" class="poster-qr" alt="باركود السؤال الكبير">
+            <div class="poster-qr-text">امسح الباركود</div>
+          </div>
+
+          <div class="poster-bottom">
+            <div class="poster-game-logo">
+              <span class="word-top">بدون</span>
+              <span class="word-bottom">كلام</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="answerModal" class="overlay" aria-hidden="true">
+    <div class="answer-card">
+      <div class="answer-top"></div>
+
+      <div class="answer-content">
+        <h3 class="answer-title">مين جاوب؟</h3>
+
+        <div class="answer-options">
+          <button id="answerTeam1" class="answer-btn" type="button">الفريق الأول</button>
+          <button id="answerTeam2" class="answer-btn" type="button">الفريق الثاني</button>
+          <button id="answerNone" class="answer-btn none" type="button">ولا أحد</button>
+        </div>
+      </div>
+
+      <button id="answerBackBtn" class="answer-back" type="button">ارجع للباركود</button>
+    </div>
+  </div>
+
+  <script>
+    const team1NameEl = document.getElementById("team1Name");
+    const team2NameEl = document.getElementById("team2Name");
+    const team1ScoreEl = document.getElementById("team1Score");
+    const team2ScoreEl = document.getElementById("team2Score");
+
+    const timerDisplay = document.getElementById("timerDisplay");
+    const durationBtn = document.getElementById("durationBtn");
+    const durationMenu = document.getElementById("durationMenu");
+    const durationOptions = Array.from(document.querySelectorAll(".duration-option"));
+
+    const mainActionBtn = document.getElementById("mainActionBtn");
+
+    const openPosterBtn = document.getElementById("openPosterBtn");
+    const posterModal = document.getElementById("posterModal");
+    const closePosterBtn = document.getElementById("closePosterBtn");
+
+    const answerModal = document.getElementById("answerModal");
+    const answerTeam1 = document.getElementById("answerTeam1");
+    const answerTeam2 = document.getElementById("answerTeam2");
+    const answerNone = document.getElementById("answerNone");
+    const answerBackBtn = document.getElementById("answerBackBtn");
+
+    const qrImageSmall = document.getElementById("qrImageSmall");
+    const qrImageLarge = document.getElementById("qrImageLarge");
+    const metaLine = document.getElementById("metaLine");
+
+    let selectedDuration = Number(sessionStorage.getItem("bdonKalam_timerDuration") || 60);
+    let remainingSeconds = selectedDuration;
+    let timerInterval = null;
+    let isRunning = false;
+    let roundActive = false;
+
+    function getStoredValue(keys, fallback) {
+      for (const key of keys) {
+        const value = sessionStorage.getItem(key) || localStorage.getItem(key);
+        if (value && String(value).trim()) return String(value).trim();
+      }
+      return fallback;
+    }
+
+    function loadHeaderData() {
+      const team1 = getStoredValue(
+        ["bdonKalam_team1", "bdonKalam_team1Name", "team1", "team1Name"],
+        "الفريق الأول"
+      );
+
+      const team2 = getStoredValue(
+        ["bdonKalam_team2", "bdonKalam_team2Name", "team2", "team2Name"],
+        "الفريق الثاني"
+      );
+
+      const score1 = Number(getStoredValue(["bdonKalam_score1", "team1Score"], "0")) || 0;
+      const score2 = Number(getStoredValue(["bdonKalam_score2", "team2Score"], "0")) || 0;
+
+      team1NameEl.textContent = team1;
+      team2NameEl.textContent = team2;
+      team1ScoreEl.textContent = score1;
+      team2ScoreEl.textContent = score2;
+
+      answerTeam1.textContent = team1;
+      answerTeam2.textContent = team2;
+    }
+
+    function updateScore(teamKey) {
+      const current1 = Number(sessionStorage.getItem("bdonKalam_score1") || "0") || 0;
+      const current2 = Number(sessionStorage.getItem("bdonKalam_score2") || "0") || 0;
+
+      const next1 = teamKey === "team1" ? current1 + 1 : current1;
+      const next2 = teamKey === "team2" ? current2 + 1 : current2;
+
+      sessionStorage.setItem("bdonKalam_score1", String(next1));
+      sessionStorage.setItem("bdonKalam_score2", String(next2));
+
+      team1ScoreEl.textContent = next1;
+      team2ScoreEl.textContent = next2;
+    }
+
+    function formatTime(totalSeconds) {
+      const mins = Math.floor(totalSeconds / 60);
+      const secs = totalSeconds % 60;
+      return `${String(mins).padStart(2, "0")}:${String(secs).padStart(2, "0")}`;
+    }
+
+    function updateTimerDisplay() {
+      timerDisplay.textContent = formatTime(remainingSeconds);
+    }
+
+    function syncDurationButton() {
+      durationBtn.textContent = `${selectedDuration} ثانية`;
+      durationOptions.forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.seconds) === selectedDuration);
+      });
+    }
+
+    function resetTimer(keepRoundClosed = true) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+      isRunning = false;
+      remainingSeconds = selectedDuration;
+      updateTimerDisplay();
+
+      if (keepRoundClosed) roundActive = false;
+      mainActionBtn.textContent = "ابدأ";
+      mainActionBtn.classList.remove("alt");
+      durationBtn.disabled = false;
+      durationBtn.style.opacity = "";
+      durationBtn.style.cursor = "";
+    }
+
+    function startTimer() {
+      if (isRunning) return;
+
+      roundActive = true;
+      isRunning = true;
+      mainActionBtn.textContent = "مين جاوب؟";
+      mainActionBtn.classList.add("alt");
+      durationBtn.disabled = true;
+      durationBtn.style.opacity = ".7";
+      durationBtn.style.cursor = "not-allowed";
+
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        remainingSeconds -= 1;
+        if (remainingSeconds <= 0) {
+          remainingSeconds = 0;
+          updateTimerDisplay();
+          clearInterval(timerInterval);
+          timerInterval = null;
+          isRunning = false;
+          return;
+        }
+        updateTimerDisplay();
+      }, 1000);
+    }
+
+    function openAnswerModal() {
+      answerModal.classList.add("show");
+      answerModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeAnswerModal() {
+      answerModal.classList.remove("show");
+      answerModal.setAttribute("aria-hidden", "true");
+    }
+
+    function openPosterModal() {
+      posterModal.classList.add("show");
+      posterModal.setAttribute("aria-hidden", "false");
+    }
+
+    function closePosterModal() {
+      posterModal.classList.remove("show");
+      posterModal.setAttribute("aria-hidden", "true");
+    }
+
+    function finishRound(scoredTeam = "") {
+      if (scoredTeam === "team1" || scoredTeam === "team2") {
+        updateScore(scoredTeam);
+      }
+      closeAnswerModal();
+      resetTimer(true);
+    }
+
+    function buildRevealUrl() {
+      const categoryKey = sessionStorage.getItem("bdonKalam_categoryKey") || "default";
+      const categoryName = sessionStorage.getItem("bdonKalam_categoryName") || "";
+      const selectedNumber = sessionStorage.getItem("bdonKalam_selectedNumber") || "1";
+
+      const revealUrl = new URL("reveal.html", window.location.href);
+      revealUrl.searchParams.set("cat", categoryKey);
+      revealUrl.searchParams.set("catName", categoryName);
+      revealUrl.searchParams.set("num", selectedNumber);
+
+      metaLine.textContent = categoryName
+        ? `القسم: ${categoryName} — الرقم: ${selectedNumber}`
+        : `الرقم: ${selectedNumber}`;
+
+      return revealUrl.toString();
+    }
+
+    function renderQr() {
+      const revealUrl = buildRevealUrl();
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(revealUrl)}`;
+
+      qrImageSmall.src = qrUrl;
+      qrImageLarge.src = qrUrl;
+    }
+
+    durationBtn.addEventListener("click", () => {
+      if (durationBtn.disabled) return;
+      durationMenu.classList.toggle("show");
+    });
+
+    durationOptions.forEach(btn => {
+      btn.addEventListener("click", () => {
+        selectedDuration = Number(btn.dataset.seconds) || 60;
+        sessionStorage.setItem("bdonKalam_timerDuration", String(selectedDuration));
+        remainingSeconds = selectedDuration;
+        syncDurationButton();
+        updateTimerDisplay();
+        durationMenu.classList.remove("show");
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!durationMenu.contains(e.target) && e.target !== durationBtn) {
+        durationMenu.classList.remove("show");
+      }
+    });
+
+    openPosterBtn.addEventListener("click", openPosterModal);
+    closePosterBtn.addEventListener("click", closePosterModal);
+
+    posterModal.addEventListener("click", (e) => {
+      if (e.target === posterModal) closePosterModal();
+    });
+
+    mainActionBtn.addEventListener("click", () => {
+      if (!roundActive) {
+        startTimer();
+        return;
+      }
+      openAnswerModal();
+    });
+
+    answerTeam1.addEventListener("click", () => finishRound("team1"));
+    answerTeam2.addEventListener("click", () => finishRound("team2"));
+    answerNone.addEventListener("click", () => finishRound(""));
+    answerBackBtn.addEventListener("click", closeAnswerModal);
+
+    answerModal.addEventListener("click", (e) => {
+      if (e.target === answerModal) closeAnswerModal();
+    });
+
+    loadHeaderData();
+    syncDurationButton();
+    updateTimerDisplay();
+    renderQr();
+  </script>
+</body>
+</html>

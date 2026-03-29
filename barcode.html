@@ -30,11 +30,9 @@
       --green-dark:#08582f;
       --poster:#dde4cb;
 
-      --line:#1d1922;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
-
       --footer-space-p: 98px;
-      --footer-space-l: 40px;
+      --footer-space-l: 28px;
     }
 
     *{
@@ -84,7 +82,6 @@
       margin:0 auto;
       display:flex;
       flex-direction:column;
-      align-items:center;
       gap:14px;
       padding-top:18px;
       position:relative;
@@ -92,7 +89,7 @@
     }
 
     .portrait-only{ display:block; }
-    .landscape-only{ display:none; }
+    .landscape-only{ display:none !important; }
 
     .game-logo{
       display:inline-flex;
@@ -120,33 +117,45 @@
     .game-logo .word-top{ transform:translateY(-6px); }
     .game-logo .word-bottom{ transform:translateY(2px); }
 
-    .top-strip{
+    .topbar{
       width:min(100%, 960px);
       min-height:108px;
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
       border:4px solid #000;
       border-radius:34px;
       box-shadow:0 10px 0 rgba(0,0,0,.28);
-      padding:14px 148px;
-      position:relative;
-      display:flex;
-      align-items:center;
-      justify-content:center;
       overflow:hidden;
+      padding:14px 18px;
     }
 
-    .strip-title{
-      position:absolute;
-      right:18px;
-      top:50%;
-      transform:translateY(-50%);
-      width:118px;
+    .portrait-bar{
+      min-height:76px;
+      display:grid;
+      grid-template-columns:118px 1fr 118px;
+      align-items:center;
+      gap:12px;
+    }
+
+    .portrait-logo{
+      display:flex;
+      align-items:center;
+      justify-content:flex-start;
+      filter:drop-shadow(0 4px 0 rgba(255,255,255,.38));
+    }
+
+    .portrait-logo img{
+      width:min(130px, 26vw);
+      height:auto;
+      display:block;
+    }
+
+    .portrait-title{
       display:flex;
       justify-content:flex-end;
       align-items:center;
     }
 
-    .strip-title .game-logo{
+    .portrait-title .game-logo{
       font-size:clamp(32px, 5.6vw, 52px);
     }
 
@@ -157,6 +166,7 @@
       gap:10px;
       align-items:center;
       direction:ltr;
+      justify-self:center;
     }
 
     .score-chip{
@@ -213,31 +223,21 @@
       order:-1;
     }
 
-    .strip-logo{
-      position:absolute;
-      left:18px;
-      top:50%;
-      transform:translateY(-50%);
-      width:118px;
-      display:flex;
-      justify-content:flex-start;
-      align-items:center;
-      filter:drop-shadow(0 4px 0 rgba(255,255,255,.38));
-    }
-
-    .strip-logo img{
-      width:min(130px, 26vw);
-      height:auto;
-      display:block;
-    }
-
-    .timer-row{
+    .controls-row{
       width:min(100%, 960px);
       display:flex;
       justify-content:flex-start;
       direction:ltr;
       gap:10px;
       align-items:center;
+      flex-wrap:wrap;
+    }
+
+    .timer-cluster{
+      position:relative;
+      display:flex;
+      align-items:center;
+      gap:10px;
       flex-wrap:wrap;
     }
 
@@ -308,6 +308,8 @@
       display:flex;
       align-items:center;
       justify-content:center;
+      background:linear-gradient(180deg, #fffdf8 0%, #efe4c7 100%);
+      color:#111;
     }
 
     .duration-btn{
@@ -315,12 +317,6 @@
       background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
       color:#fffdf7;
       text-shadow:0 2px 0 rgba(0,0,0,.16);
-    }
-
-    .back-btn{
-      min-width:120px;
-      background:linear-gradient(180deg, #fffdf8 0%, #efe4c7 100%);
-      color:#111;
     }
 
     .duration-menu{
@@ -337,14 +333,6 @@
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
       box-shadow:0 10px 0 rgba(0,0,0,.22);
       z-index:20;
-    }
-
-    .timer-cluster{
-      position:relative;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
     }
 
     .duration-menu.show{
@@ -370,7 +358,15 @@
       color:#fffdf7;
     }
 
-    .barcode-stage{
+    .content-layout{
+      display:block;
+    }
+
+    .side-panel{
+      display:none;
+    }
+
+    .stage{
       width:min(100%, 960px);
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
       border:4px solid #000;
@@ -584,7 +580,6 @@
       grid-column:1 / -1;
       width:min(100%, 280px);
       margin:0 auto;
-      background:linear-gradient(180deg, #f8f4e4 0%, #e7dfc2 100%);
     }
 
     .answer-back{
@@ -644,13 +639,8 @@
       line-height:1;
     }
 
-    .main-action:active{
-      transform:translateY(2px) scale(.99);
-    }
-
     .main-action.alt{
       background:linear-gradient(180deg, #202020 0%, #050505 100%);
-      color:#fff;
     }
 
     @media (max-width:700px){
@@ -663,18 +653,17 @@
         padding-top:14px;
       }
 
-      .top-strip{
+      .topbar{
         min-height:98px;
-        padding:12px 108px;
-        border-radius:28px;
+        padding:12px 18px;
       }
 
-      .strip-title{
-        right:10px;
-        width:82px;
+      .portrait-bar{
+        grid-template-columns:82px 1fr 82px;
+        gap:8px;
       }
 
-      .strip-title .game-logo{
+      .portrait-title .game-logo{
         font-size:clamp(22px, 5vw, 36px);
       }
 
@@ -698,12 +687,7 @@
         font-size:18px;
       }
 
-      .strip-logo{
-        left:10px;
-        width:82px;
-      }
-
-      .strip-logo img{
+      .portrait-logo img{
         width:min(82px, 20vw);
       }
 
@@ -728,7 +712,7 @@
         font-size:22px;
       }
 
-      .barcode-stage{
+      .stage{
         padding:16px 12px 16px;
         border-radius:28px;
       }
@@ -808,74 +792,69 @@
         padding-top:8px;
       }
 
-      .landscape-topbar{
-        display:flex;
-        width:100%;
-        min-height:78px;
-        background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-        border:4px solid #000;
-        border-radius:28px;
-        box-shadow:0 8px 0 rgba(0,0,0,.22);
+      .topbar{
+        min-height:86px;
         padding:10px 16px;
+        display:flex;
         align-items:center;
         justify-content:space-between;
         gap:16px;
       }
 
-      .landscape-topbar-right{
+      .topbar-right{
         display:flex;
         align-items:center;
         gap:14px;
       }
 
-      .landscape-topbar-right img{
+      .topbar-right img{
         width:72px;
         height:auto;
         display:block;
       }
 
-      .landscape-topbar-right .game-logo{
+      .topbar-right .game-logo{
         font-size:46px;
       }
 
-      .landscape-topbar-left{
+      .topbar-left{
         display:flex;
         align-items:center;
         gap:10px;
         direction:ltr;
       }
 
-      .landscape-topbar .timer-cluster{
+      .topbar-left .timer-cluster{
         display:flex;
         align-items:center;
         gap:10px;
       }
 
-      .landscape-topbar .timer-dock{
+      .topbar-left .timer-dock{
         min-width:244px;
         height:56px;
         border-width:3px;
         box-shadow:0 5px 0 rgba(0,0,0,.20);
       }
 
-      .landscape-topbar .timer-control{
+      .topbar-left .timer-control{
         width:34px;
         height:34px;
         border-width:2px;
       }
 
-      .landscape-topbar .timer-control svg{
+      .topbar-left .timer-control svg{
         width:18px;
         height:18px;
       }
 
-      .landscape-topbar .timer-value{
+      .topbar-left .timer-value{
         min-width:82px;
         font-size:26px;
       }
 
-      .landscape-topbar .duration-btn,
-      .landscape-topbar .back-btn{
+      .topbar-left .duration-btn,
+      .topbar-left .back-btn{
         height:50px;
         min-width:116px;
         border-width:3px;
@@ -883,87 +862,27 @@
         font-size:20px;
       }
 
-      .landscape-layout{
+      .topbar-left .duration-menu{
+        top:66px;
+        padding:10px;
+        border-width:3px;
+        box-shadow:0 8px 0 rgba(0,0,0,.20);
+      }
+
+      .topbar-left .duration-option{
+        height:42px;
+        font-size:18px;
+      }
+
+      .content-layout{
         display:grid;
-        width:100%;
-        grid-template-columns:minmax(0, 1fr) 320px;
+        grid-template-columns:320px minmax(0, 1fr);
         gap:16px;
+        direction:ltr;
         align-items:start;
       }
 
-      .landscape-main{
-        min-width:0;
-      }
-
-      .landscape-main .barcode-stage{
-        width:100%;
-        min-height:calc(100vh - 170px);
-        padding:14px 16px 12px;
-        border-radius:28px;
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-      }
-
-      .landscape-main .barcode-title{
-        margin-bottom:10px;
-        font-size:clamp(22px, 2.4vw, 38px);
-      }
-
-      .landscape-main .poster-trigger{
-        flex:1 1 auto;
-        align-items:center;
-        justify-content:center;
-      }
-
-      .landscape-main .poster-card{
-        width:min(100%, 460px);
-        height:280px;
-        border-radius:24px;
-      }
-
-      .landscape-main .poster-title{
-        top:14px;
-        right:18px;
-        left:18px;
-        font-size:clamp(14px, 2vw, 28px);
-      }
-
-      .landscape-main .poster-list{
-        top:62px;
-        right:20px;
-        left:20px;
-        font-size:clamp(9px, 1vw, 14px);
-        line-height:1.6;
-      }
-
-      .landscape-main .poster-qr-wrap{
-        left:14px;
-        bottom:12px;
-      }
-
-      .landscape-main .poster-qr{
-        width:56px;
-        height:56px;
-        margin-bottom:4px;
-      }
-
-      .landscape-main .poster-qr-text{
-        font-size:11px;
-      }
-
-      .landscape-main .poster-boy{
-        width:88px;
-        right:12px;
-        bottom:0;
-      }
-
-      .landscape-main .poster-game-logo{
-        bottom:16px;
-        font-size:24px;
-      }
-
-      .landscape-side{
+      .side-panel{
         display:flex;
         flex-direction:column;
         gap:14px;
@@ -1039,6 +958,74 @@
         background:linear-gradient(180deg, #202020 0%, #050505 100%);
       }
 
+      .stage{
+        width:100%;
+        min-height:calc(100vh - 170px);
+        padding:14px 16px 12px;
+        border-radius:28px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+      }
+
+      .barcode-title{
+        margin-bottom:10px;
+        font-size:clamp(22px, 2.4vw, 38px);
+      }
+
+      .poster-trigger{
+        flex:1 1 auto;
+        align-items:center;
+        justify-content:center;
+      }
+
+      .poster-card{
+        width:min(100%, 460px);
+        height:280px;
+        border-radius:24px;
+      }
+
+      .poster-title{
+        top:14px;
+        right:18px;
+        left:18px;
+        font-size:clamp(14px, 2vw, 28px);
+      }
+
+      .poster-list{
+        top:62px;
+        right:20px;
+        left:20px;
+        font-size:clamp(9px, 1vw, 14px);
+        line-height:1.6;
+      }
+
+      .poster-qr-wrap{
+        left:14px;
+        bottom:12px;
+      }
+
+      .poster-qr{
+        width:56px;
+        height:56px;
+        margin-bottom:4px;
+      }
+
+      .poster-qr-text{
+        font-size:11px;
+      }
+
+      .poster-boy{
+        width:88px;
+        right:12px;
+        bottom:0;
+      }
+
+      .poster-game-logo{
+        bottom:16px;
+        font-size:24px;
+      }
+
       .answer-card{
         min-height:min(70vh, 520px);
       }
@@ -1066,97 +1053,35 @@
 <body>
   <div class="page">
     <main class="shell">
-      <!-- عمودي -->
-      <section class="top-strip portrait-only" aria-label="معلومات اللعبة">
-        <div class="strip-title" aria-hidden="true">
-          <div class="game-logo">
-            <span class="word-top">بدون</span>
-            <span class="word-bottom">كلام</span>
-          </div>
-        </div>
-
-        <div class="strip-scores" aria-label="نتائج الفريقين">
-          <div class="score-chip">
-            <div class="score-chip-name" id="team1Name">الفريق الأول</div>
-            <div class="score-chip-num"><span id="team1Score">0</span></div>
+      <section class="topbar">
+        <!-- عمودي -->
+        <div class="portrait-bar portrait-only">
+          <div class="portrait-logo" aria-label="صندوق المسابقات">
+            <img src="logo.PNG" alt="صندوق المسابقات">
           </div>
 
-          <div class="score-chip">
-            <div class="score-chip-name" id="team2Name">الفريق الثاني</div>
-            <div class="score-chip-num"><span id="team2Score">0</span></div>
-          </div>
-        </div>
-
-        <div class="strip-logo" aria-label="صندوق المسابقات">
-          <img src="logo.PNG" alt="صندوق المسابقات">
-        </div>
-      </section>
-
-      <div class="timer-row portrait-only">
-        <div class="timer-cluster">
-          <div class="timer-dock" aria-label="المؤقت">
-            <button id="pauseResumeBtn" class="timer-control" type="button" aria-label="تشغيل أو إيقاف المؤقت">
-              <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 6v12l10-6-10-6Z" fill="var(--green)" stroke="none"></path>
-              </svg>
-              <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 6v12M15 6v12"></path>
-              </svg>
-            </button>
-
-            <div class="timer-value" id="timerDisplay">01:00</div>
-
-            <button id="resetTimerBtn" class="timer-control" type="button" aria-label="إعادة ضبط المؤقت">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M20 5v5h-5"></path>
-                <path d="M20 10a8 8 0 1 0 2 5.5"></path>
-              </svg>
-            </button>
-          </div>
-
-          <button id="durationBtn" class="duration-btn" type="button">60 ثانية</button>
-
-          <div id="durationMenu" class="duration-menu">
-            <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
-            <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
-            <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
-            <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
-          </div>
-        </div>
-      </div>
-
-      <section class="barcode-stage portrait-only">
-        <h2 class="barcode-title">امسح الـ QR وحاول تشرح لفريقك بدون ولا كلمة</h2>
-
-        <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
-          <div class="poster-card">
-            <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
-
-            <ul class="poster-list">
-              <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
-              <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
-              <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
-              <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
-            </ul>
-
-            <div class="poster-qr-wrap">
-              <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
-              <div class="poster-qr-text">امسح الباركود</div>
+          <div class="strip-scores" aria-label="نتائج الفريقين">
+            <div class="score-chip">
+              <div class="score-chip-name" id="team1Name">الفريق الأول</div>
+              <div class="score-chip-num"><span id="team1Score">0</span></div>
             </div>
 
-            <img class="poster-boy" src="boy.PNG" alt="">
+            <div class="score-chip">
+              <div class="score-chip-name" id="team2Name">الفريق الثاني</div>
+              <div class="score-chip-num"><span id="team2Score">0</span></div>
+            </div>
+          </div>
 
-            <div class="poster-game-logo">
+          <div class="portrait-title" aria-hidden="true">
+            <div class="game-logo">
               <span class="word-top">بدون</span>
               <span class="word-bottom">كلام</span>
             </div>
           </div>
-        </button>
-      </section>
+        </div>
 
-      <!-- أفقي -->
-      <section class="landscape-topbar landscape-only" aria-label="الشريط العلوي">
-        <div class="landscape-topbar-right">
+        <!-- أفقي -->
+        <div class="topbar-right landscape-only">
           <div class="game-logo" aria-hidden="true">
             <span class="word-top">بدون</span>
             <span class="word-bottom">كلام</span>
@@ -1164,7 +1089,7 @@
           <img src="logo.PNG" alt="صندوق المسابقات">
         </div>
 
-        <div class="landscape-topbar-left">
+        <div class="topbar-left landscape-only">
           <button id="backBtnLandscape" class="back-btn" type="button">رجوع</button>
 
           <div class="timer-cluster">
@@ -1200,39 +1125,41 @@
         </div>
       </section>
 
-      <section class="landscape-layout landscape-only">
-        <div class="landscape-main">
-          <section class="barcode-stage">
-            <h2 class="barcode-title">امسح الـ QR وحاول تشرح لفريقك بدون ولا كلمة</h2>
-
-            <button class="poster-trigger" id="openPosterBtnLand" type="button" aria-label="تكبير الباركود">
-              <div class="poster-card">
-                <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
-
-                <ul class="poster-list">
-                  <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
-                  <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
-                  <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
-                  <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
-                </ul>
-
-                <div class="poster-qr-wrap">
-                  <img id="qrImageSmallLand" class="poster-qr" alt="باركود السؤال">
-                  <div class="poster-qr-text">امسح الباركود</div>
-                </div>
-
-                <img class="poster-boy" src="boy.PNG" alt="">
-
-                <div class="poster-game-logo">
-                  <span class="word-top">بدون</span>
-                  <span class="word-bottom">كلام</span>
-                </div>
-              </div>
+      <div class="controls-row portrait-only">
+        <div class="timer-cluster">
+          <div class="timer-dock" aria-label="المؤقت">
+            <button id="pauseResumeBtn" class="timer-control" type="button" aria-label="تشغيل أو إيقاف المؤقت">
+              <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M8 6v12l10-6-10-6Z" fill="var(--green)" stroke="none"></path>
+              </svg>
+              <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9 6v12M15 6v12"></path>
+              </svg>
             </button>
-          </section>
-        </div>
 
-        <aside class="landscape-side">
+            <div class="timer-value" id="timerDisplay">01:00</div>
+
+            <button id="resetTimerBtn" class="timer-control" type="button" aria-label="إعادة ضبط المؤقت">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M20 5v5h-5"></path>
+                <path d="M20 10a8 8 0 1 0 2 5.5"></path>
+              </svg>
+            </button>
+          </div>
+
+          <button id="durationBtn" class="duration-btn" type="button">60 ثانية</button>
+
+          <div id="durationMenu" class="duration-menu">
+            <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
+            <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
+            <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
+            <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="content-layout">
+        <aside class="side-panel landscape-only">
           <div class="side-score-card">
             <div class="side-score-name" id="sideTeam1Name">الفريق الأول</div>
             <div class="side-score-value" id="sideTeam1Score">0</div>
@@ -1247,7 +1174,36 @@
             <button id="sideActionBtn" class="side-action" type="button">ابدأ</button>
           </div>
         </aside>
-      </section>
+
+        <section class="stage">
+          <h2 class="barcode-title">امسح الـ QR وحاول تشرح لفريقك بدون ولا كلمة</h2>
+
+          <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
+            <div class="poster-card">
+              <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
+
+              <ul class="poster-list">
+                <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
+                <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
+                <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
+                <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
+              </ul>
+
+              <div class="poster-qr-wrap">
+                <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
+                <div class="poster-qr-text">امسح الباركود</div>
+              </div>
+
+              <img class="poster-boy" src="boy.PNG" alt="">
+
+              <div class="poster-game-logo">
+                <span class="word-top">بدون</span>
+                <span class="word-bottom">كلام</span>
+              </div>
+            </div>
+          </button>
+        </section>
+      </div>
     </main>
 
     <div class="bottom-bar portrait-only">
@@ -1310,7 +1266,6 @@
     const sideActionBtn = document.getElementById("sideActionBtn");
 
     const openPosterBtn = document.getElementById("openPosterBtn");
-    const openPosterBtnLand = document.getElementById("openPosterBtnLand");
 
     const qrOnlyModal = document.getElementById("qrOnlyModal");
     const qrOnlyImage = document.getElementById("qrOnlyImage");
@@ -1322,7 +1277,6 @@
     const answerBackBtn = document.getElementById("answerBackBtn");
 
     const qrImageSmall = document.getElementById("qrImageSmall");
-    const qrImageSmallLand = document.getElementById("qrImageSmallLand");
 
     const backBtnLandscape = document.getElementById("backBtnLandscape");
 
@@ -1350,6 +1304,10 @@
 
     function getPauseButtons() {
       return [pauseResumeBtn, pauseResumeBtnLand].filter(Boolean);
+    }
+
+    function getDurationButtons() {
+      return [durationBtn, durationBtnLand].filter(Boolean);
     }
 
     function loadHeaderData() {
@@ -1413,8 +1371,9 @@
     }
 
     function syncDurationButtons() {
-      setText(durationBtn, `${selectedDuration} ثانية`);
-      setText(durationBtnLand, `${selectedDuration} ثانية`);
+      getDurationButtons().forEach(btn => {
+        setText(btn, `${selectedDuration} ثانية`);
+      });
 
       durationOptions.forEach(btn => {
         btn.classList.toggle("active", Number(btn.dataset.seconds) === selectedDuration);
@@ -1434,8 +1393,7 @@
     }
 
     function setDurationButtonsEnabled(enabled) {
-      [durationBtn, durationBtnLand].forEach(btn => {
-        if (!btn) return;
+      getDurationButtons().forEach(btn => {
         btn.disabled = !enabled;
         btn.style.opacity = enabled ? "" : ".7";
         btn.style.cursor = enabled ? "" : "not-allowed";
@@ -1560,7 +1518,6 @@
       const revealUrl = buildRevealUrl();
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&data=${encodeURIComponent(revealUrl)}`;
       qrImageSmall.src = qrUrl;
-      qrImageSmallLand.src = qrUrl;
       qrOnlyImage.src = qrUrl;
     }
 
@@ -1587,16 +1544,16 @@
     bindDurationMenu(durationBtnLand, durationMenuLand, durationOptionsLand);
 
     document.addEventListener("click", (e) => {
-      const clickInsideDesktop = durationMenu.contains(e.target) || e.target === durationBtn;
+      const clickInsidePortrait = durationMenu.contains(e.target) || e.target === durationBtn;
       const clickInsideLand = durationMenuLand.contains(e.target) || e.target === durationBtnLand;
-      if (!clickInsideDesktop) durationMenu.classList.remove("show");
+      if (!clickInsidePortrait) durationMenu.classList.remove("show");
       if (!clickInsideLand) durationMenuLand.classList.remove("show");
     });
 
     [pauseResumeBtn, pauseResumeBtnLand].forEach(btn => btn.addEventListener("click", togglePauseResume));
     [resetTimerBtn, resetTimerBtnLand].forEach(btn => btn.addEventListener("click", () => hardResetTimer(true)));
 
-    [openPosterBtn, openPosterBtnLand].forEach(btn => btn.addEventListener("click", openQrOnlyModal));
+    openPosterBtn.addEventListener("click", openQrOnlyModal);
     qrOnlyModal.addEventListener("click", closeQrOnlyModal);
 
     getActionButtons().forEach(btn => {

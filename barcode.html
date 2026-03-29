@@ -26,9 +26,6 @@
       --gold:#f2b84a;
       --gold-dark:#d9981e;
 
-      --blue:#8ecbff;
-      --blue-2:#67b8ff;
-
       --green:#0b6a39;
       --green-dark:#08582f;
       --poster:#dde4cb;
@@ -37,7 +34,7 @@
       --safe-bottom: env(safe-area-inset-bottom, 0px);
 
       --footer-space-p: 98px;
-      --footer-space-l: 82px;
+      --footer-space-l: 40px;
     }
 
     *{
@@ -94,6 +91,35 @@
       z-index:2;
     }
 
+    .portrait-only{ display:block; }
+    .landscape-only{ display:none; }
+
+    .game-logo{
+      display:inline-flex;
+      flex-direction:column;
+      align-items:center;
+      line-height:.84;
+      color:#11101a;
+      letter-spacing:-.5px;
+      transform:rotate(-6deg);
+      text-shadow:
+        -4px -4px 0 #fff,
+         4px -4px 0 #fff,
+        -4px  4px 0 #fff,
+         4px  4px 0 #fff,
+         0   -4px 0 #fff,
+         0    4px 0 #fff,
+        -4px  0   0 #fff,
+         4px  0   0 #fff,
+         0    7px 0 rgba(0,0,0,.05);
+      filter:drop-shadow(0 6px 0 rgba(0,0,0,.04));
+      user-select:none;
+      pointer-events:none;
+    }
+
+    .game-logo .word-top{ transform:translateY(-6px); }
+    .game-logo .word-bottom{ transform:translateY(2px); }
+
     .top-strip{
       width:min(100%, 960px);
       min-height:108px;
@@ -118,34 +144,11 @@
       display:flex;
       justify-content:flex-end;
       align-items:center;
-      user-select:none;
-      pointer-events:none;
     }
 
-    .strip-title-text{
-      display:inline-flex;
-      flex-direction:column;
-      align-items:center;
-      line-height:.84;
-      color:#11101a;
+    .strip-title .game-logo{
       font-size:clamp(32px, 5.6vw, 52px);
-      letter-spacing:-.5px;
-      transform:rotate(-6deg);
-      text-shadow:
-        -4px -4px 0 #fff,
-         4px -4px 0 #fff,
-        -4px  4px 0 #fff,
-         4px  4px 0 #fff,
-         0   -4px 0 #fff,
-         0    4px 0 #fff,
-        -4px  0   0 #fff,
-         4px  0   0 #fff,
-         0    7px 0 rgba(0,0,0,.05);
-      filter:drop-shadow(0 6px 0 rgba(0,0,0,.04));
     }
-
-    .strip-title-text .word-top{ transform:translateY(-6px); }
-    .strip-title-text .word-bottom{ transform:translateY(2px); }
 
     .strip-scores{
       width:min(100%, 430px);
@@ -219,8 +222,6 @@
       display:flex;
       justify-content:flex-start;
       align-items:center;
-      user-select:none;
-      pointer-events:none;
       filter:drop-shadow(0 4px 0 rgba(255,255,255,.38));
     }
 
@@ -228,11 +229,6 @@
       width:min(130px, 26vw);
       height:auto;
       display:block;
-    }
-
-    .landscape-topbar,
-    .landscape-layout{
-      display:none;
     }
 
     .timer-row{
@@ -298,20 +294,33 @@
       letter-spacing:.4px;
     }
 
-    .duration-btn{
-      min-width:136px;
+    .duration-btn,
+    .back-btn{
       height:60px;
       padding:0 18px;
       border:none;
       border-radius:999px;
       border:4px solid #000;
-      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
-      color:#fffdf7;
       box-shadow:0 8px 0 rgba(0,0,0,.22);
       cursor:pointer;
       font-size:24px;
       line-height:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .duration-btn{
+      min-width:136px;
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color:#fffdf7;
       text-shadow:0 2px 0 rgba(0,0,0,.16);
+    }
+
+    .back-btn{
+      min-width:120px;
+      background:linear-gradient(180deg, #fffdf8 0%, #efe4c7 100%);
+      color:#111;
     }
 
     .duration-menu{
@@ -665,7 +674,7 @@
         width:82px;
       }
 
-      .strip-title-text{
+      .strip-title .game-logo{
         font-size:clamp(22px, 5vw, 36px);
       }
 
@@ -712,7 +721,8 @@
         font-size:30px;
       }
 
-      .duration-btn{
+      .duration-btn,
+      .back-btn{
         height:56px;
         min-width:122px;
         font-size:22px;
@@ -789,60 +799,171 @@
         padding:8px 12px calc(var(--footer-space-l) + var(--safe-bottom));
       }
 
+      .portrait-only{ display:none !important; }
+      .landscape-only{ display:block !important; }
+
       .shell{
         width:min(100%, 100%);
-        gap:10px;
+        gap:12px;
         padding-top:8px;
-      }
-
-      .top-strip{
-        display:none;
       }
 
       .landscape-topbar{
         display:flex;
         width:100%;
-        min-height:74px;
+        min-height:78px;
         background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
         border:4px solid #000;
         border-radius:28px;
         box-shadow:0 8px 0 rgba(0,0,0,.22);
-        padding:10px 18px;
+        padding:10px 16px;
         align-items:center;
-        justify-content:flex-start;
-        gap:12px;
+        justify-content:space-between;
+        gap:16px;
       }
 
-      .landscape-topbar-store{
-        width:72px;
+      .landscape-topbar-right{
         display:flex;
         align-items:center;
-        justify-content:flex-start;
-        flex:0 0 auto;
+        gap:14px;
       }
 
-      .landscape-topbar-store img{
-        width:68px;
+      .landscape-topbar-right img{
+        width:72px;
         height:auto;
         display:block;
       }
 
-      .landscape-topbar-title{
-        color:#111;
-        font-size:34px;
-        line-height:1;
-        font-weight:700;
+      .landscape-topbar-right .game-logo{
+        font-size:46px;
+      }
+
+      .landscape-topbar-left{
+        display:flex;
+        align-items:center;
+        gap:10px;
+        direction:ltr;
+      }
+
+      .landscape-topbar .timer-cluster{
+        display:flex;
+        align-items:center;
+        gap:10px;
+      }
+
+      .landscape-topbar .timer-dock{
+        min-width:244px;
+        height:56px;
+        border-width:3px;
+        box-shadow:0 5px 0 rgba(0,0,0,.20);
+      }
+
+      .landscape-topbar .timer-control{
+        width:34px;
+        height:34px;
+        border-width:2px;
+      }
+
+      .landscape-topbar .timer-control svg{
+        width:18px;
+        height:18px;
+      }
+
+      .landscape-topbar .timer-value{
+        min-width:82px;
+        font-size:26px;
+      }
+
+      .landscape-topbar .duration-btn,
+      .landscape-topbar .back-btn{
+        height:50px;
+        min-width:116px;
+        border-width:3px;
+        box-shadow:0 5px 0 rgba(0,0,0,.20);
+        font-size:20px;
       }
 
       .landscape-layout{
         display:grid;
         width:100%;
-        grid-template-columns:260px minmax(0, 1fr);
-        gap:14px;
+        grid-template-columns:minmax(0, 1fr) 320px;
+        gap:16px;
         align-items:start;
       }
 
-      .landscape-sidebar{
+      .landscape-main{
+        min-width:0;
+      }
+
+      .landscape-main .barcode-stage{
+        width:100%;
+        min-height:calc(100vh - 170px);
+        padding:14px 16px 12px;
+        border-radius:28px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+      }
+
+      .landscape-main .barcode-title{
+        margin-bottom:10px;
+        font-size:clamp(22px, 2.4vw, 38px);
+      }
+
+      .landscape-main .poster-trigger{
+        flex:1 1 auto;
+        align-items:center;
+        justify-content:center;
+      }
+
+      .landscape-main .poster-card{
+        width:min(100%, 460px);
+        height:280px;
+        border-radius:24px;
+      }
+
+      .landscape-main .poster-title{
+        top:14px;
+        right:18px;
+        left:18px;
+        font-size:clamp(14px, 2vw, 28px);
+      }
+
+      .landscape-main .poster-list{
+        top:62px;
+        right:20px;
+        left:20px;
+        font-size:clamp(9px, 1vw, 14px);
+        line-height:1.6;
+      }
+
+      .landscape-main .poster-qr-wrap{
+        left:14px;
+        bottom:12px;
+      }
+
+      .landscape-main .poster-qr{
+        width:56px;
+        height:56px;
+        margin-bottom:4px;
+      }
+
+      .landscape-main .poster-qr-text{
+        font-size:11px;
+      }
+
+      .landscape-main .poster-boy{
+        width:88px;
+        right:12px;
+        bottom:0;
+      }
+
+      .landscape-main .poster-game-logo{
+        bottom:16px;
+        font-size:24px;
+      }
+
+      .landscape-side{
         display:flex;
         flex-direction:column;
         gap:14px;
@@ -850,65 +971,33 @@
         border:4px solid #000;
         border-radius:30px;
         box-shadow:0 8px 0 rgba(0,0,0,.22);
-        padding:18px 14px 20px;
+        padding:16px 14px 16px;
+        min-height:calc(100vh - 170px);
       }
 
-      .side-game-logo{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        min-height:78px;
-      }
-
-      .side-game-logo .game-logo{
-        display:inline-flex;
-        flex-direction:column;
-        align-items:center;
-        line-height:.84;
-        color:#11101a;
-        font-size:38px;
-        letter-spacing:-.5px;
-        transform:rotate(-6deg);
-        text-shadow:
-          -4px -4px 0 #fff,
-           4px -4px 0 #fff,
-          -4px  4px 0 #fff,
-           4px  4px 0 #fff,
-           0   -4px 0 #fff,
-           0    4px 0 #fff,
-          -4px  0   0 #fff,
-           4px  0   0 #fff,
-           0    7px 0 rgba(0,0,0,.05);
-      }
-
-      .side-game-logo .word-top{ transform:translateY(-4px); }
-      .side-game-logo .word-bottom{ transform:translateY(2px); }
-
-      .land-score-card{
+      .side-score-card{
         background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
         border:4px solid #000;
         border-radius:24px;
         box-shadow:0 6px 0 rgba(0,0,0,.18);
-        min-height:86px;
-        padding:10px 12px;
+        padding:14px 12px 12px;
         display:flex;
         flex-direction:column;
-        justify-content:center;
-        gap:8px;
+        gap:10px;
       }
 
-      .land-score-name{
+      .side-score-name{
         color:#173e73;
         text-align:center;
-        font-size:28px;
-        line-height:1.1;
+        font-size:30px;
+        line-height:1.08;
         white-space:nowrap;
         overflow:hidden;
         text-overflow:ellipsis;
       }
 
-      .land-score-value{
-        min-height:44px;
+      .side-score-value{
+        min-height:52px;
         border:4px solid #000;
         border-radius:18px;
         background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
@@ -917,131 +1006,37 @@
         display:flex;
         align-items:center;
         justify-content:center;
-        font-size:28px;
+        font-size:30px;
         line-height:1;
       }
 
-      .landscape-main{
-        display:flex;
-        flex-direction:column;
-        gap:10px;
-        min-width:0;
+      .side-action-wrap{
+        margin-top:auto;
+        padding-top:10px;
       }
 
-      .timer-row{
+      .side-action{
         width:100%;
-        margin:0;
-        justify-content:flex-start;
-      }
-
-      .timer-dock{
-        min-width:244px;
-        height:56px;
-        border-width:3px;
-        box-shadow:0 5px 0 rgba(0,0,0,.20);
-      }
-
-      .timer-control{
-        width:34px;
-        height:34px;
-        border-width:2px;
-      }
-
-      .timer-control svg{
-        width:18px;
-        height:18px;
-      }
-
-      .timer-value{
-        min-width:82px;
-        font-size:26px;
-      }
-
-      .duration-btn{
-        height:50px;
-        min-width:116px;
-        border-width:3px;
-        box-shadow:0 5px 0 rgba(0,0,0,.20);
-        font-size:20px;
-      }
-
-      .duration-menu{
-        top:66px;
-        padding:10px;
-        border-width:3px;
-        box-shadow:0 8px 0 rgba(0,0,0,.20);
-      }
-
-      .duration-option{
-        height:42px;
-        font-size:18px;
-      }
-
-      .barcode-stage{
-        width:100%;
-        min-height:calc(100vh - 240px);
-        padding:14px 16px 12px;
-        border-radius:28px;
+        min-height:72px;
+        border:none;
+        border-radius:24px;
+        border:4px solid #000;
+        background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+        color:#fff;
+        box-shadow:0 6px 0 rgba(0,0,0,.22);
+        font-size:34px;
+        line-height:1;
+        text-shadow:0 2px 0 rgba(0,0,0,.18);
         display:flex;
-        flex-direction:column;
-      }
-
-      .barcode-title{
-        margin-bottom:10px;
-        font-size:clamp(22px, 2.4vw, 38px);
-      }
-
-      .poster-trigger{
-        flex:1 1 auto;
         align-items:center;
         justify-content:center;
+        text-align:center;
+        cursor:pointer;
+        padding:0 18px;
       }
 
-      .poster-card{
-        width:min(100%, 460px);
-        height:280px;
-        border-radius:24px;
-      }
-
-      .poster-title{
-        top:14px;
-        right:18px;
-        left:18px;
-        font-size:clamp(14px, 2vw, 28px);
-      }
-
-      .poster-list{
-        top:62px;
-        right:20px;
-        left:20px;
-        font-size:clamp(9px, 1vw, 14px);
-        line-height:1.6;
-      }
-
-      .poster-qr-wrap{
-        left:14px;
-        bottom:12px;
-      }
-
-      .poster-qr{
-        width:56px;
-        height:56px;
-        margin-bottom:4px;
-      }
-
-      .poster-qr-text{
-        font-size:11px;
-      }
-
-      .poster-boy{
-        width:88px;
-        right:12px;
-        bottom:0;
-      }
-
-      .poster-game-logo{
-        bottom:16px;
-        font-size:24px;
+      .side-action.alt{
+        background:linear-gradient(180deg, #202020 0%, #050505 100%);
       }
 
       .answer-card{
@@ -1063,17 +1058,7 @@
       }
 
       .bottom-bar{
-        height:var(--footer-space-l);
-      }
-
-      .main-action{
-        right:8px;
-        bottom:6px;
-        min-width:190px;
-        height:62px;
-        border-width:4px;
-        box-shadow:0 5px 0 rgba(0,0,0,.24);
-        font-size:30px;
+        display:none;
       }
     }
   </style>
@@ -1081,9 +1066,10 @@
 <body>
   <div class="page">
     <main class="shell">
-      <section class="top-strip" aria-label="معلومات اللعبة">
+      <!-- عمودي -->
+      <section class="top-strip portrait-only" aria-label="معلومات اللعبة">
         <div class="strip-title" aria-hidden="true">
-          <div class="strip-title-text">
+          <div class="game-logo">
             <span class="word-top">بدون</span>
             <span class="word-bottom">كلام</span>
           </div>
@@ -1106,102 +1092,10 @@
         </div>
       </section>
 
-      <section class="landscape-topbar" aria-label="شريط علوي">
-        <div class="landscape-topbar-store">
-          <img src="logo.PNG" alt="صندوق المسابقات">
-        </div>
-        <div class="landscape-topbar-title">لعبة بدون كلام</div>
-      </section>
-
-      <div class="landscape-layout">
-        <aside class="landscape-sidebar" aria-label="نتائج الفرق">
-          <div class="side-game-logo" aria-hidden="true">
-            <div class="game-logo">
-              <span class="word-top">بدون</span>
-              <span class="word-bottom">كلام</span>
-            </div>
-          </div>
-
-          <div class="land-score-card">
-            <div class="land-score-name" id="sideTeam1Name">الفريق الأول</div>
-            <div class="land-score-value" id="sideTeam1Score">0</div>
-          </div>
-
-          <div class="land-score-card">
-            <div class="land-score-name" id="sideTeam2Name">الفريق الثاني</div>
-            <div class="land-score-value" id="sideTeam2Score">0</div>
-          </div>
-        </aside>
-
-        <section class="landscape-main">
-          <div class="timer-row">
-            <div class="timer-cluster">
-              <div class="timer-dock" aria-label="المؤقت">
-                <button id="pauseResumeBtn" class="timer-control" type="button" aria-label="تشغيل أو إيقاف المؤقت">
-                  <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8 6v12l10-6-10-6Z" fill="var(--green)" stroke="none"></path>
-                  </svg>
-                  <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M9 6v12M15 6v12"></path>
-                  </svg>
-                </button>
-
-                <div class="timer-value" id="timerDisplay">01:00</div>
-
-                <button id="resetTimerBtn" class="timer-control" type="button" aria-label="إعادة ضبط المؤقت">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M20 5v5h-5"></path>
-                    <path d="M20 10a8 8 0 1 0 2 5.5"></path>
-                  </svg>
-                </button>
-              </div>
-
-              <button id="durationBtn" class="duration-btn" type="button">60 ثانية</button>
-
-              <div id="durationMenu" class="duration-menu">
-                <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
-                <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
-                <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
-                <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
-              </div>
-            </div>
-          </div>
-
-          <section class="barcode-stage">
-            <h2 class="barcode-title">امسح الـ QR وحاول تشرح لفريقك بدون ولا كلمة</h2>
-
-            <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
-              <div class="poster-card">
-                <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
-
-                <ul class="poster-list">
-                  <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
-                  <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
-                  <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
-                  <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
-                </ul>
-
-                <div class="poster-qr-wrap">
-                  <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
-                  <div class="poster-qr-text">امسح الباركود</div>
-                </div>
-
-                <img class="poster-boy" src="boy.PNG" alt="">
-
-                <div class="poster-game-logo">
-                  <span class="word-top">بدون</span>
-                  <span class="word-bottom">كلام</span>
-                </div>
-              </div>
-            </button>
-          </section>
-        </section>
-      </div>
-
       <div class="timer-row portrait-only">
         <div class="timer-cluster">
           <div class="timer-dock" aria-label="المؤقت">
-            <button id="pauseResumeBtnMobile" class="timer-control" type="button" aria-label="تشغيل أو إيقاف المؤقت">
+            <button id="pauseResumeBtn" class="timer-control" type="button" aria-label="تشغيل أو إيقاف المؤقت">
               <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M8 6v12l10-6-10-6Z" fill="var(--green)" stroke="none"></path>
               </svg>
@@ -1210,9 +1104,9 @@
               </svg>
             </button>
 
-            <div class="timer-value" id="timerDisplayMobile">01:00</div>
+            <div class="timer-value" id="timerDisplay">01:00</div>
 
-            <button id="resetTimerBtnMobile" class="timer-control" type="button" aria-label="إعادة ضبط المؤقت">
+            <button id="resetTimerBtn" class="timer-control" type="button" aria-label="إعادة ضبط المؤقت">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M20 5v5h-5"></path>
                 <path d="M20 10a8 8 0 1 0 2 5.5"></path>
@@ -1220,9 +1114,9 @@
             </button>
           </div>
 
-          <button id="durationBtnMobile" class="duration-btn" type="button">60 ثانية</button>
+          <button id="durationBtn" class="duration-btn" type="button">60 ثانية</button>
 
-          <div id="durationMenuMobile" class="duration-menu">
+          <div id="durationMenu" class="duration-menu">
             <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
             <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
             <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
@@ -1234,7 +1128,7 @@
       <section class="barcode-stage portrait-only">
         <h2 class="barcode-title">امسح الـ QR وحاول تشرح لفريقك بدون ولا كلمة</h2>
 
-        <button class="poster-trigger" id="openPosterBtnMobile" type="button" aria-label="تكبير الباركود">
+        <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
           <div class="poster-card">
             <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
 
@@ -1246,7 +1140,7 @@
             </ul>
 
             <div class="poster-qr-wrap">
-              <img id="qrImageSmallMobile" class="poster-qr" alt="باركود السؤال">
+              <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
               <div class="poster-qr-text">امسح الباركود</div>
             </div>
 
@@ -1259,9 +1153,104 @@
           </div>
         </button>
       </section>
+
+      <!-- أفقي -->
+      <section class="landscape-topbar landscape-only" aria-label="الشريط العلوي">
+        <div class="landscape-topbar-right">
+          <div class="game-logo" aria-hidden="true">
+            <span class="word-top">بدون</span>
+            <span class="word-bottom">كلام</span>
+          </div>
+          <img src="logo.PNG" alt="صندوق المسابقات">
+        </div>
+
+        <div class="landscape-topbar-left">
+          <button id="backBtnLandscape" class="back-btn" type="button">رجوع</button>
+
+          <div class="timer-cluster">
+            <div class="timer-dock" aria-label="المؤقت">
+              <button id="pauseResumeBtnLand" class="timer-control" type="button" aria-label="تشغيل أو إيقاف المؤقت">
+                <svg class="play-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 6v12l10-6-10-6Z" fill="var(--green)" stroke="none"></path>
+                </svg>
+                <svg class="pause-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M9 6v12M15 6v12"></path>
+                </svg>
+              </button>
+
+              <div class="timer-value" id="timerDisplayLand">01:00</div>
+
+              <button id="resetTimerBtnLand" class="timer-control" type="button" aria-label="إعادة ضبط المؤقت">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M20 5v5h-5"></path>
+                  <path d="M20 10a8 8 0 1 0 2 5.5"></path>
+                </svg>
+              </button>
+            </div>
+
+            <button id="durationBtnLand" class="duration-btn" type="button">60 ثانية</button>
+
+            <div id="durationMenuLand" class="duration-menu">
+              <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
+              <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
+              <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
+              <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="landscape-layout landscape-only">
+        <div class="landscape-main">
+          <section class="barcode-stage">
+            <h2 class="barcode-title">امسح الـ QR وحاول تشرح لفريقك بدون ولا كلمة</h2>
+
+            <button class="poster-trigger" id="openPosterBtnLand" type="button" aria-label="تكبير الباركود">
+              <div class="poster-card">
+                <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
+
+                <ul class="poster-list">
+                  <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
+                  <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
+                  <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
+                  <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
+                </ul>
+
+                <div class="poster-qr-wrap">
+                  <img id="qrImageSmallLand" class="poster-qr" alt="باركود السؤال">
+                  <div class="poster-qr-text">امسح الباركود</div>
+                </div>
+
+                <img class="poster-boy" src="boy.PNG" alt="">
+
+                <div class="poster-game-logo">
+                  <span class="word-top">بدون</span>
+                  <span class="word-bottom">كلام</span>
+                </div>
+              </div>
+            </button>
+          </section>
+        </div>
+
+        <aside class="landscape-side">
+          <div class="side-score-card">
+            <div class="side-score-name" id="sideTeam1Name">الفريق الأول</div>
+            <div class="side-score-value" id="sideTeam1Score">0</div>
+          </div>
+
+          <div class="side-score-card">
+            <div class="side-score-name" id="sideTeam2Name">الفريق الثاني</div>
+            <div class="side-score-value" id="sideTeam2Score">0</div>
+          </div>
+
+          <div class="side-action-wrap">
+            <button id="sideActionBtn" class="side-action" type="button">ابدأ</button>
+          </div>
+        </aside>
+      </section>
     </main>
 
-    <div class="bottom-bar">
+    <div class="bottom-bar portrait-only">
       <button id="mainActionBtn" class="main-action" type="button">ابدأ</button>
     </div>
   </div>
@@ -1300,27 +1289,28 @@
     const sideTeam2ScoreEl = document.getElementById("sideTeam2Score");
 
     const timerDisplay = document.getElementById("timerDisplay");
-    const timerDisplayMobile = document.getElementById("timerDisplayMobile");
+    const timerDisplayLand = document.getElementById("timerDisplayLand");
 
     const durationBtn = document.getElementById("durationBtn");
-    const durationBtnMobile = document.getElementById("durationBtnMobile");
+    const durationBtnLand = document.getElementById("durationBtnLand");
 
     const durationMenu = document.getElementById("durationMenu");
-    const durationMenuMobile = document.getElementById("durationMenuMobile");
+    const durationMenuLand = document.getElementById("durationMenuLand");
 
     const durationOptions = Array.from(durationMenu.querySelectorAll(".duration-option"));
-    const durationOptionsMobile = Array.from(durationMenuMobile.querySelectorAll(".duration-option"));
+    const durationOptionsLand = Array.from(durationMenuLand.querySelectorAll(".duration-option"));
 
     const pauseResumeBtn = document.getElementById("pauseResumeBtn");
-    const pauseResumeBtnMobile = document.getElementById("pauseResumeBtnMobile");
+    const pauseResumeBtnLand = document.getElementById("pauseResumeBtnLand");
 
     const resetTimerBtn = document.getElementById("resetTimerBtn");
-    const resetTimerBtnMobile = document.getElementById("resetTimerBtnMobile");
+    const resetTimerBtnLand = document.getElementById("resetTimerBtnLand");
 
     const mainActionBtn = document.getElementById("mainActionBtn");
+    const sideActionBtn = document.getElementById("sideActionBtn");
 
     const openPosterBtn = document.getElementById("openPosterBtn");
-    const openPosterBtnMobile = document.getElementById("openPosterBtnMobile");
+    const openPosterBtnLand = document.getElementById("openPosterBtnLand");
 
     const qrOnlyModal = document.getElementById("qrOnlyModal");
     const qrOnlyImage = document.getElementById("qrOnlyImage");
@@ -1332,7 +1322,9 @@
     const answerBackBtn = document.getElementById("answerBackBtn");
 
     const qrImageSmall = document.getElementById("qrImageSmall");
-    const qrImageSmallMobile = document.getElementById("qrImageSmallMobile");
+    const qrImageSmallLand = document.getElementById("qrImageSmallLand");
+
+    const backBtnLandscape = document.getElementById("backBtnLandscape");
 
     let selectedDuration = Number(sessionStorage.getItem("bdonKalam_timerDuration") || 60);
     let remainingSeconds = selectedDuration;
@@ -1346,6 +1338,18 @@
         if (value && String(value).trim()) return String(value).trim();
       }
       return fallback;
+    }
+
+    function setText(el, value) {
+      if (el) el.textContent = value;
+    }
+
+    function getActionButtons() {
+      return [mainActionBtn, sideActionBtn].filter(Boolean);
+    }
+
+    function getPauseButtons() {
+      return [pauseResumeBtn, pauseResumeBtnLand].filter(Boolean);
     }
 
     function loadHeaderData() {
@@ -1362,18 +1366,18 @@
       const score1 = Number(getStoredValue(["bdonKalam_score1", "team1Score"], "0")) || 0;
       const score2 = Number(getStoredValue(["bdonKalam_score2", "team2Score"], "0")) || 0;
 
-      team1NameEl.textContent = team1;
-      team2NameEl.textContent = team2;
-      team1ScoreEl.textContent = score1;
-      team2ScoreEl.textContent = score2;
+      setText(team1NameEl, team1);
+      setText(team2NameEl, team2);
+      setText(team1ScoreEl, score1);
+      setText(team2ScoreEl, score2);
 
-      sideTeam1NameEl.textContent = team1;
-      sideTeam2NameEl.textContent = team2;
-      sideTeam1ScoreEl.textContent = score1;
-      sideTeam2ScoreEl.textContent = score2;
+      setText(sideTeam1NameEl, team1);
+      setText(sideTeam2NameEl, team2);
+      setText(sideTeam1ScoreEl, score1);
+      setText(sideTeam2ScoreEl, score2);
 
-      answerTeam1.textContent = team1;
-      answerTeam2.textContent = team2;
+      setText(answerTeam1, team1);
+      setText(answerTeam2, team2);
     }
 
     function updateScore(teamKey) {
@@ -1386,10 +1390,10 @@
       sessionStorage.setItem("bdonKalam_score1", String(next1));
       sessionStorage.setItem("bdonKalam_score2", String(next2));
 
-      team1ScoreEl.textContent = next1;
-      team2ScoreEl.textContent = next2;
-      sideTeam1ScoreEl.textContent = next1;
-      sideTeam2ScoreEl.textContent = next2;
+      setText(team1ScoreEl, next1);
+      setText(team2ScoreEl, next2);
+      setText(sideTeam1ScoreEl, next1);
+      setText(sideTeam2ScoreEl, next2);
     }
 
     function formatTime(totalSeconds) {
@@ -1400,22 +1404,41 @@
 
     function updateTimerDisplay() {
       const formatted = formatTime(remainingSeconds);
-      timerDisplay.textContent = formatted;
-      timerDisplayMobile.textContent = formatted;
-      pauseResumeBtn.classList.toggle("playing", isRunning);
-      pauseResumeBtnMobile.classList.toggle("playing", isRunning);
+      setText(timerDisplay, formatted);
+      setText(timerDisplayLand, formatted);
+
+      getPauseButtons().forEach(btn => {
+        btn.classList.toggle("playing", isRunning);
+      });
     }
 
     function syncDurationButtons() {
-      durationBtn.textContent = `${selectedDuration} ثانية`;
-      durationBtnMobile.textContent = `${selectedDuration} ثانية`;
+      setText(durationBtn, `${selectedDuration} ثانية`);
+      setText(durationBtnLand, `${selectedDuration} ثانية`);
 
       durationOptions.forEach(btn => {
         btn.classList.toggle("active", Number(btn.dataset.seconds) === selectedDuration);
       });
 
-      durationOptionsMobile.forEach(btn => {
+      durationOptionsLand.forEach(btn => {
         btn.classList.toggle("active", Number(btn.dataset.seconds) === selectedDuration);
+      });
+    }
+
+    function syncActionButtons() {
+      const text = roundActive ? "مين جاوب؟" : "ابدأ";
+      getActionButtons().forEach(btn => {
+        setText(btn, text);
+        btn.classList.toggle("alt", roundActive);
+      });
+    }
+
+    function setDurationButtonsEnabled(enabled) {
+      [durationBtn, durationBtnLand].forEach(btn => {
+        if (!btn) return;
+        btn.disabled = !enabled;
+        btn.style.opacity = enabled ? "" : ".7";
+        btn.style.cursor = enabled ? "" : "not-allowed";
       });
     }
 
@@ -1425,18 +1448,11 @@
       isRunning = false;
       remainingSeconds = selectedDuration;
       updateTimerDisplay();
-
-      durationBtn.disabled = false;
-      durationBtnMobile.disabled = false;
-      durationBtn.style.opacity = "";
-      durationBtn.style.cursor = "";
-      durationBtnMobile.style.opacity = "";
-      durationBtnMobile.style.cursor = "";
+      setDurationButtonsEnabled(true);
 
       if (resetRound) {
         roundActive = false;
-        mainActionBtn.textContent = "ابدأ";
-        mainActionBtn.classList.remove("alt");
+        syncActionButtons();
       }
     }
 
@@ -1445,16 +1461,8 @@
 
       roundActive = true;
       isRunning = true;
-      mainActionBtn.textContent = "مين جاوب؟";
-      mainActionBtn.classList.add("alt");
-
-      durationBtn.disabled = true;
-      durationBtnMobile.disabled = true;
-      durationBtn.style.opacity = ".7";
-      durationBtn.style.cursor = "not-allowed";
-      durationBtnMobile.style.opacity = ".7";
-      durationBtnMobile.style.cursor = "not-allowed";
-
+      syncActionButtons();
+      setDurationButtonsEnabled(false);
       updateTimerDisplay();
 
       clearInterval(timerInterval);
@@ -1552,7 +1560,7 @@
       const revealUrl = buildRevealUrl();
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&data=${encodeURIComponent(revealUrl)}`;
       qrImageSmall.src = qrUrl;
-      qrImageSmallMobile.src = qrUrl;
+      qrImageSmallLand.src = qrUrl;
       qrOnlyImage.src = qrUrl;
     }
 
@@ -1570,36 +1578,35 @@
           syncDurationButtons();
           updateTimerDisplay();
           durationMenu.classList.remove("show");
-          durationMenuMobile.classList.remove("show");
+          durationMenuLand.classList.remove("show");
         });
       });
     }
 
     bindDurationMenu(durationBtn, durationMenu, durationOptions);
-    bindDurationMenu(durationBtnMobile, durationMenuMobile, durationOptionsMobile);
+    bindDurationMenu(durationBtnLand, durationMenuLand, durationOptionsLand);
 
     document.addEventListener("click", (e) => {
       const clickInsideDesktop = durationMenu.contains(e.target) || e.target === durationBtn;
-      const clickInsideMobile = durationMenuMobile.contains(e.target) || e.target === durationBtnMobile;
+      const clickInsideLand = durationMenuLand.contains(e.target) || e.target === durationBtnLand;
       if (!clickInsideDesktop) durationMenu.classList.remove("show");
-      if (!clickInsideMobile) durationMenuMobile.classList.remove("show");
+      if (!clickInsideLand) durationMenuLand.classList.remove("show");
     });
 
-    pauseResumeBtn.addEventListener("click", togglePauseResume);
-    pauseResumeBtnMobile.addEventListener("click", togglePauseResume);
-    resetTimerBtn.addEventListener("click", () => hardResetTimer(true));
-    resetTimerBtnMobile.addEventListener("click", () => hardResetTimer(true));
+    [pauseResumeBtn, pauseResumeBtnLand].forEach(btn => btn.addEventListener("click", togglePauseResume));
+    [resetTimerBtn, resetTimerBtnLand].forEach(btn => btn.addEventListener("click", () => hardResetTimer(true)));
 
-    openPosterBtn.addEventListener("click", openQrOnlyModal);
-    openPosterBtnMobile.addEventListener("click", openQrOnlyModal);
+    [openPosterBtn, openPosterBtnLand].forEach(btn => btn.addEventListener("click", openQrOnlyModal));
     qrOnlyModal.addEventListener("click", closeQrOnlyModal);
 
-    mainActionBtn.addEventListener("click", () => {
-      if (!roundActive) {
-        startTimer();
-        return;
-      }
-      openAnswerModal();
+    getActionButtons().forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!roundActive) {
+          startTimer();
+          return;
+        }
+        openAnswerModal();
+      });
     });
 
     answerTeam1.addEventListener("click", () => finishRound("team1"));
@@ -1611,8 +1618,11 @@
       if (e.target === answerModal) closeAnswerModal();
     });
 
+    backBtnLandscape.addEventListener("click", goBackToNumbers);
+
     loadHeaderData();
     syncDurationButtons();
+    syncActionButtons();
     updateTimerDisplay();
     renderQr();
   </script>

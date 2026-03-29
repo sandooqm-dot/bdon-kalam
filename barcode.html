@@ -31,15 +31,14 @@
 
       --green:#0b6a39;
       --green-dark:#08582f;
-      --green-soft:#e7e2ca;
       --milk:#f4efdc;
       --poster:#dde4cb;
 
       --line:#1d1922;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
 
-      --footer-space-p: 118px;
-      --footer-space-l: 96px;
+      --footer-space-p: 98px;
+      --footer-space-l: 82px;
     }
 
     *{
@@ -100,7 +99,7 @@
       width:min(100%, 960px);
       min-height:108px;
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-      border:4px solid var(--line);
+      border:4px solid #000;
       border-radius:34px;
       box-shadow:0 10px 0 rgba(0,0,0,.28);
       padding:14px 18px;
@@ -160,7 +159,7 @@
       min-height:58px;
       padding:8px 12px;
       border-radius:22px;
-      border:3px solid var(--line);
+      border:3px solid #000;
       background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
       box-shadow:0 6px 0 rgba(0,0,0,.18);
       display:flex;
@@ -189,7 +188,7 @@
       width:38px;
       height:38px;
       border-radius:14px;
-      border:3px solid var(--line);
+      border:3px solid #000;
       background:var(--gold);
       box-shadow:0 4px 0 rgba(0,0,0,.16);
       color:#3f2b0c;
@@ -350,16 +349,16 @@
     .barcode-stage{
       width:min(100%, 960px);
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-      border:4px solid var(--line);
+      border:4px solid #000;
       border-radius:34px;
       box-shadow:0 10px 0 rgba(0,0,0,.28);
-      padding:18px 18px 18px;
+      padding:18px 18px 16px;
     }
 
     .barcode-title{
-      margin:0 0 12px;
+      margin:0 0 14px;
       text-align:center;
-      color:var(--green);
+      color:#111;
       font-size:clamp(24px, 4.5vw, 42px);
       line-height:1.45;
     }
@@ -379,20 +378,10 @@
       height:560px;
       background:var(--poster);
       border-radius:28px;
+      border:3px solid #000;
       box-shadow:0 10px 22px rgba(0,0,0,.12);
-      border:1px solid rgba(0,0,0,.06);
       position:relative;
       overflow:hidden;
-    }
-
-    .poster-mark{
-      position:absolute;
-      top:14px;
-      left:16px;
-      width:34px;
-      height:34px;
-      object-fit:contain;
-      display:block;
     }
 
     .poster-title{
@@ -462,13 +451,13 @@
     .poster-game-logo{
       position:absolute;
       left:50%;
-      bottom:12px;
+      bottom:28px;
       transform:translateX(-50%) rotate(-4deg);
       display:inline-flex;
       flex-direction:column;
       align-items:center;
       line-height:.84;
-      color:#0e5a30;
+      color:#111;
       font-size:34px;
       letter-spacing:-.5px;
       text-shadow:
@@ -503,87 +492,14 @@
       display:flex;
     }
 
-    .modal-shell{
-      position:relative;
-      width:min(100%, 1180px);
-    }
-
-    .close-modal{
-      position:absolute;
-      top:-10px;
-      right:-10px;
-      width:56px;
-      height:56px;
-      border:none;
-      border-radius:50%;
-      border:4px solid #fff;
-      background:#151515;
-      color:#fff;
-      font-size:34px;
-      line-height:1;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:5;
-    }
-
-    .poster-modal{
-      width:min(100%, 1120px);
-      background:var(--poster);
-      border-radius:26px;
-      box-shadow:0 14px 30px rgba(0,0,0,.24);
-      padding:24px 30px 24px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .poster-modal .poster-mark{
-      top:22px;
-      left:26px;
-      width:52px;
-      height:52px;
-    }
-
-    .poster-modal .poster-title{
-      top:26px;
-      right:88px;
-      left:88px;
-      font-size:clamp(36px, 4vw, 64px);
-    }
-
-    .poster-modal .poster-list{
-      top:122px;
-      right:90px;
-      left:90px;
-      font-size:clamp(22px, 2.2vw, 40px);
-      line-height:1.65;
-    }
-
-    .poster-modal .poster-qr-wrap{
-      left:42px;
-      bottom:46px;
-    }
-
-    .poster-modal .poster-qr{
-      width:152px;
-      height:152px;
-      padding:6px;
-    }
-
-    .poster-modal .poster-qr-text{
-      font-size:28px;
-    }
-
-    .poster-modal .poster-boy{
-      right:32px;
-      bottom:0;
-      width:280px;
-    }
-
-    .poster-modal .poster-game-logo{
-      bottom:18px;
-      font-size:64px;
+    .qr-only{
+      width:min(80vw, 440px);
+      height:auto;
+      background:#fff;
+      border-radius:22px;
+      padding:14px;
+      box-shadow:0 18px 34px rgba(0,0,0,.28);
+      display:block;
     }
 
     .answer-card{
@@ -681,22 +597,22 @@
 
     .main-action{
       position:absolute;
-      right:18px;
-      bottom:18px;
-      min-width:250px;
-      height:82px;
+      right:8px;
+      bottom:8px;
+      min-width:210px;
+      height:72px;
       border:none;
-      border-radius:28px;
-      border:6px solid #000;
+      border-radius:24px;
+      border:5px solid #000;
       background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
       color:#fff;
-      font-size:clamp(34px, 5vw, 46px);
+      font-size:clamp(30px, 4.7vw, 42px);
       font-weight:700;
-      box-shadow:0 8px 0 rgba(0,0,0,.28);
+      box-shadow:0 7px 0 rgba(0,0,0,.28);
       cursor:pointer;
       pointer-events:auto;
       text-shadow:0 3px 0 rgba(0,0,0,.16);
-      padding:0 24px;
+      padding:0 22px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -824,6 +740,7 @@
       }
 
       .poster-game-logo{
+        bottom:24px;
         font-size:30px;
       }
 
@@ -843,8 +760,9 @@
       }
 
       .main-action{
-        right:12px;
-        min-width:220px;
+        right:6px;
+        bottom:6px;
+        min-width:195px;
       }
     }
 
@@ -965,13 +883,6 @@
         border-radius:24px;
       }
 
-      .poster-mark{
-        top:10px;
-        left:12px;
-        width:24px;
-        height:24px;
-      }
-
       .poster-title{
         top:14px;
         right:18px;
@@ -1009,12 +920,8 @@
       }
 
       .poster-game-logo{
-        bottom:6px;
+        bottom:16px;
         font-size:24px;
-      }
-
-      .poster-modal{
-        width:min(100%, 1120px);
       }
 
       .answer-card{
@@ -1040,13 +947,13 @@
       }
 
       .main-action{
-        right:14px;
-        bottom:14px;
-        min-width:220px;
-        height:68px;
+        right:8px;
+        bottom:6px;
+        min-width:190px;
+        height:62px;
         border-width:4px;
         box-shadow:0 5px 0 rgba(0,0,0,.24);
-        font-size:34px;
+        font-size:30px;
       }
     }
   </style>
@@ -1115,10 +1022,8 @@
       <section class="barcode-stage">
         <h2 class="barcode-title">امسح الـ QR وحاول تشرح لفريقك بدون ولا كلمة</h2>
 
-        <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير البطاقة">
+        <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
           <div class="poster-card">
-            <img class="poster-mark" src="logo.PNG" alt="">
-
             <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
 
             <ul class="poster-list">
@@ -1149,35 +1054,8 @@
     </div>
   </div>
 
-  <div id="posterModal" class="overlay" aria-hidden="true">
-    <div class="modal-shell">
-      <button id="closePosterBtn" class="close-modal" type="button" aria-label="إغلاق">×</button>
-
-      <div class="poster-modal">
-        <img class="poster-mark" src="logo.PNG" alt="">
-
-        <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
-
-        <ul class="poster-list">
-          <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
-          <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
-          <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
-          <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
-        </ul>
-
-        <div class="poster-qr-wrap">
-          <img id="qrImageLarge" class="poster-qr" alt="باركود السؤال الكبير">
-          <div class="poster-qr-text">امسح الباركود</div>
-        </div>
-
-        <img class="poster-boy" src="boy.PNG" alt="">
-
-        <div class="poster-game-logo">
-          <span class="word-top">بدون</span>
-          <span class="word-bottom">كلام</span>
-        </div>
-      </div>
-    </div>
+  <div id="qrOnlyModal" class="overlay" aria-hidden="true">
+    <img id="qrOnlyImage" class="qr-only" alt="باركود كبير">
   </div>
 
   <div id="answerModal" class="overlay" aria-hidden="true">
@@ -1214,8 +1092,8 @@
     const mainActionBtn = document.getElementById("mainActionBtn");
 
     const openPosterBtn = document.getElementById("openPosterBtn");
-    const posterModal = document.getElementById("posterModal");
-    const closePosterBtn = document.getElementById("closePosterBtn");
+    const qrOnlyModal = document.getElementById("qrOnlyModal");
+    const qrOnlyImage = document.getElementById("qrOnlyImage");
 
     const answerModal = document.getElementById("answerModal");
     const answerTeam1 = document.getElementById("answerTeam1");
@@ -1224,7 +1102,6 @@
     const answerBackBtn = document.getElementById("answerBackBtn");
 
     const qrImageSmall = document.getElementById("qrImageSmall");
-    const qrImageLarge = document.getElementById("qrImageLarge");
 
     let selectedDuration = Number(sessionStorage.getItem("bdonKalam_timerDuration") || 60);
     let remainingSeconds = selectedDuration;
@@ -1379,14 +1256,14 @@
       answerModal.setAttribute("aria-hidden", "true");
     }
 
-    function openPosterModal() {
-      posterModal.classList.add("show");
-      posterModal.setAttribute("aria-hidden", "false");
+    function openQrOnlyModal() {
+      qrOnlyModal.classList.add("show");
+      qrOnlyModal.setAttribute("aria-hidden", "false");
     }
 
-    function closePosterModal() {
-      posterModal.classList.remove("show");
-      posterModal.setAttribute("aria-hidden", "true");
+    function closeQrOnlyModal() {
+      qrOnlyModal.classList.remove("show");
+      qrOnlyModal.setAttribute("aria-hidden", "true");
     }
 
     function goBackToNumbers() {
@@ -1416,9 +1293,9 @@
 
     function renderQr() {
       const revealUrl = buildRevealUrl();
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(revealUrl)}`;
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&data=${encodeURIComponent(revealUrl)}`;
       qrImageSmall.src = qrUrl;
-      qrImageLarge.src = qrUrl;
+      qrOnlyImage.src = qrUrl;
     }
 
     durationBtn.addEventListener("click", () => {
@@ -1446,12 +1323,8 @@
     pauseResumeBtn.addEventListener("click", togglePauseResume);
     resetTimerBtn.addEventListener("click", () => hardResetTimer(true));
 
-    openPosterBtn.addEventListener("click", openPosterModal);
-    closePosterBtn.addEventListener("click", closePosterModal);
-
-    posterModal.addEventListener("click", (e) => {
-      if (e.target === posterModal) closePosterModal();
-    });
+    openPosterBtn.addEventListener("click", openQrOnlyModal);
+    qrOnlyModal.addEventListener("click", closeQrOnlyModal);
 
     mainActionBtn.addEventListener("click", () => {
       if (!roundActive) {

@@ -149,7 +149,6 @@
     .strip-title-text .word-top{ transform:translateY(-6px); }
     .strip-title-text .word-bottom{ transform:translateY(2px); }
 
-    /* ✅ النتائج صارت دائمًا بجانب بعض */
     .strip-scores{
       width:min(100%, 430px);
       display:grid;
@@ -515,12 +514,13 @@
       display:block;
     }
 
+    /* ✅ تغيير ألوان نافذة مين جاوب من الأخضر إلى ألوان اللعبة/الأسود */
     .answer-card{
       width:min(100%, 980px);
       min-height:min(72vh, 620px);
       background:#ececec;
       border-radius:34px;
-      border:6px solid var(--green);
+      border:6px solid #000;
       box-shadow:0 16px 28px rgba(0,0,0,.22);
       overflow:hidden;
       position:relative;
@@ -528,7 +528,7 @@
 
     .answer-top{
       height:24px;
-      background:var(--green);
+      background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
     }
 
     .answer-content{
@@ -555,7 +555,7 @@
       min-height:86px;
       border:none;
       border-radius:999px;
-      border:5px solid var(--green);
+      border:5px solid #000;
       background:linear-gradient(180deg, #f8f4e4 0%, #e7dfc2 100%);
       color:#111;
       box-shadow:0 8px 0 rgba(0,0,0,.18);
@@ -584,7 +584,7 @@
       height:72px;
       border:none;
       border-radius:999px;
-      border:5px solid var(--green);
+      border:5px solid #000;
       background:linear-gradient(180deg, #f8f4e4 0%, #e7dfc2 100%);
       color:#111;
       box-shadow:0 8px 0 rgba(0,0,0,.18);
@@ -638,7 +638,8 @@
     }
 
     .main-action.alt{
-      background:linear-gradient(180deg, var(--green) 0%, var(--green-dark) 100%);
+      background:linear-gradient(180deg, #202020 0%, #050505 100%);
+      color:#fff;
     }
 
     @media (max-width:700px){

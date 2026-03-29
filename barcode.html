@@ -102,18 +102,26 @@
       border:4px solid #000;
       border-radius:34px;
       box-shadow:0 10px 0 rgba(0,0,0,.28);
-      padding:14px 18px;
+      padding:14px 148px;
+      position:relative;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:14px;
+      justify-content:center;
+      overflow:hidden;
+      gap:0;
     }
 
     .strip-title{
-      min-width:140px;
+      position:absolute;
+      right:18px;
+      top:50%;
+      transform:translateY(-50%);
+      width:118px;
       display:flex;
-      justify-content:flex-start;
+      justify-content:flex-end;
       align-items:center;
+      user-select:none;
+      pointer-events:none;
     }
 
     .strip-title-text{
@@ -122,7 +130,7 @@
       align-items:center;
       line-height:.84;
       color:#11101a;
-      font-size:clamp(34px, 6vw, 54px);
+      font-size:clamp(32px, 5.6vw, 52px);
       letter-spacing:-.5px;
       transform:rotate(-6deg);
       text-shadow:
@@ -136,43 +144,42 @@
          4px  0   0 #fff,
          0    7px 0 rgba(0,0,0,.05);
       filter:drop-shadow(0 6px 0 rgba(0,0,0,.04));
-      user-select:none;
-      pointer-events:none;
     }
 
     .strip-title-text .word-top{ transform:translateY(-6px); }
     .strip-title-text .word-bottom{ transform:translateY(2px); }
 
+    /* ✅ النتائج صارت دائمًا بجانب بعض */
     .strip-scores{
-      flex:1 1 auto;
-      min-width:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
+      width:min(100%, 430px);
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
       gap:10px;
-      flex-wrap:wrap;
+      align-items:center;
+      direction:ltr;
     }
 
     .score-chip{
-      min-width:150px;
-      max-width:260px;
+      min-width:0;
+      width:100%;
       min-height:58px;
-      padding:8px 12px;
+      padding:8px 10px;
       border-radius:22px;
       border:3px solid #000;
       background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
       box-shadow:0 6px 0 rgba(0,0,0,.18);
       display:flex;
       align-items:center;
-      gap:10px;
+      gap:8px;
       justify-content:space-between;
+      direction:ltr;
     }
 
     .score-chip-name{
       flex:1 1 auto;
       min-width:0;
       color:#173e73;
-      font-size:22px;
+      font-size:20px;
       line-height:1.15;
       white-space:nowrap;
       overflow:hidden;
@@ -180,6 +187,7 @@
       text-align:right;
       display:flex;
       align-items:center;
+      justify-content:flex-end;
       min-height:100%;
       transform:translateY(-1px);
     }
@@ -202,12 +210,17 @@
       line-height:1;
       font-weight:700;
       font-variant-numeric:tabular-nums;
+      order:-1;
     }
 
     .strip-logo{
-      min-width:110px;
+      position:absolute;
+      left:18px;
+      top:50%;
+      transform:translateY(-50%);
+      width:118px;
       display:flex;
-      justify-content:flex-end;
+      justify-content:flex-start;
       align-items:center;
       user-select:none;
       pointer-events:none;
@@ -215,7 +228,7 @@
     }
 
     .strip-logo img{
-      width:min(146px, 30vw);
+      width:min(130px, 26vw);
       height:auto;
       display:block;
     }
@@ -639,31 +652,32 @@
       }
 
       .top-strip{
-        padding:14px 12px;
+        min-height:98px;
+        padding:12px 108px;
         border-radius:28px;
-        gap:10px;
       }
 
       .strip-title{
-        min-width:106px;
+        right:10px;
+        width:82px;
       }
 
       .strip-title-text{
-        font-size:clamp(26px, 6vw, 42px);
+        font-size:clamp(22px, 5vw, 36px);
       }
 
       .strip-scores{
+        width:min(100%, 280px);
         gap:8px;
       }
 
       .score-chip{
-        min-width:126px;
         min-height:52px;
-        padding:6px 10px;
+        padding:6px 8px;
       }
 
       .score-chip-name{
-        font-size:18px;
+        font-size:17px;
       }
 
       .score-chip-num{
@@ -673,11 +687,12 @@
       }
 
       .strip-logo{
-        min-width:76px;
+        left:10px;
+        width:82px;
       }
 
       .strip-logo img{
-        width:min(110px, 24vw);
+        width:min(82px, 20vw);
       }
 
       .timer-dock{
@@ -785,16 +800,27 @@
 
       .top-strip{
         min-height:78px;
-        padding:8px 14px;
+        padding:8px 132px;
         border-radius:28px;
       }
 
       .strip-title{
-        min-width:112px;
+        right:14px;
+        width:102px;
       }
 
       .strip-title-text{
         font-size:30px;
+      }
+
+      .strip-scores{
+        width:min(100%, 390px);
+        gap:10px;
+      }
+
+      .strip-logo{
+        left:14px;
+        width:102px;
       }
 
       .strip-logo img{
@@ -802,8 +828,6 @@
       }
 
       .score-chip{
-        min-width:126px;
-        max-width:190px;
         min-height:42px;
         padding:6px 10px;
         border-width:3px;

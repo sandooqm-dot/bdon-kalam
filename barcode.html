@@ -365,10 +365,6 @@
       color:#fffdf7;
     }
 
-    .content-layout{
-      display:block;
-    }
-
     .stage{
       width:min(100%, 960px);
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
@@ -787,7 +783,7 @@
       }
 
       .portrait-only{ display:none !important; }
-      .landscape-only{ display:block !important; }
+      .landscape-only{ display:none !important; }
 
       .shell{
         width:min(100%, 100%);
@@ -796,41 +792,90 @@
       }
 
       .topbar{
-        min-height:92px;
-        padding:10px 14px;
+        min-height:72px;
+        padding:8px 12px;
       }
 
       .topbar-land{
-        display:grid;
-        grid-template-columns:auto auto auto auto auto auto;
-        align-items:center;
-        gap:10px;
-        direction:rtl;
-        justify-content:space-between;
-      }
-
-      .land-store-logo,
-      .land-game-logo,
-      .land-score-row,
-      .land-duration-wrap,
-      .land-timer,
-      .land-back{
-        flex:0 0 auto;
         display:flex;
         align-items:center;
+        gap:8px;
+        width:100%;
+        direction:ltr;
       }
 
-      .land-store-logo img{
-        width:46px;
-        height:auto;
-        display:block;
+      .land-back{
+        flex:0 0 auto;
       }
 
-      .land-game-logo .game-logo{
-        font-size:30px;
+      .land-back .back-btn{
+        min-width:82px;
+        height:40px;
+        border-width:3px;
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        font-size:17px;
+        padding:0 14px;
+      }
+
+      .land-timer{
+        flex:0 0 auto;
+      }
+
+      .land-timer .timer-dock{
+        min-width:182px;
+        height:40px;
+        border-width:3px;
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        padding:0 9px;
+        gap:8px;
+      }
+
+      .land-timer .timer-control{
+        width:24px;
+        height:24px;
+        border-width:2px;
+      }
+
+      .land-timer .timer-control svg{
+        width:13px;
+        height:13px;
+      }
+
+      .land-timer .timer-value{
+        min-width:60px;
+        font-size:19px;
+      }
+
+      .land-duration-wrap{
+        flex:0 0 auto;
+        position:relative;
+      }
+
+      .land-duration-wrap .duration-btn{
+        min-width:96px;
+        height:40px;
+        border-width:3px;
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        font-size:17px;
+        padding:0 12px;
+      }
+
+      .land-duration-wrap .duration-menu{
+        top:50px;
+        left:0;
+        right:auto;
+        padding:10px;
+        border-width:3px;
+        box-shadow:0 8px 0 rgba(0,0,0,.20);
+      }
+
+      .land-duration-wrap .duration-option{
+        height:38px;
+        font-size:16px;
       }
 
       .land-score-row{
+        flex:0 0 auto;
         display:flex;
         align-items:center;
         gap:8px;
@@ -838,11 +883,11 @@
       }
 
       .land-score-chip{
-        width:146px;
-        min-width:146px;
-        min-height:42px;
-        padding:5px 8px;
-        border-radius:18px;
+        width:134px;
+        min-width:134px;
+        height:40px;
+        padding:4px 7px;
+        border-radius:16px;
         border:3px solid #000;
         background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
         box-shadow:0 4px 0 rgba(0,0,0,.15);
@@ -857,27 +902,25 @@
         flex:1 1 auto;
         min-width:0;
         color:#173e73;
-        font-size:15px;
-        line-height:1.1;
-        white-space:normal;
-        overflow:visible;
-        text-overflow:clip;
+        font-size:14px;
+        line-height:1.05;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
         text-align:right;
         display:flex;
         align-items:center;
         justify-content:flex-end;
-        min-height:28px;
         padding:0 2px;
-        word-break:break-word;
       }
 
       .land-score-num{
-        width:28px;
-        height:28px;
-        border-radius:11px;
+        width:24px;
+        height:24px;
+        border-radius:10px;
         border:3px solid #000;
         background:var(--gold);
-        box-shadow:0 3px 0 rgba(0,0,0,.14);
+        box-shadow:0 2px 0 rgba(0,0,0,.14);
         color:#3f2b0c;
         display:flex;
         align-items:center;
@@ -887,71 +930,32 @@
         direction:ltr;
         text-align:center;
         line-height:1;
-        font-size:18px;
+        font-size:15px;
         font-weight:700;
         order:-1;
       }
 
-      .land-duration-wrap .duration-btn{
-        min-width:110px;
-        height:44px;
-        border-width:3px;
-        box-shadow:0 4px 0 rgba(0,0,0,.18);
-        font-size:19px;
-        padding:0 14px;
-      }
-
-      .land-timer .timer-dock{
-        min-width:200px;
-        height:44px;
-        border-width:3px;
-        box-shadow:0 4px 0 rgba(0,0,0,.18);
-        padding:0 10px;
+      .brand-cluster{
+        flex:0 0 auto;
+        display:flex;
+        align-items:center;
         gap:8px;
+        margin-left:auto;
       }
 
-      .land-timer .timer-control{
-        width:28px;
-        height:28px;
-        border-width:2px;
+      .land-game-logo .game-logo{
+        font-size:26px;
       }
 
-      .land-timer .timer-control svg{
-        width:15px;
-        height:15px;
-      }
-
-      .land-timer .timer-value{
-        min-width:66px;
-        font-size:22px;
-      }
-
-      .land-back .back-btn{
-        min-width:88px;
-        height:44px;
-        border-width:3px;
-        box-shadow:0 4px 0 rgba(0,0,0,.18);
-        font-size:18px;
-        padding:0 14px;
-      }
-
-      .land-duration-wrap .duration-menu{
-        top:56px;
-        right:0;
-        left:auto;
-        padding:10px;
-        border-width:3px;
-        box-shadow:0 8px 0 rgba(0,0,0,.20);
-      }
-
-      .land-duration-wrap .duration-option{
-        height:40px;
-        font-size:17px;
+      .land-store-logo img{
+        width:38px;
+        height:auto;
+        display:block;
       }
 
       .stage{
         width:100%;
-        min-height:calc(100vh - 146px);
+        min-height:calc(100vh - 126px);
         padding:14px 16px 12px;
         border-radius:28px;
         display:flex;
@@ -1082,38 +1086,8 @@
         </div>
 
         <div class="topbar-land landscape-only">
-          <div class="land-store-logo">
-            <img src="logo.PNG" alt="صندوق المسابقات">
-          </div>
-
-          <div class="land-game-logo" aria-hidden="true">
-            <div class="game-logo">
-              <span class="word-top">بدون</span>
-              <span class="word-bottom">كلام</span>
-            </div>
-          </div>
-
-          <div class="land-score-row" aria-label="نتائج الفريقين">
-            <div class="land-score-chip">
-              <div class="land-score-name" id="team1NameLand">الفريق الأول</div>
-              <div class="land-score-num"><span id="team1ScoreLand">0</span></div>
-            </div>
-
-            <div class="land-score-chip">
-              <div class="land-score-name" id="team2NameLand">الفريق الثاني</div>
-              <div class="land-score-num"><span id="team2ScoreLand">0</span></div>
-            </div>
-          </div>
-
-          <div class="land-duration-wrap">
-            <button id="durationBtnLand" class="duration-btn" type="button">60 ثانية</button>
-
-            <div id="durationMenuLand" class="duration-menu">
-              <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
-              <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
-              <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
-              <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
-            </div>
+          <div class="land-back">
+            <button id="backBtnLandscape" class="back-btn" type="button">رجوع</button>
           </div>
 
           <div class="land-timer">
@@ -1138,8 +1112,40 @@
             </div>
           </div>
 
-          <div class="land-back">
-            <button id="backBtnLandscape" class="back-btn" type="button">رجوع</button>
+          <div class="land-duration-wrap">
+            <button id="durationBtnLand" class="duration-btn" type="button">60 ثانية</button>
+
+            <div id="durationMenuLand" class="duration-menu">
+              <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
+              <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
+              <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
+              <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
+            </div>
+          </div>
+
+          <div class="land-score-row" aria-label="نتائج الفريقين">
+            <div class="land-score-chip">
+              <div class="land-score-name" id="team1NameLand">الفريق الأول</div>
+              <div class="land-score-num"><span id="team1ScoreLand">0</span></div>
+            </div>
+
+            <div class="land-score-chip">
+              <div class="land-score-name" id="team2NameLand">الفريق الثاني</div>
+              <div class="land-score-num"><span id="team2ScoreLand">0</span></div>
+            </div>
+          </div>
+
+          <div class="brand-cluster">
+            <div class="land-game-logo" aria-hidden="true">
+              <div class="game-logo">
+                <span class="word-top">بدون</span>
+                <span class="word-bottom">كلام</span>
+              </div>
+            </div>
+
+            <div class="land-store-logo">
+              <img src="logo.PNG" alt="صندوق المسابقات">
+            </div>
           </div>
         </div>
       </section>
@@ -1333,8 +1339,8 @@
     }
 
     function updateScore(teamKey) {
-      const current1 = Number(sessionStorage.getItem("bdonKalam_score1") || "0") || 0;
-      const current2 = Number(sessionStorage.getItem("bdonKalam_score2") || "0") || 0;
+      const current1 = Number(sessionStorage.getItem("bdonKalam_score1") || "0")) || 0;
+      const current2 = Number(sessionStorage.getItem("bdonKalam_score2") || "0")) || 0;
 
       const next1 = teamKey === "team1" ? current1 + 1 : current1;
       const next2 = teamKey === "team2" ? current2 + 1 : current2;

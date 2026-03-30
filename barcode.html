@@ -27,7 +27,7 @@
       --poster:#dde4cb;
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --footer-space-p: 98px;
-      --footer-space-l: 76px;
+      --footer-space-l: 28px;
     }
 
     *{
@@ -84,7 +84,7 @@
     }
 
     .portrait-only{ display:block; }
-    .landscape-only{ display:none; }
+    .landscape-only{ display:none !important; }
 
     .ltr{
       direction:ltr;
@@ -357,6 +357,14 @@
     .duration-option.active{
       background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
       color:#fffdf7;
+    }
+
+    .content-layout{
+      display:block;
+    }
+
+    .land-sidebar{
+      display:none;
     }
 
     .stage{
@@ -773,7 +781,7 @@
       }
 
       .portrait-only{ display:none !important; }
-      .landscape-only{ display:flex !important; }
+      .landscape-only{ display:block !important; }
 
       .shell{
         width:min(100%, 100%);
@@ -787,22 +795,19 @@
       }
 
       .topbar-land{
+        display:flex !important;
         align-items:center;
         gap:8px;
         width:100%;
-        direction:ltr;
+        direction:rtl;
       }
 
-      .land-store-logo,
-      .land-game-logo,
-      .land-score-row,
-      .land-duration-wrap,
-      .land-timer,
-      .land-back{
-        flex:0 0 auto;
-        display:flex;
-        align-items:center;
-      }
+      /* الترتيب من اليمين لليسار */
+      .land-store-logo{ order:1; }
+      .land-game-logo{ order:2; }
+      .land-duration-wrap{ order:3; }
+      .land-timer{ order:4; }
+      .land-back{ order:5; margin-right:auto; }
 
       .land-store-logo img{
         width:38px;
@@ -810,72 +815,19 @@
         display:block;
       }
 
+      .land-game-logo{
+        display:flex;
+        align-items:center;
+      }
+
       .land-game-logo .game-logo{
         font-size:26px;
       }
 
-      .land-score-row{
-        display:flex;
-        align-items:center;
-        gap:8px;
-        direction:ltr;
-      }
-
-      .land-score-chip{
-        width:134px;
-        min-width:134px;
-        height:40px;
-        padding:4px 7px;
-        border-radius:16px;
-        border:3px solid #000;
-        background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
-        box-shadow:0 4px 0 rgba(0,0,0,.15);
-        display:flex;
-        align-items:center;
-        gap:6px;
-        justify-content:space-between;
-        direction:ltr;
-      }
-
-      .land-score-name{
-        flex:1 1 auto;
-        min-width:0;
-        color:#173e73;
-        font-size:14px;
-        line-height:1.05;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-        text-align:right;
-        display:flex;
-        align-items:center;
-        justify-content:flex-end;
-        padding:0 2px;
-      }
-
-      .land-score-num{
-        width:24px;
-        height:24px;
-        border-radius:10px;
-        border:3px solid #000;
-        background:var(--gold);
-        box-shadow:0 2px 0 rgba(0,0,0,.14);
-        color:#3f2b0c;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        flex:0 0 auto;
-        padding:0;
-        direction:ltr;
-        text-align:center;
-        line-height:1;
-        font-size:15px;
-        font-weight:700;
-        order:-1;
-      }
-
       .land-duration-wrap{
         position:relative;
+        display:flex;
+        align-items:center;
       }
 
       .land-duration-wrap .duration-btn{
@@ -889,8 +841,8 @@
 
       .land-duration-wrap .duration-menu{
         top:50px;
-        left:0;
-        right:auto;
+        right:0;
+        left:auto;
         padding:10px;
         border-width:3px;
         box-shadow:0 8px 0 rgba(0,0,0,.20);
@@ -899,6 +851,11 @@
       .land-duration-wrap .duration-option{
         height:38px;
         font-size:16px;
+      }
+
+      .land-timer{
+        display:flex;
+        align-items:center;
       }
 
       .land-timer .timer-dock{
@@ -926,8 +883,9 @@
         font-size:19px;
       }
 
-      .top-spacer{
-        flex:1 1 auto;
+      .land-back{
+        display:flex;
+        align-items:center;
       }
 
       .land-back .back-btn{
@@ -937,6 +895,83 @@
         box-shadow:0 4px 0 rgba(0,0,0,.18);
         font-size:17px;
         padding:0 14px;
+      }
+
+      .content-layout{
+        display:grid;
+        grid-template-columns:250px minmax(0, 1fr);
+        gap:12px;
+        align-items:start;
+      }
+
+      .land-sidebar{
+        display:flex;
+        flex-direction:column;
+        gap:12px;
+      }
+
+      .team-stack{
+        display:flex;
+        flex-direction:column;
+        gap:10px;
+      }
+
+      .team-panel{
+        width:100%;
+        background:linear-gradient(180deg, #fffdf9 0%, #f7f0dc 100%);
+        border:4px solid #000;
+        border-radius:28px;
+        box-shadow:0 8px 0 rgba(0,0,0,.20);
+        padding:14px 14px 12px;
+      }
+
+      .team-panel-name{
+        color:#173e73;
+        text-align:center;
+        font-size:28px;
+        line-height:1.15;
+        margin:0 0 12px;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .team-panel-score{
+        height:56px;
+        border-radius:22px;
+        border:4px solid #000;
+        background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+        box-shadow:0 5px 0 rgba(0,0,0,.16);
+        color:#fffdf7;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        font-size:34px;
+        line-height:1;
+        text-shadow:0 2px 0 rgba(0,0,0,.14);
+      }
+
+      .land-action-wrap{
+        display:flex;
+      }
+
+      .land-action-btn{
+        width:100%;
+        height:58px;
+        border:none;
+        border-radius:24px;
+        border:4px solid #000;
+        background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
+        color:#fffdf7;
+        box-shadow:0 6px 0 rgba(0,0,0,.22);
+        font-size:28px;
+        line-height:1;
+        text-shadow:0 2px 0 rgba(0,0,0,.16);
+        cursor:pointer;
+      }
+
+      .land-action-btn.alt{
+        background:linear-gradient(180deg, #202020 0%, #050505 100%);
       }
 
       .stage{
@@ -1008,18 +1043,7 @@
       }
 
       .bottom-bar{
-        height:var(--footer-space-l);
-      }
-
-      .main-action{
-        right:12px;
-        bottom:8px;
-        min-width:170px;
-        height:54px;
-        border-width:4px;
-        box-shadow:0 5px 0 rgba(0,0,0,.22);
-        font-size:28px;
-        padding:0 18px;
+        display:none;
       }
 
       .answer-card{
@@ -1083,18 +1107,6 @@
             </div>
           </div>
 
-          <div class="land-score-row" aria-label="نتائج الفريقين">
-            <div class="land-score-chip">
-              <div class="land-score-name" id="team1NameLand">الفريق الأول</div>
-              <div class="land-score-num"><span id="team1ScoreLand">0</span></div>
-            </div>
-
-            <div class="land-score-chip">
-              <div class="land-score-name" id="team2NameLand">الفريق الثاني</div>
-              <div class="land-score-num"><span id="team2ScoreLand">0</span></div>
-            </div>
-          </div>
-
           <div class="land-duration-wrap">
             <button id="durationBtnLand" class="duration-btn" type="button">60 ثانية</button>
 
@@ -1127,8 +1139,6 @@
               </button>
             </div>
           </div>
-
-          <div class="top-spacer"></div>
 
           <div class="land-back">
             <button id="backBtnLandscape" class="back-btn" type="button">رجوع</button>
@@ -1169,34 +1179,54 @@
         </div>
       </div>
 
-      <section class="stage">
-        <h2 class="barcode-title">امسح الـ <span class="ltr">QR</span> وحاول تشرح لفريقك بدون ولا كلمة</h2>
-
-        <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
-          <div class="poster-card">
-            <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
-
-            <ul class="poster-list">
-              <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
-              <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
-              <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
-              <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
-            </ul>
-
-            <div class="poster-qr-wrap">
-              <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
-              <div class="poster-qr-text">امسح الباركود</div>
+      <div class="content-layout">
+        <aside class="land-sidebar landscape-only">
+          <div class="team-stack">
+            <div class="team-panel">
+              <div class="team-panel-name" id="team1NameSide">الفريق الأول</div>
+              <div class="team-panel-score" id="team1ScoreSide">0</div>
             </div>
 
-            <img class="poster-boy" src="boy.PNG" alt="">
-
-            <div class="poster-game-logo">
-              <span class="word-top">بدون</span>
-              <span class="word-bottom">كلام</span>
+            <div class="team-panel">
+              <div class="team-panel-name" id="team2NameSide">الفريق الثاني</div>
+              <div class="team-panel-score" id="team2ScoreSide">0</div>
             </div>
           </div>
-        </button>
-      </section>
+
+          <div class="land-action-wrap">
+            <button id="mainActionBtnLand" class="land-action-btn" type="button">ابدأ</button>
+          </div>
+        </aside>
+
+        <section class="stage">
+          <h2 class="barcode-title">امسح الـ <span class="ltr">QR</span> وحاول تشرح لفريقك بدون ولا كلمة</h2>
+
+          <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
+            <div class="poster-card">
+              <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
+
+              <ul class="poster-list">
+                <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
+                <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
+                <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
+                <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
+              </ul>
+
+              <div class="poster-qr-wrap">
+                <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
+                <div class="poster-qr-text">امسح الباركود</div>
+              </div>
+
+              <img class="poster-boy" src="boy.PNG" alt="">
+
+              <div class="poster-game-logo">
+                <span class="word-top">بدون</span>
+                <span class="word-bottom">كلام</span>
+              </div>
+            </div>
+          </button>
+        </section>
+      </div>
     </main>
 
     <div class="bottom-bar">
@@ -1232,10 +1262,10 @@
     const team1ScoreEl = document.getElementById("team1Score");
     const team2ScoreEl = document.getElementById("team2Score");
 
-    const team1NameLandEl = document.getElementById("team1NameLand");
-    const team2NameLandEl = document.getElementById("team2NameLand");
-    const team1ScoreLandEl = document.getElementById("team1ScoreLand");
-    const team2ScoreLandEl = document.getElementById("team2ScoreLand");
+    const team1NameLandEl = document.getElementById("team1NameSide");
+    const team2NameLandEl = document.getElementById("team2NameSide");
+    const team1ScoreLandEl = document.getElementById("team1ScoreSide");
+    const team2ScoreLandEl = document.getElementById("team2ScoreSide");
 
     const timerDisplay = document.getElementById("timerDisplay");
     const timerDisplayLand = document.getElementById("timerDisplayLand");
@@ -1256,6 +1286,7 @@
     const resetTimerBtnLand = document.getElementById("resetTimerBtnLand");
 
     const mainActionBtn = document.getElementById("mainActionBtn");
+    const mainActionBtnLand = document.getElementById("mainActionBtnLand");
     const openPosterBtn = document.getElementById("openPosterBtn");
 
     const qrOnlyModal = document.getElementById("qrOnlyModal");
@@ -1294,6 +1325,10 @@
 
     function getDurationButtons() {
       return [durationBtn, durationBtnLand].filter(Boolean);
+    }
+
+    function getActionButtons() {
+      return [mainActionBtn, mainActionBtnLand].filter(Boolean);
     }
 
     function loadHeaderData() {
@@ -1372,8 +1407,10 @@
 
     function syncActionButton() {
       const text = roundActive ? "مين جاوب؟" : "ابدأ";
-      setText(mainActionBtn, text);
-      mainActionBtn.classList.toggle("alt", roundActive);
+      getActionButtons().forEach(btn => {
+        btn.textContent = text;
+        btn.classList.toggle("alt", roundActive);
+      });
     }
 
     function setDurationButtonsEnabled(enabled) {
@@ -1534,18 +1571,20 @@
       if (!clickInsideLand) durationMenuLand.classList.remove("show");
     });
 
-    [pauseResumeBtn, pauseResumeBtnLand].forEach(btn => btn.addEventListener("click", togglePauseResume));
+    getPauseButtons().forEach(btn => btn.addEventListener("click", togglePauseResume));
     [resetTimerBtn, resetTimerBtnLand].forEach(btn => btn.addEventListener("click", () => hardResetTimer(true)));
 
     openPosterBtn.addEventListener("click", openQrOnlyModal);
     qrOnlyModal.addEventListener("click", closeQrOnlyModal);
 
-    mainActionBtn.addEventListener("click", () => {
-      if (!roundActive) {
-        startTimer();
-        return;
-      }
-      openAnswerModal();
+    getActionButtons().forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (!roundActive) {
+          startTimer();
+          return;
+        }
+        openAnswerModal();
+      });
     });
 
     answerTeam1.addEventListener("click", () => finishRound("team1"));

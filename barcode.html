@@ -797,37 +797,51 @@
       .topbar-land{
         display:flex !important;
         align-items:center;
-        gap:8px;
+        gap:12px;
         width:100%;
-        direction:rtl;
+        direction:ltr;
       }
 
-      /* الترتيب من اليمين لليسار */
-      .land-store-logo{ order:1; }
-      .land-game-logo{ order:2; }
-      .land-duration-wrap{ order:3; }
-      .land-timer{ order:4; }
-      .land-back{ order:5; margin-right:auto; }
+      .land-back{
+        order:1;
+        display:flex;
+        align-items:center;
+      }
+
+      .land-timer{
+        order:2;
+        display:flex;
+        align-items:center;
+      }
+
+      .land-duration-wrap{
+        order:3;
+        position:relative;
+        display:flex;
+        align-items:center;
+      }
+
+      .land-game-logo{
+        order:4;
+        display:flex;
+        align-items:center;
+        margin-left:auto;
+      }
+
+      .land-store-logo{
+        order:5;
+        display:flex;
+        align-items:center;
+      }
 
       .land-store-logo img{
-        width:56px;
+        width:74px;
         height:auto;
         display:block;
       }
 
-      .land-game-logo{
-        display:flex;
-        align-items:center;
-      }
-
       .land-game-logo .game-logo{
         font-size:26px;
-      }
-
-      .land-duration-wrap{
-        position:relative;
-        display:flex;
-        align-items:center;
       }
 
       .land-duration-wrap .duration-btn{
@@ -841,8 +855,8 @@
 
       .land-duration-wrap .duration-menu{
         top:50px;
-        right:0;
-        left:auto;
+        left:0;
+        right:auto;
         padding:10px;
         border-width:3px;
         box-shadow:0 8px 0 rgba(0,0,0,.20);
@@ -851,11 +865,6 @@
       .land-duration-wrap .duration-option{
         height:38px;
         font-size:16px;
-      }
-
-      .land-timer{
-        display:flex;
-        align-items:center;
       }
 
       .land-timer .timer-dock{
@@ -883,11 +892,6 @@
         font-size:19px;
       }
 
-      .land-back{
-        display:flex;
-        align-items:center;
-      }
-
       .land-back .back-btn{
         min-width:82px;
         height:40px;
@@ -902,12 +906,25 @@
         grid-template-columns:250px minmax(0, 1fr);
         gap:12px;
         align-items:start;
+        direction:ltr;
       }
 
       .land-sidebar{
         display:flex;
         flex-direction:column;
         gap:12px;
+        direction:rtl;
+      }
+
+      .stage{
+        width:100%;
+        min-height:calc(100vh - 126px);
+        padding:14px 16px 12px;
+        border-radius:28px;
+        display:flex;
+        flex-direction:column;
+        justify-content:center;
+        direction:rtl;
       }
 
       .team-stack{
@@ -953,6 +970,7 @@
 
       .land-action-wrap{
         display:flex;
+        margin-top:24px;
       }
 
       .land-action-btn{
@@ -972,16 +990,6 @@
 
       .land-action-btn.alt{
         background:linear-gradient(180deg, #202020 0%, #050505 100%);
-      }
-
-      .stage{
-        width:100%;
-        min-height:calc(100vh - 126px);
-        padding:14px 16px 12px;
-        border-radius:28px;
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
       }
 
       .barcode-title{

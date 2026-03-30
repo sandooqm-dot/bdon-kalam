@@ -790,64 +790,44 @@
       }
 
       .topbar{
-        width:100%;
         min-height:72px;
-        padding:8px 16px;
+        padding:8px 12px;
       }
 
       .topbar-land{
-        display:grid !important;
-        grid-template-columns:auto auto auto 1fr auto auto;
+        display:flex !important;
         align-items:center;
-        gap:10px;
+        gap:8px;
         width:100%;
-        direction:ltr;
+        direction:rtl;
       }
 
-      .land-back{
-        grid-column:1;
-        display:flex;
-        align-items:center;
-        justify-self:start;
-      }
+      /* الترتيب من اليمين لليسار */
+      .land-store-logo{ order:1; }
+      .land-game-logo{ order:2; }
+      .land-duration-wrap{ order:3; }
+      .land-timer{ order:4; }
+      .land-back{ order:5; margin-right:auto; }
 
-      .land-timer{
-        grid-column:2;
-        display:flex;
-        align-items:center;
-        justify-self:start;
-      }
-
-      .land-duration-wrap{
-        grid-column:3;
-        position:relative;
-        display:flex;
-        align-items:center;
-        justify-self:start;
+      .land-store-logo img{
+        width:56px;
+        height:auto;
+        display:block;
       }
 
       .land-game-logo{
-        grid-column:5;
         display:flex;
         align-items:center;
-        justify-self:end;
-      }
-
-      .land-store-logo{
-        grid-column:6;
-        display:flex;
-        align-items:center;
-        justify-self:end;
-      }
-
-      .land-store-logo img{
-        height:48px;
-        width:auto;
-        display:block;
       }
 
       .land-game-logo .game-logo{
         font-size:26px;
+      }
+
+      .land-duration-wrap{
+        position:relative;
+        display:flex;
+        align-items:center;
       }
 
       .land-duration-wrap .duration-btn{
@@ -861,8 +841,8 @@
 
       .land-duration-wrap .duration-menu{
         top:50px;
-        right:auto;
-        left:0;
+        right:0;
+        left:auto;
         padding:10px;
         border-width:3px;
         box-shadow:0 8px 0 rgba(0,0,0,.20);
@@ -871,6 +851,11 @@
       .land-duration-wrap .duration-option{
         height:38px;
         font-size:16px;
+      }
+
+      .land-timer{
+        display:flex;
+        align-items:center;
       }
 
       .land-timer .timer-dock{
@@ -896,6 +881,11 @@
       .land-timer .timer-value{
         min-width:60px;
         font-size:19px;
+      }
+
+      .land-back{
+        display:flex;
+        align-items:center;
       }
 
       .land-back .back-btn{
@@ -963,8 +953,6 @@
 
       .land-action-wrap{
         display:flex;
-        margin-top:12px;
-        padding-top:6px;
       }
 
       .land-action-btn{

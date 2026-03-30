@@ -31,7 +31,7 @@
 
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --footer-space-p: 98px;
-      --footer-space-l: 24px;
+      --footer-space-l: 76px;
     }
 
     *{
@@ -315,6 +315,7 @@
       justify-content:center;
       background:linear-gradient(180deg, #fffdf8 0%, #efe4c7 100%);
       color:#111;
+      white-space:nowrap;
     }
 
     .duration-btn{
@@ -365,10 +366,6 @@
 
     .content-layout{
       display:block;
-    }
-
-    .side-panel{
-      display:none;
     }
 
     .stage{
@@ -793,102 +790,151 @@
 
       .shell{
         width:min(100%, 100%);
-        gap:12px;
+        gap:10px;
         padding-top:8px;
       }
 
       .topbar{
-        min-height:86px;
-        padding:10px 16px;
+        min-height:70px;
+        padding:8px 12px;
       }
 
       .topbar-land{
         display:flex;
         align-items:center;
         justify-content:flex-start;
-        gap:14px;
+        gap:10px;
         direction:rtl;
         flex-wrap:nowrap;
       }
 
-      .land-store-logo{
+      .land-store-logo,
+      .land-game-logo,
+      .land-score-row,
+      .land-duration-wrap,
+      .land-timer,
+      .land-back{
         flex:0 0 auto;
         display:flex;
         align-items:center;
-        justify-content:center;
       }
 
       .land-store-logo img{
-        width:60px;
+        width:48px;
         height:auto;
         display:block;
       }
 
-      .land-game-logo{
-        flex:0 0 auto;
+      .land-game-logo .game-logo{
+        font-size:30px;
+      }
+
+      .land-score-row{
+        display:flex;
+        align-items:center;
+        gap:8px;
+        direction:ltr;
+      }
+
+      .land-score-chip{
+        width:156px;
+        min-width:156px;
+        min-height:44px;
+        padding:5px 8px;
+        border-radius:18px;
+        border:3px solid #000;
+        background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
+        box-shadow:0 4px 0 rgba(0,0,0,.15);
+        display:flex;
+        align-items:center;
+        gap:6px;
+        justify-content:space-between;
+        direction:ltr;
+      }
+
+      .land-score-name{
+        flex:1 1 auto;
+        min-width:0;
+        color:#173e73;
+        font-size:17px;
+        line-height:1.15;
+        white-space:normal;
+        overflow:visible;
+        text-overflow:clip;
+        text-align:right;
+        display:flex;
+        align-items:center;
+        justify-content:flex-end;
+        min-height:32px;
+        padding:0 2px;
+      }
+
+      .land-score-num{
+        width:30px;
+        height:30px;
+        border-radius:12px;
+        border:3px solid #000;
+        background:var(--gold);
+        box-shadow:0 3px 0 rgba(0,0,0,.14);
+        color:#3f2b0c;
         display:flex;
         align-items:center;
         justify-content:center;
-      }
-
-      .land-game-logo .game-logo{
-        font-size:40px;
-      }
-
-      .land-duration-wrap{
-        position:relative;
         flex:0 0 auto;
+        padding:0;
+        direction:ltr;
+        text-align:center;
+        line-height:1;
+        font-size:18px;
+        font-weight:700;
+        order:-1;
       }
 
       .land-duration-wrap .duration-btn{
-        min-width:124px;
-        height:50px;
+        min-width:112px;
+        height:42px;
         border-width:3px;
-        box-shadow:0 5px 0 rgba(0,0,0,.20);
-        font-size:20px;
-      }
-
-      .land-timer{
-        flex:0 0 auto;
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        font-size:18px;
+        padding:0 14px;
       }
 
       .land-timer .timer-dock{
-        min-width:244px;
-        height:56px;
+        min-width:210px;
+        height:46px;
         border-width:3px;
-        box-shadow:0 5px 0 rgba(0,0,0,.20);
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        padding:0 10px;
+        gap:8px;
       }
 
       .land-timer .timer-control{
-        width:34px;
-        height:34px;
+        width:30px;
+        height:30px;
         border-width:2px;
       }
 
       .land-timer .timer-control svg{
-        width:18px;
-        height:18px;
+        width:16px;
+        height:16px;
       }
 
       .land-timer .timer-value{
-        min-width:82px;
-        font-size:26px;
-      }
-
-      .land-back{
-        flex:0 0 auto;
+        min-width:72px;
+        font-size:24px;
       }
 
       .land-back .back-btn{
-        min-width:108px;
-        height:50px;
+        min-width:92px;
+        height:42px;
         border-width:3px;
-        box-shadow:0 5px 0 rgba(0,0,0,.20);
-        font-size:20px;
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        font-size:18px;
+        padding:0 14px;
       }
 
       .land-duration-wrap .duration-menu{
-        top:62px;
+        top:54px;
         right:0;
         left:auto;
         padding:10px;
@@ -897,103 +943,17 @@
       }
 
       .land-duration-wrap .duration-option{
-        height:42px;
-        font-size:18px;
+        height:40px;
+        font-size:17px;
       }
 
       .content-layout{
-        display:grid;
-        grid-template-columns:270px minmax(0, 1fr);
-        gap:14px;
-        direction:ltr;
-        align-items:start;
-      }
-
-      .side-panel{
-        display:flex;
-        flex-direction:column;
-        gap:12px;
-        background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
-        border:4px solid #000;
-        border-radius:28px;
-        box-shadow:0 8px 0 rgba(0,0,0,.22);
-        padding:12px 10px 12px;
-        min-height:calc(100vh - 170px);
-      }
-
-      .side-score-card{
-        background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
-        border:4px solid #000;
-        border-radius:22px;
-        box-shadow:0 6px 0 rgba(0,0,0,.18);
-        padding:10px 10px 10px;
-        display:flex;
-        flex-direction:column;
-        gap:8px;
-      }
-
-      .side-score-name{
-        color:#173e73;
-        text-align:center;
-        font-size:22px;
-        line-height:1.18;
-        white-space:normal;
-        overflow:visible;
-        text-overflow:clip;
-        min-height:50px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:0 4px;
-        word-break:break-word;
-      }
-
-      .side-score-value{
-        min-height:42px;
-        border:4px solid #000;
-        border-radius:16px;
-        background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
-        color:#fff;
-        text-shadow:0 2px 0 rgba(0,0,0,.18);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        font-size:26px;
-        line-height:1;
-      }
-
-      .side-action-wrap{
-        margin-top:auto;
-        padding-top:8px;
-      }
-
-      .side-action{
-        width:100%;
-        min-height:60px;
-        border:none;
-        border-radius:20px;
-        border:4px solid #000;
-        background:linear-gradient(180deg, var(--gold) 0%, var(--gold-dark) 100%);
-        color:#fff;
-        box-shadow:0 6px 0 rgba(0,0,0,.22);
-        font-size:28px;
-        line-height:1;
-        text-shadow:0 2px 0 rgba(0,0,0,.18);
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        cursor:pointer;
-        padding:0 16px;
-      }
-
-      .side-action.alt{
-        background:linear-gradient(180deg, #202020 0%, #050505 100%);
+        display:block;
       }
 
       .stage{
         width:100%;
-        min-height:calc(100vh - 170px);
+        min-height:calc(100vh - 130px);
         padding:14px 16px 12px;
         border-radius:28px;
         display:flex;
@@ -1003,7 +963,7 @@
 
       .barcode-title{
         margin-bottom:10px;
-        font-size:clamp(20px, 2.1vw, 34px);
+        font-size:clamp(20px, 2vw, 32px);
       }
 
       .poster-trigger{
@@ -1059,6 +1019,21 @@
         font-size:22px;
       }
 
+      .bottom-bar{
+        height:var(--footer-space-l);
+      }
+
+      .main-action{
+        right:12px;
+        bottom:8px;
+        min-width:170px;
+        height:54px;
+        border-width:4px;
+        box-shadow:0 5px 0 rgba(0,0,0,.22);
+        font-size:28px;
+        padding:0 18px;
+      }
+
       .answer-card{
         min-height:min(70vh, 520px);
       }
@@ -1075,10 +1050,6 @@
       .answer-back{
         height:62px;
         font-size:clamp(20px, 2.2vw, 34px);
-      }
-
-      .bottom-bar{
-        display:none;
       }
     }
   </style>
@@ -1121,6 +1092,18 @@
             <div class="game-logo">
               <span class="word-top">بدون</span>
               <span class="word-bottom">كلام</span>
+            </div>
+          </div>
+
+          <div class="land-score-row" aria-label="نتائج الفريقين">
+            <div class="land-score-chip">
+              <div class="land-score-name" id="team1NameLand">الفريق الأول</div>
+              <div class="land-score-num"><span id="team1ScoreLand">0</span></div>
+            </div>
+
+            <div class="land-score-chip">
+              <div class="land-score-name" id="team2NameLand">الفريق الثاني</div>
+              <div class="land-score-num"><span id="team2ScoreLand">0</span></div>
             </div>
           </div>
 
@@ -1197,22 +1180,6 @@
       </div>
 
       <div class="content-layout">
-        <aside class="side-panel landscape-only">
-          <div class="side-score-card">
-            <div class="side-score-name" id="sideTeam1Name">الفريق الأول</div>
-            <div class="side-score-value" id="sideTeam1Score">0</div>
-          </div>
-
-          <div class="side-score-card">
-            <div class="side-score-name" id="sideTeam2Name">الفريق الثاني</div>
-            <div class="side-score-value" id="sideTeam2Score">0</div>
-          </div>
-
-          <div class="side-action-wrap">
-            <button id="sideActionBtn" class="side-action" type="button">ابدأ</button>
-          </div>
-        </aside>
-
         <section class="stage">
           <h2 class="barcode-title">امسح الـ <span class="ltr">QR</span> وحاول تشرح لفريقك بدون ولا كلمة</h2>
 
@@ -1244,7 +1211,7 @@
       </div>
     </main>
 
-    <div class="bottom-bar portrait-only">
+    <div class="bottom-bar">
       <button id="mainActionBtn" class="main-action" type="button">ابدأ</button>
     </div>
   </div>
@@ -1277,10 +1244,10 @@
     const team1ScoreEl = document.getElementById("team1Score");
     const team2ScoreEl = document.getElementById("team2Score");
 
-    const sideTeam1NameEl = document.getElementById("sideTeam1Name");
-    const sideTeam2NameEl = document.getElementById("sideTeam2Name");
-    const sideTeam1ScoreEl = document.getElementById("sideTeam1Score");
-    const sideTeam2ScoreEl = document.getElementById("sideTeam2Score");
+    const team1NameLandEl = document.getElementById("team1NameLand");
+    const team2NameLandEl = document.getElementById("team2NameLand");
+    const team1ScoreLandEl = document.getElementById("team1ScoreLand");
+    const team2ScoreLandEl = document.getElementById("team2ScoreLand");
 
     const timerDisplay = document.getElementById("timerDisplay");
     const timerDisplayLand = document.getElementById("timerDisplayLand");
@@ -1301,8 +1268,6 @@
     const resetTimerBtnLand = document.getElementById("resetTimerBtnLand");
 
     const mainActionBtn = document.getElementById("mainActionBtn");
-    const sideActionBtn = document.getElementById("sideActionBtn");
-
     const openPosterBtn = document.getElementById("openPosterBtn");
 
     const qrOnlyModal = document.getElementById("qrOnlyModal");
@@ -1335,10 +1300,6 @@
       if (el) el.textContent = value;
     }
 
-    function getActionButtons() {
-      return [mainActionBtn, sideActionBtn].filter(Boolean);
-    }
-
     function getPauseButtons() {
       return [pauseResumeBtn, pauseResumeBtnLand].filter(Boolean);
     }
@@ -1366,10 +1327,10 @@
       setText(team1ScoreEl, score1);
       setText(team2ScoreEl, score2);
 
-      setText(sideTeam1NameEl, team1);
-      setText(sideTeam2NameEl, team2);
-      setText(sideTeam1ScoreEl, score1);
-      setText(sideTeam2ScoreEl, score2);
+      setText(team1NameLandEl, team1);
+      setText(team2NameLandEl, team2);
+      setText(team1ScoreLandEl, score1);
+      setText(team2ScoreLandEl, score2);
 
       setText(answerTeam1, team1);
       setText(answerTeam2, team2);
@@ -1387,8 +1348,8 @@
 
       setText(team1ScoreEl, next1);
       setText(team2ScoreEl, next2);
-      setText(sideTeam1ScoreEl, next1);
-      setText(sideTeam2ScoreEl, next2);
+      setText(team1ScoreLandEl, next1);
+      setText(team2ScoreLandEl, next2);
     }
 
     function formatTime(totalSeconds) {
@@ -1421,12 +1382,10 @@
       });
     }
 
-    function syncActionButtons() {
+    function syncActionButton() {
       const text = roundActive ? "مين جاوب؟" : "ابدأ";
-      getActionButtons().forEach(btn => {
-        setText(btn, text);
-        btn.classList.toggle("alt", roundActive);
-      });
+      setText(mainActionBtn, text);
+      mainActionBtn.classList.toggle("alt", roundActive);
     }
 
     function setDurationButtonsEnabled(enabled) {
@@ -1447,7 +1406,7 @@
 
       if (resetRound) {
         roundActive = false;
-        syncActionButtons();
+        syncActionButton();
       }
     }
 
@@ -1456,7 +1415,7 @@
 
       roundActive = true;
       isRunning = true;
-      syncActionButtons();
+      syncActionButton();
       setDurationButtonsEnabled(false);
       updateTimerDisplay();
 
@@ -1593,14 +1552,12 @@
     openPosterBtn.addEventListener("click", openQrOnlyModal);
     qrOnlyModal.addEventListener("click", closeQrOnlyModal);
 
-    getActionButtons().forEach(btn => {
-      btn.addEventListener("click", () => {
-        if (!roundActive) {
-          startTimer();
-          return;
-        }
-        openAnswerModal();
-      });
+    mainActionBtn.addEventListener("click", () => {
+      if (!roundActive) {
+        startTimer();
+        return;
+      }
+      openAnswerModal();
     });
 
     answerTeam1.addEventListener("click", () => finishRound("team1"));
@@ -1616,7 +1573,7 @@
 
     loadHeaderData();
     syncDurationButtons();
-    syncActionButtons();
+    syncActionButton();
     updateTimerDisplay();
     renderQr();
   </script>

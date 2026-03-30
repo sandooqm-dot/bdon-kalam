@@ -19,16 +19,12 @@
       --dot:#e7d8ae;
       --ink:#18131d;
       --white:#fffdf7;
-
       --panel:#f8efd6;
       --panel-2:#f0e0b9;
-
       --gold:#f2b84a;
       --gold-dark:#d9981e;
-
       --green:#0b6a39;
       --poster:#dde4cb;
-
       --safe-bottom: env(safe-area-inset-bottom, 0px);
       --footer-space-p: 98px;
       --footer-space-l: 76px;
@@ -88,7 +84,7 @@
     }
 
     .portrait-only{ display:block; }
-    .landscape-only{ display:none !important; }
+    .landscape-only{ display:none; }
 
     .ltr{
       direction:ltr;
@@ -342,9 +338,7 @@
       z-index:20;
     }
 
-    .duration-menu.show{
-      display:flex;
-    }
+    .duration-menu.show{ display:flex; }
 
     .duration-option{
       min-width:88px;
@@ -429,9 +423,7 @@
       text-align:right;
     }
 
-    .poster-list li{
-      margin:2px 0;
-    }
+    .poster-list li{ margin:2px 0; }
 
     .poster-qr-wrap{
       position:absolute;
@@ -507,9 +499,7 @@
       z-index:90;
     }
 
-    .overlay.show{
-      display:flex;
-    }
+    .overlay.show{ display:flex; }
 
     .qr-only{
       width:min(80vw, 440px);
@@ -783,7 +773,7 @@
       }
 
       .portrait-only{ display:none !important; }
-      .landscape-only{ display:none !important; }
+      .landscape-only{ display:flex !important; }
 
       .shell{
         width:min(100%, 100%);
@@ -797,85 +787,34 @@
       }
 
       .topbar-land{
-        display:flex;
         align-items:center;
         gap:8px;
         width:100%;
         direction:ltr;
       }
 
+      .land-store-logo,
+      .land-game-logo,
+      .land-score-row,
+      .land-duration-wrap,
+      .land-timer,
       .land-back{
         flex:0 0 auto;
+        display:flex;
+        align-items:center;
       }
 
-      .land-back .back-btn{
-        min-width:82px;
-        height:40px;
-        border-width:3px;
-        box-shadow:0 4px 0 rgba(0,0,0,.18);
-        font-size:17px;
-        padding:0 14px;
+      .land-store-logo img{
+        width:38px;
+        height:auto;
+        display:block;
       }
 
-      .land-timer{
-        flex:0 0 auto;
-      }
-
-      .land-timer .timer-dock{
-        min-width:182px;
-        height:40px;
-        border-width:3px;
-        box-shadow:0 4px 0 rgba(0,0,0,.18);
-        padding:0 9px;
-        gap:8px;
-      }
-
-      .land-timer .timer-control{
-        width:24px;
-        height:24px;
-        border-width:2px;
-      }
-
-      .land-timer .timer-control svg{
-        width:13px;
-        height:13px;
-      }
-
-      .land-timer .timer-value{
-        min-width:60px;
-        font-size:19px;
-      }
-
-      .land-duration-wrap{
-        flex:0 0 auto;
-        position:relative;
-      }
-
-      .land-duration-wrap .duration-btn{
-        min-width:96px;
-        height:40px;
-        border-width:3px;
-        box-shadow:0 4px 0 rgba(0,0,0,.18);
-        font-size:17px;
-        padding:0 12px;
-      }
-
-      .land-duration-wrap .duration-menu{
-        top:50px;
-        left:0;
-        right:auto;
-        padding:10px;
-        border-width:3px;
-        box-shadow:0 8px 0 rgba(0,0,0,.20);
-      }
-
-      .land-duration-wrap .duration-option{
-        height:38px;
-        font-size:16px;
+      .land-game-logo .game-logo{
+        font-size:26px;
       }
 
       .land-score-row{
-        flex:0 0 auto;
         display:flex;
         align-items:center;
         gap:8px;
@@ -935,22 +874,69 @@
         order:-1;
       }
 
-      .brand-cluster{
-        flex:0 0 auto;
-        display:flex;
-        align-items:center;
+      .land-duration-wrap{
+        position:relative;
+      }
+
+      .land-duration-wrap .duration-btn{
+        min-width:96px;
+        height:40px;
+        border-width:3px;
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        font-size:17px;
+        padding:0 12px;
+      }
+
+      .land-duration-wrap .duration-menu{
+        top:50px;
+        left:0;
+        right:auto;
+        padding:10px;
+        border-width:3px;
+        box-shadow:0 8px 0 rgba(0,0,0,.20);
+      }
+
+      .land-duration-wrap .duration-option{
+        height:38px;
+        font-size:16px;
+      }
+
+      .land-timer .timer-dock{
+        min-width:182px;
+        height:40px;
+        border-width:3px;
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        padding:0 9px;
         gap:8px;
-        margin-left:auto;
       }
 
-      .land-game-logo .game-logo{
-        font-size:26px;
+      .land-timer .timer-control{
+        width:24px;
+        height:24px;
+        border-width:2px;
       }
 
-      .land-store-logo img{
-        width:38px;
-        height:auto;
-        display:block;
+      .land-timer .timer-control svg{
+        width:13px;
+        height:13px;
+      }
+
+      .land-timer .timer-value{
+        min-width:60px;
+        font-size:19px;
+      }
+
+      .top-spacer{
+        flex:1 1 auto;
+      }
+
+      .land-back .back-btn{
+        min-width:82px;
+        height:40px;
+        border-width:3px;
+        box-shadow:0 4px 0 rgba(0,0,0,.18);
+        font-size:17px;
+        padding:0 14px;
       }
 
       .stage{
@@ -1086,8 +1072,38 @@
         </div>
 
         <div class="topbar-land landscape-only">
-          <div class="land-back">
-            <button id="backBtnLandscape" class="back-btn" type="button">رجوع</button>
+          <div class="land-store-logo">
+            <img src="logo.PNG" alt="صندوق المسابقات">
+          </div>
+
+          <div class="land-game-logo" aria-hidden="true">
+            <div class="game-logo">
+              <span class="word-top">بدون</span>
+              <span class="word-bottom">كلام</span>
+            </div>
+          </div>
+
+          <div class="land-score-row" aria-label="نتائج الفريقين">
+            <div class="land-score-chip">
+              <div class="land-score-name" id="team1NameLand">الفريق الأول</div>
+              <div class="land-score-num"><span id="team1ScoreLand">0</span></div>
+            </div>
+
+            <div class="land-score-chip">
+              <div class="land-score-name" id="team2NameLand">الفريق الثاني</div>
+              <div class="land-score-num"><span id="team2ScoreLand">0</span></div>
+            </div>
+          </div>
+
+          <div class="land-duration-wrap">
+            <button id="durationBtnLand" class="duration-btn" type="button">60 ثانية</button>
+
+            <div id="durationMenuLand" class="duration-menu">
+              <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
+              <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
+              <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
+              <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
+            </div>
           </div>
 
           <div class="land-timer">
@@ -1112,40 +1128,10 @@
             </div>
           </div>
 
-          <div class="land-duration-wrap">
-            <button id="durationBtnLand" class="duration-btn" type="button">60 ثانية</button>
+          <div class="top-spacer"></div>
 
-            <div id="durationMenuLand" class="duration-menu">
-              <button class="duration-option" type="button" data-seconds="30">30 ثانية</button>
-              <button class="duration-option active" type="button" data-seconds="60">60 ثانية</button>
-              <button class="duration-option" type="button" data-seconds="90">90 ثانية</button>
-              <button class="duration-option" type="button" data-seconds="120">120 ثانية</button>
-            </div>
-          </div>
-
-          <div class="land-score-row" aria-label="نتائج الفريقين">
-            <div class="land-score-chip">
-              <div class="land-score-name" id="team1NameLand">الفريق الأول</div>
-              <div class="land-score-num"><span id="team1ScoreLand">0</span></div>
-            </div>
-
-            <div class="land-score-chip">
-              <div class="land-score-name" id="team2NameLand">الفريق الثاني</div>
-              <div class="land-score-num"><span id="team2ScoreLand">0</span></div>
-            </div>
-          </div>
-
-          <div class="brand-cluster">
-            <div class="land-game-logo" aria-hidden="true">
-              <div class="game-logo">
-                <span class="word-top">بدون</span>
-                <span class="word-bottom">كلام</span>
-              </div>
-            </div>
-
-            <div class="land-store-logo">
-              <img src="logo.PNG" alt="صندوق المسابقات">
-            </div>
+          <div class="land-back">
+            <button id="backBtnLandscape" class="back-btn" type="button">رجوع</button>
           </div>
         </div>
       </section>
@@ -1339,8 +1325,8 @@
     }
 
     function updateScore(teamKey) {
-      const current1 = Number(sessionStorage.getItem("bdonKalam_score1") || "0")) || 0;
-      const current2 = Number(sessionStorage.getItem("bdonKalam_score2") || "0")) || 0;
+      const current1 = Number(sessionStorage.getItem("bdonKalam_score1") || "0") || 0;
+      const current2 = Number(sessionStorage.getItem("bdonKalam_score2") || "0") || 0;
 
       const next1 = teamKey === "team1" ? current1 + 1 : current1;
       const next2 = teamKey === "team2" ? current2 + 1 : current2;

@@ -297,6 +297,7 @@
       line-height:1;
       font-variant-numeric:tabular-nums;
       letter-spacing:.4px;
+      white-space:nowrap;
     }
 
     .duration-btn,
@@ -795,17 +796,17 @@
       }
 
       .topbar{
-        min-height:70px;
-        padding:8px 12px;
+        min-height:92px;
+        padding:10px 14px;
       }
 
       .topbar-land{
-        display:flex;
+        display:grid;
+        grid-template-columns:auto auto auto auto auto auto;
         align-items:center;
-        justify-content:flex-start;
         gap:10px;
         direction:rtl;
-        flex-wrap:nowrap;
+        justify-content:space-between;
       }
 
       .land-store-logo,
@@ -820,7 +821,7 @@
       }
 
       .land-store-logo img{
-        width:48px;
+        width:46px;
         height:auto;
         display:block;
       }
@@ -837,9 +838,9 @@
       }
 
       .land-score-chip{
-        width:156px;
-        min-width:156px;
-        min-height:44px;
+        width:146px;
+        min-width:146px;
+        min-height:42px;
         padding:5px 8px;
         border-radius:18px;
         border:3px solid #000;
@@ -856,8 +857,8 @@
         flex:1 1 auto;
         min-width:0;
         color:#173e73;
-        font-size:17px;
-        line-height:1.15;
+        font-size:15px;
+        line-height:1.1;
         white-space:normal;
         overflow:visible;
         text-overflow:clip;
@@ -865,14 +866,15 @@
         display:flex;
         align-items:center;
         justify-content:flex-end;
-        min-height:32px;
+        min-height:28px;
         padding:0 2px;
+        word-break:break-word;
       }
 
       .land-score-num{
-        width:30px;
-        height:30px;
-        border-radius:12px;
+        width:28px;
+        height:28px;
+        border-radius:11px;
         border:3px solid #000;
         background:var(--gold);
         box-shadow:0 3px 0 rgba(0,0,0,.14);
@@ -891,17 +893,17 @@
       }
 
       .land-duration-wrap .duration-btn{
-        min-width:112px;
-        height:42px;
+        min-width:110px;
+        height:44px;
         border-width:3px;
         box-shadow:0 4px 0 rgba(0,0,0,.18);
-        font-size:18px;
+        font-size:19px;
         padding:0 14px;
       }
 
       .land-timer .timer-dock{
-        min-width:210px;
-        height:46px;
+        min-width:200px;
+        height:44px;
         border-width:3px;
         box-shadow:0 4px 0 rgba(0,0,0,.18);
         padding:0 10px;
@@ -909,24 +911,24 @@
       }
 
       .land-timer .timer-control{
-        width:30px;
-        height:30px;
+        width:28px;
+        height:28px;
         border-width:2px;
       }
 
       .land-timer .timer-control svg{
-        width:16px;
-        height:16px;
+        width:15px;
+        height:15px;
       }
 
       .land-timer .timer-value{
-        min-width:72px;
-        font-size:24px;
+        min-width:66px;
+        font-size:22px;
       }
 
       .land-back .back-btn{
-        min-width:92px;
-        height:42px;
+        min-width:88px;
+        height:44px;
         border-width:3px;
         box-shadow:0 4px 0 rgba(0,0,0,.18);
         font-size:18px;
@@ -934,7 +936,7 @@
       }
 
       .land-duration-wrap .duration-menu{
-        top:54px;
+        top:56px;
         right:0;
         left:auto;
         padding:10px;
@@ -947,13 +949,9 @@
         font-size:17px;
       }
 
-      .content-layout{
-        display:block;
-      }
-
       .stage{
         width:100%;
-        min-height:calc(100vh - 130px);
+        min-height:calc(100vh - 146px);
         padding:14px 16px 12px;
         border-radius:28px;
         display:flex;
@@ -1179,36 +1177,34 @@
         </div>
       </div>
 
-      <div class="content-layout">
-        <section class="stage">
-          <h2 class="barcode-title">امسح الـ <span class="ltr">QR</span> وحاول تشرح لفريقك بدون ولا كلمة</h2>
+      <section class="stage">
+        <h2 class="barcode-title">امسح الـ <span class="ltr">QR</span> وحاول تشرح لفريقك بدون ولا كلمة</h2>
 
-          <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
-            <div class="poster-card">
-              <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
+        <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
+          <div class="poster-card">
+            <h3 class="poster-title">اقرأ القوانين بدقة وبعدها اضغط ابدأ!</h3>
 
-              <ul class="poster-list">
-                <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
-                <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
-                <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
-                <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
-              </ul>
+            <ul class="poster-list">
+              <li>١) لاعب واحد فقط يمسح الباركود ويشوف الجواب.</li>
+              <li>٢) ممنوع أي شخص غيره يطلع على المحتوى.</li>
+              <li>٣) الشرح يكون بالإشارات فقط بدون أي كلمة.</li>
+              <li>٤) اضغط ابدأ بعد فتح الباركود ليبدأ المؤقت.</li>
+            </ul>
 
-              <div class="poster-qr-wrap">
-                <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
-                <div class="poster-qr-text">امسح الباركود</div>
-              </div>
-
-              <img class="poster-boy" src="boy.PNG" alt="">
-
-              <div class="poster-game-logo">
-                <span class="word-top">بدون</span>
-                <span class="word-bottom">كلام</span>
-              </div>
+            <div class="poster-qr-wrap">
+              <img id="qrImageSmall" class="poster-qr" alt="باركود السؤال">
+              <div class="poster-qr-text">امسح الباركود</div>
             </div>
-          </button>
-        </section>
-      </div>
+
+            <img class="poster-boy" src="boy.PNG" alt="">
+
+            <div class="poster-game-logo">
+              <span class="word-top">بدون</span>
+              <span class="word-bottom">كلام</span>
+            </div>
+          </div>
+        </button>
+      </section>
     </main>
 
     <div class="bottom-bar">

@@ -640,6 +640,7 @@
     .step-head{
       display:flex;
       align-items:center;
+      justify-content:flex-start;
       gap:8px;
       margin-bottom:6px;
       color:#214a86;
@@ -647,18 +648,26 @@
     }
 
     .step-no{
-      width:30px;
-      height:30px;
+      width:34px;
+      height:34px;
+      min-width:34px;
+      min-height:34px;
       border-radius:10px;
       border:3px solid var(--line);
       background:var(--gold);
       box-shadow:0 3px 0 var(--shadow);
-      display:grid;
-      place-items:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:0;
       font-size:16px;
+      line-height:1;
       color:#3d2a0b;
       flex:0 0 auto;
       direction:ltr;
+      unicode-bidi:isolate;
+      font-variant-numeric:tabular-nums;
     }
 
     .step p{

@@ -33,7 +33,6 @@
 
       --card-bg:#A9784C;
 
-      /* ✅ لون اختيار أوضح بكثير */
       --selected:#D8A55A;
       --selected-ring:#F6D37A;
 
@@ -105,6 +104,21 @@
       --hkm-scale: 2.00;
       --hkm-y: 6px;
 
+      --random-card-h-p: 210px;
+      --random-img-h-p: 104px;
+      --random-title-h-p: 58px;
+      --random-title-size-p: 26px;
+      --random-title-y-p: -2px;
+
+      --random-card-h-l: 168px;
+      --random-img-h-l: 94px;
+      --random-title-h-l: 46px;
+      --random-title-size-l: 24px;
+      --random-title-y-l: -1px;
+
+      --random-scale: 1.95;
+      --random-y: 4px;
+
       --ram-card-h-p: 210px;
       --ram-img-h-p: 104px;
       --ram-title-h-p: 44px;
@@ -119,6 +133,21 @@
 
       --ram-scale: 2.00;
       --ram-y: 4px;
+
+      --spacetoon-card-h-p: 210px;
+      --spacetoon-img-h-p: 102px;
+      --spacetoon-title-h-p: 44px;
+      --spacetoon-title-size-p: 28px;
+      --spacetoon-title-y-p: 0px;
+
+      --spacetoon-card-h-l: 168px;
+      --spacetoon-img-h-l: 94px;
+      --spacetoon-title-h-l: 34px;
+      --spacetoon-title-size-l: 26px;
+      --spacetoon-title-y-l: 0px;
+
+      --spacetoon-scale: 1.95;
+      --spacetoon-y: 6px;
 
       --job-card-h-p: 210px;
       --job-img-h-p: 104px;
@@ -474,7 +503,6 @@
       transform:translateY(2px) scale(.99);
     }
 
-    /* ✅ تحسين وضوح الاختيار */
     .cat.selected{
       background:var(--selected);
       border-color:#f3c14f;
@@ -501,8 +529,9 @@
       line-height:1.12;
       min-height:var(--title-h);
       display:flex;
-      align-items:flex-start;
-      justify-content:center;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
       padding-top:4px;
       margin:0;
       font-size:min(var(--title-size), 8vw);
@@ -510,6 +539,17 @@
       text-shadow:
         0 3px 0 rgba(0,0,0,.42),
         0 0 12px rgba(0,0,0,.14);
+    }
+
+    .cat-subtitle{
+      display:block;
+      margin-top:4px;
+      font-size:.54em;
+      line-height:1;
+      opacity:.96;
+      text-shadow:
+        0 2px 0 rgba(0,0,0,.42),
+        0 0 8px rgba(0,0,0,.12);
     }
 
     .cat-visual{
@@ -546,6 +586,16 @@
       --img-y: var(--hkm-y);
     }
 
+    .cat[data-key="random"]{
+      --card-h: var(--random-card-h-p);
+      --img-h: var(--random-img-h-p);
+      --title-h: var(--random-title-h-p);
+      --title-size: var(--random-title-size-p);
+      --title-y: var(--random-title-y-p);
+      --img-scale: var(--random-scale);
+      --img-y: var(--random-y);
+    }
+
     .cat[data-key="ram"]{
       --card-h: var(--ram-card-h-p);
       --img-h: var(--ram-img-h-p);
@@ -554,6 +604,16 @@
       --title-y: var(--ram-title-y-p);
       --img-scale: var(--ram-scale);
       --img-y: var(--ram-y);
+    }
+
+    .cat[data-key="spacetoon"]{
+      --card-h: var(--spacetoon-card-h-p);
+      --img-h: var(--spacetoon-img-h-p);
+      --title-h: var(--spacetoon-title-h-p);
+      --title-size: var(--spacetoon-title-size-p);
+      --title-y: var(--spacetoon-title-y-p);
+      --img-scale: var(--spacetoon-scale);
+      --img-y: var(--spacetoon-y);
     }
 
     .cat[data-key="job"]{
@@ -805,7 +865,7 @@
 
       .board{
         width:min(100%, var(--board-width-l));
-        grid-template-columns:repeat(3, minmax(0, 1fr));
+        grid-template-columns:repeat(4, minmax(0, 1fr));
         gap:var(--board-gap-l);
         padding:var(--board-pad-l);
         border-radius:var(--board-radius-l);
@@ -819,12 +879,28 @@
         --title-y: var(--hkm-title-y-l);
       }
 
+      .cat[data-key="random"]{
+        --card-h: var(--random-card-h-l);
+        --img-h: var(--random-img-h-l);
+        --title-h: var(--random-title-h-l);
+        --title-size: var(--random-title-size-l);
+        --title-y: var(--random-title-y-l);
+      }
+
       .cat[data-key="ram"]{
         --card-h: var(--ram-card-h-l);
         --img-h: var(--ram-img-h-l);
         --title-h: var(--ram-title-h-l);
         --title-size: var(--ram-title-size-l);
         --title-y: var(--ram-title-y-l);
+      }
+
+      .cat[data-key="spacetoon"]{
+        --card-h: var(--spacetoon-card-h-l);
+        --img-h: var(--spacetoon-img-h-l);
+        --title-h: var(--spacetoon-title-h-l);
+        --title-size: var(--spacetoon-title-size-l);
+        --title-y: var(--spacetoon-title-y-l);
       }
 
       .cat[data-key="job"]{
@@ -958,9 +1034,19 @@
           <div class="cat-visual"><img src="hkm.PNG" alt="حكم وأمثال"></div>
         </button>
 
+        <button class="cat" type="button" data-key="random" data-name="جميع الأقسام">
+          <div class="cat-title">جميع الأقسام<span class="cat-subtitle">(عشوائي)</span></div>
+          <div class="cat-visual"><img src="random.PNG" alt="جميع الأقسام"></div>
+        </button>
+
         <button class="cat" type="button" data-key="ram" data-name="مسلسلات رمضانية">
           <div class="cat-title">مسلسلات رمضانية</div>
           <div class="cat-visual"><img src="ram.PNG" alt="مسلسلات رمضانية"></div>
+        </button>
+
+        <button class="cat" type="button" data-key="spacetoon" data-name="سبيستون">
+          <div class="cat-title">سبيستون</div>
+          <div class="cat-visual"><img src="spacetoon.PNG" alt="سبيستون"></div>
         </button>
 
         <button class="cat" type="button" data-key="job" data-name="وظائف ومهن">

@@ -1093,6 +1093,21 @@
     const savedKey = sessionStorage.getItem("bdonKalam_categoryKey") || "";
     let selectedKey = savedKey;
 
+    const RANDOM_POOL_KEY = "bdonKalam_randomPool_v1";
+    const RANDOM_INDEX_KEY = "bdonKalam_randomIndex_v1";
+    const RANDOM_MODE_KEY = "bdonKalam_randomMode_v1";
+    const RANDOM_SESSION_KEY = "bdonKalam_randomSessionId_v1";
+
+    const RANDOM_SOURCE_CATEGORIES = [
+      { key: "hkm", name: "حكم وأمثال", count: 30 },
+      { key: "ram", name: "مسلسلات رمضانية", count: 30 },
+      { key: "spacetoon", name: "سبيستون", count: 30 },
+      { key: "job", name: "وظائف ومهن", count: 30 },
+      { key: "kit", name: "أدوات المطبخ", count: 30 },
+      { key: "song", name: "أغاني", count: 30 },
+      { key: "place", name: "أماكن ومواقع", count: 30 }
+    ];
+
     function loadHeaderData() {
       const team1 = sessionStorage.getItem("bdonKalam_team1") || "الفريق الأول";
       const team2 = sessionStorage.getItem("bdonKalam_team2") || "الفريق الثاني";
@@ -1113,11 +1128,59 @@
       startBtn.disabled = !selectedKey;
     }
 
+    function clearRandomMode() {
+      sessionStorage.removeItem(RANDOM_POOL_KEY);
+      sessionStorage.removeItem(RANDOM_INDEX_KEY);
+      sessionStorage.removeItem(RANDOM_MODE_KEY);
+      sessionStorage.removeItem(RANDOM_SESSION_KEY);
+    }
+
+    function buildRandomPool() {
+      const pool = [];
+
+      RANDOM_SOURCE_CATEGORIES.forEach(category => {
+        for (let i = 1; i <= category.count; i++) {
+          pool.push({
+            key: category.key,
+            name: category.name,
+            number: i
+          });
+        }
+      });
+
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
+
+      return pool;
+    }
+
+    function startRandomMode() {
+      const pool = buildRandomPool();
+
+      sessionStorage.setItem("bdonKalam_categoryKey", "random");
+      sessionStorage.setItem("bdonKalam_categoryName", "جميع الأقسام");
+      sessionStorage.setItem(RANDOM_MODE_KEY, "1");
+      sessionStorage.setItem(RANDOM_POOL_KEY, JSON.stringify(pool));
+      sessionStorage.setItem(RANDOM_INDEX_KEY, "0");
+      sessionStorage.setItem(RANDOM_SESSION_KEY, String(Date.now()));
+      sessionStorage.removeItem("bdonKalam_selectedNumber");
+
+      window.location.href = "barcode.html?mode=random";
+    }
+
     cards.forEach(card => {
       card.addEventListener("click", () => {
         const key = card.dataset.key;
         const name = card.dataset.name;
 
+        if (key === "random") {
+          startRandomMode();
+          return;
+        }
+
+        clearRandomMode();
         sessionStorage.setItem("bdonKalam_categoryKey", key);
         sessionStorage.setItem("bdonKalam_categoryName", name);
         sessionStorage.removeItem("bdonKalam_selectedNumber");
@@ -1128,6 +1191,12 @@
 
     startBtn.addEventListener("click", () => {
       if (!selectedKey) return;
+
+      if (selectedKey === "random") {
+        startRandomMode();
+        return;
+      }
+
       window.location.href = "numbers.html";
     });
 
@@ -1136,7 +1205,12 @@
     });
 
     loadHeaderData();
-    applySelection(savedKey);
+
+    if (savedKey === "random") {
+      applySelection("");
+    } else {
+      applySelection(savedKey);
+    }
   </script>
 </body>
 </html>

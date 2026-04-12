@@ -788,176 +788,6 @@
       text-align:right;
     }
 
-    .setting-card{
-      background:linear-gradient(180deg, #f8efd7, #f0e3be);
-      border:4px solid var(--line);
-      box-shadow:0 10px 0 var(--shadow);
-      border-radius:34px;
-      padding:20px 22px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      margin-bottom:18px;
-    }
-
-    .setting-card.compact{
-      min-height:132px;
-    }
-
-    .setting-main{
-      text-align:right;
-      flex:1 1 auto;
-      min-width:0;
-    }
-
-    .setting-title{
-      margin:0 0 4px;
-      font-size:clamp(24px, 3.8vw, 40px);
-      color:#17131d;
-      line-height:1.2;
-    }
-
-    .setting-sub{
-      margin:0;
-      color:#4f4956;
-      font-size:clamp(16px, 2.4vw, 24px);
-      line-height:1.5;
-    }
-
-    .setting-icon{
-      width:78px;
-      height:78px;
-      border-radius:22px;
-      border:4px solid var(--line);
-      background:#f8e9ab;
-      box-shadow:0 6px 0 rgba(0,0,0,.18);
-      display:grid;
-      place-items:center;
-      color:#2d2617;
-      flex:0 0 auto;
-    }
-
-    .setting-icon svg{
-      width:40px;
-      height:40px;
-      display:block;
-    }
-
-    .toggle{
-      width:92px;
-      height:48px;
-      border:4px solid var(--line);
-      box-shadow:0 6px 0 rgba(0,0,0,.18);
-      border-radius:999px;
-      background:#cfd3d6;
-      position:relative;
-      cursor:pointer;
-      transition:background .16s ease;
-      flex:0 0 auto;
-    }
-
-    .toggle::before{
-      content:"";
-      position:absolute;
-      top:4px;
-      right:4px;
-      width:32px;
-      height:32px;
-      border-radius:50%;
-      background:#f5f5f5;
-      border:3px solid var(--line);
-      box-shadow:0 3px 0 rgba(0,0,0,.18);
-      transition:transform .16s ease;
-    }
-
-    .toggle.is-on{
-      background:linear-gradient(180deg, #6ad36e, #49b95d);
-    }
-
-    .toggle.is-on::before{
-      transform:translateX(-44px);
-    }
-
-    .range-card{
-      display:block;
-    }
-
-    .range-top{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:16px;
-      margin-bottom:18px;
-    }
-
-    .range-percent{
-      font-size:clamp(22px, 3.8vw, 38px);
-      color:#7a4cff;
-      line-height:1;
-      padding-top:6px;
-      min-width:64px;
-      text-align:left;
-      direction:ltr;
-    }
-
-    .range-area{
-      width:100%;
-      display:flex;
-      align-items:center;
-      gap:18px;
-    }
-
-    .range-slider{
-      --progress:70%;
-      direction:ltr;
-      width:100%;
-      height:22px;
-      appearance:none;
-      outline:none;
-      margin:0;
-      border-radius:999px;
-      border:4px solid var(--line);
-      background:
-        linear-gradient(90deg, #59ce70 0%, #59ce70 var(--progress), #fff6df var(--progress), #fff6df 100%);
-      box-shadow:0 5px 0 rgba(0,0,0,.18);
-      cursor:pointer;
-    }
-
-    .range-slider::-webkit-slider-runnable-track{
-      height:14px;
-      background:transparent;
-      border:none;
-    }
-
-    .range-slider::-moz-range-track{
-      height:14px;
-      background:transparent;
-      border:none;
-    }
-
-    .range-slider::-webkit-slider-thumb{
-      appearance:none;
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      border:4px solid var(--line);
-      background:linear-gradient(180deg, #6fe07b 0%, #48c95d 100%);
-      box-shadow:0 4px 0 rgba(0,0,0,.18);
-      margin-top:-10px;
-      cursor:pointer;
-    }
-
-    .range-slider::-moz-range-thumb{
-      width:34px;
-      height:34px;
-      border-radius:50%;
-      border:4px solid var(--line);
-      background:linear-gradient(180deg, #6fe07b 0%, #48c95d 100%);
-      box-shadow:0 4px 0 rgba(0,0,0,.18);
-      cursor:pointer;
-    }
-
     .account-btn{
       width:100%;
       min-height:88px;
@@ -1119,15 +949,6 @@
         width:100%;
       }
 
-      .setting-card{
-        padding:18px 16px;
-      }
-
-      .setting-icon{
-        width:70px;
-        height:70px;
-      }
-
       .tools{
         gap:14px;
       }
@@ -1239,10 +1060,6 @@
       .settings-header{
         grid-template-columns:72px 1fr 110px;
       }
-
-      .setting-card{
-        border-radius:30px;
-      }
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -1336,8 +1153,8 @@
               <button id="instructionsTool" class="tool-btn info" type="button" aria-label="التعليمات">
                 <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <circle cx="12" cy="12" r="9" fill="currentColor"></circle>
-                  <path d="M12 11.2v4.8" stroke="#fffdf7" stroke-width="2.5" stroke-linecap="round"></path>
-                  <path d="M10.35 8.85c.35-1.05 1.28-1.75 2.55-1.75 1.5 0 2.6.95 2.6 2.3 0 1.02-.52 1.72-1.56 2.35-.96.58-1.29.95-1.29 1.73v.22" stroke="#fffdf7" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"></path>
+                  <path d="M12 7.4v6.3" stroke="#fffdf7" stroke-width="2.6" stroke-linecap="round"></path>
+                  <circle cx="12" cy="16.9" r="1.4" fill="#fffdf7"></circle>
                 </svg>
               </button>
 
@@ -1427,82 +1244,6 @@
       <div class="settings-divider"></div>
 
       <section class="settings-section">
-        <h3 class="settings-section-title">التفضيلات</h3>
-        <p class="settings-section-desc">قم بتخصيص تجربة اللعب الخاصة بك</p>
-
-        <div class="setting-card compact">
-          <button id="soundToggle" class="toggle" type="button" aria-label="تبديل الصوت"></button>
-
-          <div class="setting-main">
-            <h4 class="setting-title">الصوت</h4>
-            <p id="soundStatus" class="setting-sub">مفعّل</p>
-          </div>
-
-          <div class="setting-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M5 10v4h4l5 4V6l-5 4H5Z"></path>
-              <path d="M17.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-              <path d="M19.8 6.2a8.2 8.2 0 0 1 0 11.6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-            </svg>
-          </div>
-        </div>
-
-        <div class="setting-card range-card">
-          <div class="range-top">
-            <div id="volumePercent" class="range-percent">70%</div>
-
-            <div class="setting-main">
-              <h4 class="setting-title">مستوى الصوت</h4>
-              <p class="setting-sub">اضبط مستوى مؤثرات اللعبة</p>
-            </div>
-
-            <div class="setting-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="currentColor">
-                <path d="M5 10v4h4l5 4V6l-5 4H5Z"></path>
-                <path d="M17.5 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-              </svg>
-            </div>
-          </div>
-
-          <div class="range-area">
-            <input id="volumeRange" class="range-slider" type="range" min="0" max="100" value="70" />
-          </div>
-        </div>
-
-        <div class="setting-card compact">
-          <button id="vibrationToggle" class="toggle" type="button" aria-label="تبديل الاهتزاز"></button>
-
-          <div class="setting-main">
-            <h4 class="setting-title">الاهتزاز</h4>
-            <p id="vibrationStatus" class="setting-sub">مفعّل</p>
-          </div>
-
-          <div class="setting-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <rect x="8" y="4" width="8" height="16" rx="2"></rect>
-              <path d="M4 8c-1.2 1.3-1.2 6.7 0 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-              <path d="M20 8c1.2 1.3 1.2 6.7 0 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
-            </svg>
-          </div>
-        </div>
-
-        <div class="setting-card compact">
-          <button id="analyticsToggle" class="toggle" type="button" aria-label="تبديل التحليلات"></button>
-
-          <div class="setting-main">
-            <h4 class="setting-title">التحليلات وتحسين الأداء</h4>
-            <p class="setting-sub">مسموح بإرسال بيانات الاستخدام لتحسين التطبيق والإعلانات</p>
-          </div>
-
-          <div class="setting-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="currentColor">
-              <path d="M5 19V9h3v10H5Zm5 0V5h3v14h-3Zm5 0v-7h3v7h-3Z"></path>
-            </svg>
-          </div>
-        </div>
-      </section>
-
-      <section class="settings-section">
         <h3 class="settings-section-title">الحساب</h3>
         <p class="settings-section-desc">إدارة حسابك وحالة التفعيل الحالية</p>
 
@@ -1551,24 +1292,9 @@
     const accountModalText = document.getElementById("accountModalText");
     const closeAccountBtn = document.getElementById("closeAccountBtn");
 
-    const soundToggle = document.getElementById("soundToggle");
-    const vibrationToggle = document.getElementById("vibrationToggle");
-    const analyticsToggle = document.getElementById("analyticsToggle");
-    const soundStatus = document.getElementById("soundStatus");
-    const vibrationStatus = document.getElementById("vibrationStatus");
-    const volumeRange = document.getElementById("volumeRange");
-    const volumePercent = document.getElementById("volumePercent");
-
     const toast = document.getElementById("toast");
 
     let toastTimer = null;
-
-    const STORAGE = {
-      sound: "bdonKalam_sound_enabled",
-      vibration: "bdonKalam_vibration_enabled",
-      analytics: "bdonKalam_analytics_enabled",
-      volume: "bdonKalam_volume"
-    };
 
     const EMAIL_KEYS = [
       "bdonKalam_email",
@@ -1670,44 +1396,6 @@
       window.location.href = "categories.html";
     }
 
-    function setToggleState(el, isOn) {
-      el.classList.toggle("is-on", !!isOn);
-      el.setAttribute("aria-pressed", String(!!isOn));
-    }
-
-    function getBool(key, fallback = true) {
-      const raw = localStorage.getItem(key);
-      if (raw === null) return fallback;
-      return raw === "true";
-    }
-
-    function getVolume() {
-      const raw = localStorage.getItem(STORAGE.volume);
-      const num = Number(raw);
-      return Number.isFinite(num) ? Math.max(0, Math.min(100, num)) : 70;
-    }
-
-    function updateVolumeUI(value) {
-      volumeRange.value = value;
-      volumePercent.textContent = value + "%";
-      volumeRange.style.setProperty("--progress", value + "%");
-    }
-
-    function updateSettingsUI() {
-      const soundOn = getBool(STORAGE.sound, true);
-      const vibrationOn = getBool(STORAGE.vibration, true);
-      const analyticsOn = getBool(STORAGE.analytics, true);
-
-      setToggleState(soundToggle, soundOn);
-      setToggleState(vibrationToggle, vibrationOn);
-      setToggleState(analyticsToggle, analyticsOn);
-
-      soundStatus.textContent = soundOn ? "مفعّل" : "متوقف";
-      vibrationStatus.textContent = vibrationOn ? "مفعّل" : "متوقف";
-
-      updateVolumeUI(getVolume());
-    }
-
     function readStoredValue(key) {
       try {
         const local = localStorage.getItem(key);
@@ -1748,14 +1436,6 @@
         : "الإيميل المرتبط سيظهر هنا بعد ربط صفحة تسجيل الدخول.";
       accountEmailInline.textContent = text;
       accountModalText.textContent = text;
-    }
-
-    function toggleSetting(key, button, statusEl, labels) {
-      const current = getBool(key, true);
-      const next = !current;
-      localStorage.setItem(key, String(next));
-      setToggleState(button, next);
-      if (statusEl) statusEl.textContent = next ? labels.on : labels.off;
     }
 
     team1Input.addEventListener("input", saveTeams);
@@ -1806,25 +1486,6 @@
 
     startBtn.addEventListener("click", startGame);
 
-    soundToggle.addEventListener("click", () => {
-      toggleSetting(STORAGE.sound, soundToggle, soundStatus, { on: "مفعّل", off: "متوقف" });
-    });
-
-    vibrationToggle.addEventListener("click", () => {
-      toggleSetting(STORAGE.vibration, vibrationToggle, vibrationStatus, { on: "مفعّل", off: "متوقف" });
-    });
-
-    analyticsToggle.addEventListener("click", () => {
-      toggleSetting(STORAGE.analytics, analyticsToggle, null, { on: "مفعّل", off: "متوقف" });
-    });
-
-    volumeRange.addEventListener("input", () => {
-      const value = Math.max(0, Math.min(100, Number(volumeRange.value) || 0));
-      localStorage.setItem(STORAGE.volume, String(value));
-      updateVolumeUI(value);
-    });
-
-    updateSettingsUI();
     renderAccountEmail();
   </script>
 </body>

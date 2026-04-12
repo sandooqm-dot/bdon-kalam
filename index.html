@@ -5,6 +5,55 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>بدون كلام</title>
 
+  <style id="auth-gate-style">
+    body{visibility:hidden !important;}
+  </style>
+  <script>
+    (function () {
+      const ACTIVATE_URL = "activate.html";
+      const HIDE_STYLE_ID = "auth-gate-style";
+
+      const TOKEN_KEYS = [
+        "bdonKalam_token_v1",
+        "bdonKalam_token",
+        "sandooq_token_v1",
+        "sandooq_token",
+        "token"
+      ];
+
+      const EMAIL_KEYS = [
+        "bdonKalam_email_v1",
+        "bdonKalam_email",
+        "sandooq_email",
+        "user_email",
+        "email"
+      ];
+
+      function readAny(keys) {
+        for (const key of keys) {
+          try {
+            const value = localStorage.getItem(key) || sessionStorage.getItem(key);
+            if (value && String(value).trim()) return String(value).trim();
+          } catch (_) {}
+        }
+        return "";
+      }
+
+      const token = readAny(TOKEN_KEYS);
+      const email = readAny(EMAIL_KEYS);
+
+      if (!token || !email) {
+        location.replace(ACTIVATE_URL);
+        return;
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const gateStyle = document.getElementById(HIDE_STYLE_ID);
+        if (gateStyle) gateStyle.remove();
+      });
+    })();
+  </script>
+
   <style>
     @font-face{
       font-family:"Estedad";

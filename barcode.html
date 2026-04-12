@@ -376,6 +376,33 @@
       padding:18px 18px 16px;
     }
 
+    .barcode-meta{
+      display:flex;
+      justify-content:center;
+      margin-bottom:10px;
+    }
+
+    .question-badge{
+      min-width:112px;
+      height:46px;
+      padding:0 16px;
+      border-radius:999px;
+      border:3px solid #000;
+      background:linear-gradient(180deg, #fffdf8 0%, #f4ecd0 100%);
+      box-shadow:0 5px 0 rgba(0,0,0,.16);
+      color:#111;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:24px;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .question-badge[hidden]{
+      display:none;
+    }
+
     .barcode-title{
       margin:0 0 14px;
       text-align:center;
@@ -714,6 +741,12 @@
         border-radius:28px;
       }
 
+      .question-badge{
+        min-width:102px;
+        height:42px;
+        font-size:22px;
+      }
+
       .poster-card{
         width:min(100%, 360px);
         height:470px;
@@ -994,6 +1027,16 @@
         background:linear-gradient(180deg, #202020 0%, #050505 100%);
       }
 
+      .barcode-meta{
+        margin-bottom:8px;
+      }
+
+      .question-badge{
+        min-width:96px;
+        height:38px;
+        font-size:20px;
+      }
+
       .barcode-title{
         margin-bottom:10px;
         font-size:clamp(20px, 2vw, 32px);
@@ -1209,6 +1252,10 @@
         </aside>
 
         <section class="stage">
+          <div class="barcode-meta">
+            <div id="questionBadge" class="question-badge" hidden>رقم 1</div>
+          </div>
+
           <h2 class="barcode-title">امسح الـ <span class="ltr">QR</span> وحاول تشرح لفريقك بدون ولا كلمة</h2>
 
           <button class="poster-trigger" id="openPosterBtn" type="button" aria-label="تكبير الباركود">
@@ -1267,6 +1314,25 @@
   </div>
 
   <script>
+    const RANDOM_POOL_KEY = "bdonKalam_randomPool_v1";
+    const RANDOM_INDEX_KEY = "bdonKalam_randomIndex_v1";
+    const RANDOM_MODE_KEY = "bdonKalam_randomMode_v1";
+    const RANDOM_SESSION_KEY = "bdonKalam_randomSessionId_v1";
+    const RANDOM_CURRENT_KEY = "bdonKalam_randomCurrentKey_v1";
+    const RANDOM_CURRENT_NAME = "bdonKalam_randomCurrentName_v1";
+
+    const RANDOM_SOURCE_CATEGORIES = [
+      { key: "hkm", name: "حكم وأمثال", count: 30 },
+      { key: "ram", name: "مسلسلات رمضانية", count: 30 },
+      { key: "spacetoon", name: "سبيستون", count: 30 },
+      { key: "job", name: "وظائف ومهن", count: 30 },
+      { key: "kit", name: "أدوات المطبخ", count: 30 },
+      { key: "song", name: "أغاني", count: 30 },
+      { key: "place", name: "أماكن ومواقع", count: 30 }
+    ];
+
+    const urlParams = new URLSearchParams(window.location.search);
+
     const team1NameEl = document.getElementById("team1Name");
     const team2NameEl = document.getElementById("team2Name");
     const team1ScoreEl = document.getElementById("team1Score");
@@ -1310,6 +1376,7 @@
 
     const qrImageSmall = document.getElementById("qrImageSmall");
     const backBtnLandscape = document.getElementById("backBtnLandscape");
+    const questionBadge = document.getElementById("questionBadge");
 
     let selectedDuration = Number(sessionStorage.getItem("bdonKalam_timerDuration") || 60);
     let remainingSeconds = selectedDuration;
@@ -1339,6 +1406,150 @@
 
     function getActionButtons() {
       return [mainActionBtn, mainActionBtnLand].filter(Boolean);
+    }
+
+    function isRandomMode() {
+      return (
+        urlParams.get("mode") === "random" ||
+        sessionStorage.getItem(RANDOM_MODE_KEY) === "1" ||
+        sessionStorage.getItem("bdonKalam_categoryKey") === "random"
+      );
+    }
+
+    function readRandomPool() {
+      try {
+        const parsed = JSON.parse(sessionStorage.getItem(RANDOM_POOL_KEY) || "[]");
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function shuffleArray(items) {
+      const arr = [...items];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function buildRandomPool() {
+      const pool = [];
+      RANDOM_SOURCE_CATEGORIES.forEach(category => {
+        for (let i = 1; i <= category.count; i++) {
+          pool.push({
+            key: category.key,
+            name: category.name,
+            number: i
+          });
+        }
+      });
+      return shuffleArray(pool);
+    }
+
+    function ensureRandomState() {
+      if (!isRandomMode()) return;
+
+      let pool = readRandomPool();
+      let index = Number(sessionStorage.getItem(RANDOM_INDEX_KEY) || "0");
+
+      if (!Array.isArray(pool) || pool.length === 0) {
+        pool = buildRandomPool();
+        index = 0;
+        sessionStorage.setItem(RANDOM_POOL_KEY, JSON.stringify(pool));
+        sessionStorage.setItem(RANDOM_INDEX_KEY, "0");
+        sessionStorage.setItem(RANDOM_MODE_KEY, "1");
+        sessionStorage.setItem(RANDOM_SESSION_KEY, String(Date.now()));
+      }
+
+      if (!Number.isFinite(index) || index < 0) {
+        index = 0;
+        sessionStorage.setItem(RANDOM_INDEX_KEY, "0");
+      }
+
+      if (index >= pool.length) {
+        pool = shuffleArray(pool);
+        index = 0;
+        sessionStorage.setItem(RANDOM_POOL_KEY, JSON.stringify(pool));
+        sessionStorage.setItem(RANDOM_INDEX_KEY, "0");
+      }
+    }
+
+    function getCurrentRandomEntry() {
+      ensureRandomState();
+      const pool = readRandomPool();
+      const index = Number(sessionStorage.getItem(RANDOM_INDEX_KEY) || "0");
+      return pool[index] || null;
+    }
+
+    function syncCurrentEntryToStorage() {
+      if (isRandomMode()) {
+        const entry = getCurrentRandomEntry();
+        if (!entry) return;
+
+        sessionStorage.setItem(RANDOM_CURRENT_KEY, entry.key);
+        sessionStorage.setItem(RANDOM_CURRENT_NAME, entry.name);
+        sessionStorage.setItem("bdonKalam_selectedNumber", String(entry.number));
+      } else {
+        const queryCat = urlParams.get("cat");
+        const queryCatName = urlParams.get("catName");
+        const queryNum = urlParams.get("num");
+
+        if (queryCat) sessionStorage.setItem("bdonKalam_categoryKey", queryCat);
+        if (queryCatName) sessionStorage.setItem("bdonKalam_categoryName", queryCatName);
+        if (queryNum) sessionStorage.setItem("bdonKalam_selectedNumber", queryNum);
+
+        sessionStorage.removeItem(RANDOM_CURRENT_KEY);
+        sessionStorage.removeItem(RANDOM_CURRENT_NAME);
+      }
+    }
+
+    function getEffectiveRoundData() {
+      if (isRandomMode()) {
+        const entry = getCurrentRandomEntry();
+        const index = Number(sessionStorage.getItem(RANDOM_INDEX_KEY) || "0");
+        if (!entry) {
+          return {
+            categoryKey: "hkm",
+            categoryName: "حكم وأمثال",
+            selectedNumber: 1,
+            displayNumber: 1
+          };
+        }
+
+        return {
+          categoryKey: entry.key,
+          categoryName: entry.name,
+          selectedNumber: entry.number,
+          displayNumber: index + 1
+        };
+      }
+
+      const queryCat = urlParams.get("cat");
+      const queryCatName = urlParams.get("catName");
+      const queryNum = urlParams.get("num");
+
+      const categoryKey = queryCat || sessionStorage.getItem("bdonKalam_categoryKey") || "default";
+      const categoryName = queryCatName || sessionStorage.getItem("bdonKalam_categoryName") || "";
+      const selectedNumber = Number(queryNum || sessionStorage.getItem("bdonKalam_selectedNumber") || "1") || 1;
+
+      return {
+        categoryKey,
+        categoryName,
+        selectedNumber,
+        displayNumber: selectedNumber
+      };
+    }
+
+    function updateQuestionBadge() {
+      const roundData = getEffectiveRoundData();
+      if (!roundData || !roundData.displayNumber) {
+        questionBadge.hidden = true;
+        return;
+      }
+      questionBadge.hidden = false;
+      questionBadge.textContent = `رقم ${roundData.displayNumber}`;
     }
 
     function loadHeaderData() {
@@ -1520,36 +1731,77 @@
       qrOnlyModal.setAttribute("aria-hidden", "true");
     }
 
-    function goBackToNumbers() {
+    function goBackTarget() {
+      if (isRandomMode()) {
+        window.location.href = "categories.html";
+        return;
+      }
       window.location.href = "numbers.html";
+    }
+
+    function buildRevealUrl() {
+      const roundData = getEffectiveRoundData();
+
+      const revealUrl = new URL("reveal.html", window.location.href);
+      revealUrl.searchParams.set("cat", roundData.categoryKey);
+      revealUrl.searchParams.set("catName", roundData.categoryName);
+      revealUrl.searchParams.set("num", String(roundData.selectedNumber));
+      return revealUrl.toString();
+    }
+
+    function renderQr() {
+      syncCurrentEntryToStorage();
+      updateQuestionBadge();
+
+      const revealUrl = buildRevealUrl();
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&data=${encodeURIComponent(revealUrl)}`;
+      qrImageSmall.src = qrUrl;
+      qrOnlyImage.src = qrUrl;
+    }
+
+    function advanceRandomRound() {
+      if (!isRandomMode()) {
+        window.location.href = "numbers.html";
+        return;
+      }
+
+      let pool = readRandomPool();
+      let index = Number(sessionStorage.getItem(RANDOM_INDEX_KEY) || "0");
+
+      if (!Array.isArray(pool) || pool.length === 0) {
+        pool = buildRandomPool();
+        index = 0;
+      } else {
+        index += 1;
+        if (index >= pool.length) {
+          pool = shuffleArray(pool);
+          index = 0;
+        }
+      }
+
+      sessionStorage.setItem(RANDOM_POOL_KEY, JSON.stringify(pool));
+      sessionStorage.setItem(RANDOM_INDEX_KEY, String(index));
+      sessionStorage.setItem(RANDOM_MODE_KEY, "1");
+
+      hardResetTimer(true);
+      renderQr();
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
 
     function finishRound(scoredTeam = "") {
       if (scoredTeam === "team1" || scoredTeam === "team2") {
         updateScore(scoredTeam);
       }
+
       closeAnswerModal();
+
+      if (isRandomMode()) {
+        advanceRandomRound();
+        return;
+      }
+
       hardResetTimer(true);
-      goBackToNumbers();
-    }
-
-    function buildRevealUrl() {
-      const categoryKey = sessionStorage.getItem("bdonKalam_categoryKey") || "default";
-      const categoryName = sessionStorage.getItem("bdonKalam_categoryName") || "";
-      const selectedNumber = sessionStorage.getItem("bdonKalam_selectedNumber") || "1";
-
-      const revealUrl = new URL("reveal.html", window.location.href);
-      revealUrl.searchParams.set("cat", categoryKey);
-      revealUrl.searchParams.set("catName", categoryName);
-      revealUrl.searchParams.set("num", selectedNumber);
-      return revealUrl.toString();
-    }
-
-    function renderQr() {
-      const revealUrl = buildRevealUrl();
-      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=640x640&data=${encodeURIComponent(revealUrl)}`;
-      qrImageSmall.src = qrUrl;
-      qrOnlyImage.src = qrUrl;
+      window.location.href = "numbers.html";
     }
 
     function bindDurationMenu(button, menu, options) {
@@ -1606,8 +1858,9 @@
       if (e.target === answerModal) closeAnswerModal();
     });
 
-    backBtnLandscape.addEventListener("click", goBackToNumbers);
+    backBtnLandscape.addEventListener("click", goBackTarget);
 
+    syncCurrentEntryToStorage();
     loadHeaderData();
     syncDurationButtons();
     syncActionButton();

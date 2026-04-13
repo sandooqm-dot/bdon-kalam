@@ -427,12 +427,12 @@
 
     .top-strip{
       width:min(100%, 960px);
-      min-height:74px;
+      min-height:64px;
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
       border:4px solid var(--line);
       border-radius:28px;
       box-shadow:0 10px 0 rgba(0,0,0,.28);
-      padding:8px 12px;
+      padding:5px 12px;
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -449,10 +449,11 @@
       user-select:none;
       pointer-events:none;
       filter:drop-shadow(0 4px 0 rgba(255,255,255,.38));
+      flex:0 0 auto;
     }
 
     .strip-logo img{
-      width:min(88px, 20vw);
+      width:min(86px, 20vw);
       height:auto;
       display:block;
     }
@@ -461,7 +462,7 @@
       order:2;
       flex:1 1 auto;
       min-width:0;
-      max-width:320px;
+      max-width:360px;
       display:flex;
       align-items:center;
       justify-content:center;
@@ -472,7 +473,7 @@
     .score-chip{
       flex:1 1 0;
       min-width:0;
-      min-height:44px;
+      min-height:46px;
       padding:4px 8px;
       border-radius:18px;
       border:3px solid var(--line);
@@ -483,14 +484,15 @@
       gap:7px;
       justify-content:space-between;
       direction:ltr;
+      overflow:hidden;
     }
 
     .score-chip-name{
       flex:1 1 auto;
       min-width:0;
       color:#173e73;
-      font-size:16px;
-      line-height:1.1;
+      font-size:18px;
+      line-height:1.22;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
@@ -499,7 +501,7 @@
       align-items:center;
       justify-content:flex-end;
       min-height:100%;
-      transform:translateY(-1px);
+      padding:2px 0 5px;
     }
 
     .score-chip-num{
@@ -535,6 +537,7 @@
       display:flex;
       justify-content:flex-end;
       align-items:center;
+      flex:0 0 auto;
     }
 
     .strip-title-text{
@@ -543,7 +546,7 @@
       align-items:center;
       line-height:.84;
       color:#11101a;
-      font-size:clamp(18px, 4.3vw, 30px);
+      font-size:clamp(20px, 4.5vw, 30px);
       letter-spacing:-.5px;
       transform:rotate(-6deg);
       text-shadow:
@@ -910,18 +913,34 @@
     }
 
     @media (max-width:760px){
+      .top-strip{
+        min-height:60px;
+        padding:4px 10px;
+        gap:8px;
+      }
+
+      .strip-logo{
+        min-width:64px;
+      }
+
+      .strip-logo img{
+        width:min(78px, 18vw);
+      }
+
       .strip-scores{
-        max-width:300px;
+        max-width:336px;
         gap:6px;
       }
 
       .score-chip{
-        min-height:42px;
+        min-height:44px;
         padding:4px 7px;
       }
 
       .score-chip-name{
-        font-size:15px;
+        font-size:17px;
+        line-height:1.22;
+        padding:2px 0 5px;
       }
 
       .score-chip-num{
@@ -930,8 +949,8 @@
         font-size:17px;
       }
 
-      .strip-logo img{
-        width:min(82px, 19vw);
+      .strip-title{
+        min-width:64px;
       }
 
       .strip-title-text{
@@ -956,25 +975,25 @@
 
       .top-strip{
         width:min(100%, 1780px);
-        min-height:66px;
-        padding:7px 14px;
-        border-radius:26px;
+        min-height:58px;
+        padding:4px 12px;
+        border-radius:24px;
       }
 
       .strip-logo{
-        min-width:90px;
+        min-width:82px;
       }
 
       .strip-logo img{
-        width:92px;
+        width:84px;
       }
 
       .strip-title{
-        min-width:90px;
+        min-width:82px;
       }
 
       .strip-title-text{
-        font-size:28px;
+        font-size:26px;
       }
 
       .strip-scores{
@@ -984,11 +1003,13 @@
 
       .score-chip{
         min-height:40px;
-        padding:4px 8px;
+        padding:3px 8px;
       }
 
       .score-chip-name{
         font-size:16px;
+        line-height:1.2;
+        padding:2px 0 4px;
       }
 
       .score-chip-num{
@@ -1105,11 +1126,8 @@
 
     <main class="shell">
       <section class="top-strip" aria-label="معلومات اللعبة">
-        <div class="strip-title" aria-hidden="true">
-          <div class="strip-title-text">
-            <span class="word-top">بدون</span>
-            <span class="word-bottom">كلام</span>
-          </div>
+        <div class="strip-logo" aria-label="صندوق المسابقات">
+          <img src="logo.PNG" alt="صندوق المسابقات">
         </div>
 
         <div class="strip-scores" aria-label="نتائج الفريقين">
@@ -1124,8 +1142,11 @@
           </div>
         </div>
 
-        <div class="strip-logo" aria-label="صندوق المسابقات">
-          <img src="logo.PNG" alt="صندوق المسابقات">
+        <div class="strip-title" aria-hidden="true">
+          <div class="strip-title-text">
+            <span class="word-top">بدون</span>
+            <span class="word-bottom">كلام</span>
+          </div>
         </div>
       </section>
 

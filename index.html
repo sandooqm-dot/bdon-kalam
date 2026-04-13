@@ -318,7 +318,7 @@
     .hero{
       width:min(100%, 840px);
       margin:0 auto;
-      padding-top:12px;
+      padding-top:0;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -335,12 +335,12 @@
 
     .logo-stage{
       position:relative;
-      min-height:390px;
+      min-height:240px;
       display:flex;
-      align-items:flex-end;
+      align-items:flex-start;
       justify-content:center;
       overflow:visible;
-      padding-top:0;
+      padding-top:4px;
     }
 
     .title-sticker{
@@ -350,7 +350,7 @@
       line-height:.83;
       color:#11101a;
       font-size:clamp(101px, 18.6vw, 182px);
-      transform:translateY(-48px) rotate(-7deg);
+      transform:translateY(0) rotate(-7deg);
       letter-spacing:-1px;
       text-shadow:
         -6px -6px 0 #fff,
@@ -374,17 +374,17 @@
     }
 
     .title-sticker .word-top{
-      transform:translateY(-20px);
+      transform:translateY(-10px);
     }
 
     .title-sticker .word-bottom{
-      transform:translateY(4px);
+      transform:translateY(2px);
     }
 
     .boy-stage{
       position:absolute;
       right:22px;
-      bottom:-44px;
+      bottom:-8px;
       width:min(242px, 31vw);
       z-index:3;
       animation:boyBob 3.6s ease-in-out infinite;
@@ -416,7 +416,7 @@
 
     .board{
       width:100%;
-      margin-top:26px;
+      margin-top:8px;
       padding:38px 22px 22px;
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
       border:4px solid var(--line);
@@ -1016,13 +1016,13 @@
       }
 
       .logo-stage{
-        min-height:370px;
+        min-height:225px;
       }
 
       .boy-stage{
         width:min(214px, 29vw);
         right:16px;
-        bottom:-40px;
+        bottom:-6px;
       }
 
       .settings-header{
@@ -1036,17 +1036,17 @@
       }
 
       .logo-stage{
-        min-height:338px;
+        min-height:205px;
       }
 
       .title-sticker{
-        transform:translateY(-38px) rotate(-7deg);
+        transform:translateY(0) rotate(-7deg);
       }
 
       .boy-stage{
         width:min(192px, 30vw);
         right:10px;
-        bottom:-34px;
+        bottom:-4px;
       }
 
       .fields{
@@ -1089,25 +1089,33 @@
       }
 
       .hero{
-        padding-top:8px;
+        padding-top:0;
       }
 
       .logo-stage{
-        min-height:270px;
+        min-height:180px;
       }
 
       .title-sticker{
         font-size:clamp(92px, 12vw, 156px);
-        transform:translateY(-30px) rotate(-7deg);
+        transform:translateY(0) rotate(-7deg);
+      }
+
+      .title-sticker .word-top{
+        transform:translateY(-8px);
+      }
+
+      .title-sticker .word-bottom{
+        transform:translateY(2px);
       }
 
       .boy-stage{
         width:min(188px, 20vw);
-        bottom:-28px;
+        bottom:-6px;
       }
 
       .board{
-        margin-top:18px;
+        margin-top:8px;
       }
     }
 
@@ -1118,22 +1126,22 @@
       }
 
       .hero{
-        padding-top:6px;
+        padding-top:0;
       }
 
       .logo-stage{
-        min-height:220px;
+        min-height:155px;
       }
 
       .title-sticker{
         font-size:98px;
-        transform:translateY(-18px) rotate(-7deg);
+        transform:translateY(0) rotate(-7deg);
       }
 
       .boy-stage{
         width:146px;
         right:16px;
-        bottom:-20px;
+        bottom:-2px;
       }
 
       .board{

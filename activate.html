@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>تفعيل اللعبة - بدون كلام</title>
+  <title>لعبة بدون كلام</title>
 
   <style>
     @font-face{
@@ -351,7 +351,7 @@
       padding-top:24px;
       text-align:center;
       font-size:clamp(18px, 2.8vw, 28px);
-      color:#7a7366;
+      color:#000;
       font-weight:700;
     }
 
@@ -556,14 +556,14 @@
   </div>
 
   <script>
-    const API_BASE = "";
+    const API_BASE = window.location.origin;
     const GAME_ENTRY = "index.html";
 
     const API = {
-      register: API_BASE + "/api/register",
-      login: API_BASE + "/api/login",
-      me: API_BASE + "/api/me",
-      activate: API_BASE + "/api/activate"
+      register: `${API_BASE}/api/register`,
+      login: `${API_BASE}/api/login`,
+      me: `${API_BASE}/api/me`,
+      activate: `${API_BASE}/api/activate`
     };
 
     const STORAGE = {
@@ -635,6 +635,14 @@
 
     function clearStoredEmail() {
       localStorage.removeItem(STORAGE.email);
+    }
+
+    function normalizeEmail(value) {
+      return String(value || "").trim().toLowerCase();
+    }
+
+    function normalizeCode(value) {
+      return String(value || "").trim().toUpperCase().replace(/\s+/g, "");
     }
 
     function showBanner(message, type = "info") {
@@ -800,8 +808,8 @@
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const email = loginEmail.value.trim();
-      const password = loginPassword.value.trim();
+      const email = normalizeEmail(loginEmail.value);
+      const password = String(loginPassword.value || "").trim();
 
       if (!email || !password) {
         showBanner("أدخل الإيميل وكلمة المرور.", "error");
@@ -847,9 +855,9 @@
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const email = registerEmail.value.trim();
-      const password = registerPassword.value.trim();
-      const password2 = registerPassword2.value.trim();
+      const email = normalizeEmail(registerEmail.value);
+      const password = String(registerPassword.value || "").trim();
+      const password2 = String(registerPassword2.value || "").trim();
 
       if (!email || !password || !password2) {
         showBanner("أكمل جميع الحقول أولًا.", "error");
@@ -882,17 +890,9 @@
         const token = pickToken(result.data);
         const resolvedEmail = pickEmail(result.data) || email;
 
+        if (token) setToken(token);
         setStoredEmail(resolvedEmail);
-
-        if (token) {
-          setToken(token);
-          showActivateStep(resolvedEmail, "تم إنشاء الحساب بنجاح ✅ الآن أدخل كود اللعبة.");
-        } else {
-          setMode("login");
-          loginEmail.value = resolvedEmail;
-          loginPassword.value = "";
-          showBanner("تم إنشاء الحساب بنجاح. سجّل دخولك الآن.", "success");
-        }
+        showActivateStep(resolvedEmail, "تم إنشاء الحساب بنجاح ✅ الآن أدخل كود اللعبة.");
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {
@@ -901,8 +901,10 @@
     });
 
     activateBtn.addEventListener("click", async () => {
-      const code = activateCode.value.trim();
+      const code = normalizeCode(activateCode.value);
       const email = linkedEmail.value.trim() || getStoredEmail();
+
+      activateCode.value = code;
 
       if (!code) {
         showBanner("أدخل كود اللعبة أولًا.", "error");
@@ -922,7 +924,7 @@
           return;
         }
 
-        showReadyStep(email, "تم تفعيل اللعبة بنجاح ✅");
+        showReadyStep(email, result.data?.message || "تم تفعيل اللعبة بنجاح ✅");
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {

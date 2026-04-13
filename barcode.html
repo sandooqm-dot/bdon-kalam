@@ -810,6 +810,40 @@
       background:linear-gradient(180deg, #202020 0%, #050505 100%);
     }
 
+    .back-fab{
+      position:absolute;
+      left:18px;
+      bottom:18px;
+      width:82px;
+      height:82px;
+      border:none;
+      border-radius:50%;
+      border:6px solid #000;
+      background:linear-gradient(180deg, var(--blue) 0%, var(--blue-2) 100%);
+      box-shadow:0 8px 0 rgba(0,0,0,.28);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      pointer-events:auto;
+      transition:transform .12s ease;
+      padding:0;
+    }
+
+    .back-fab:active{
+      transform:translateY(2px) scale(.99);
+    }
+
+    .back-fab svg{
+      width:34px;
+      height:34px;
+      stroke:#111;
+      fill:none;
+      stroke-width:2.8;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+
     @media (max-width:700px){
       .page{
         padding:12px 12px calc(var(--footer-space-p) + var(--safe-bottom));
@@ -948,6 +982,18 @@
         right:6px;
         bottom:6px;
         min-width:195px;
+      }
+
+      .back-fab{
+        left:18px;
+        bottom:18px;
+        width:76px;
+        height:76px;
+      }
+
+      .back-fab svg{
+        width:32px;
+        height:32px;
       }
     }
 
@@ -1432,6 +1478,12 @@
     </main>
 
     <div class="bottom-bar">
+      <button id="backBtnPortrait" class="back-fab portrait-only" type="button" aria-label="الرجوع" title="الرجوع">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M15 5 8 12l7 7"></path>
+        </svg>
+      </button>
+
       <button id="mainActionBtn" class="main-action" type="button">ابدأ</button>
     </div>
   </div>
@@ -1521,6 +1573,7 @@
 
     const qrImageSmall = document.getElementById("qrImageSmall");
     const backBtnLandscape = document.getElementById("backBtnLandscape");
+    const backBtnPortrait = document.getElementById("backBtnPortrait");
     const questionBadge = document.getElementById("questionBadge");
 
     let selectedDuration = Number(sessionStorage.getItem("bdonKalam_timerDuration") || 60);
@@ -2004,6 +2057,7 @@
     });
 
     backBtnLandscape.addEventListener("click", goBackTarget);
+    backBtnPortrait.addEventListener("click", goBackTarget);
 
     syncCurrentEntryToStorage();
     loadHeaderData();

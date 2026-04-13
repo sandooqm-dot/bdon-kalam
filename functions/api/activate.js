@@ -96,11 +96,21 @@ export async function onRequestPost(context) {
           .bind(sessionEmail)
           .run();
 
+        const sheetSync = await syncCodeToSheet({
+          code,
+          status: "USED",
+          email: sessionEmail,
+          deviceKey,
+          activatedAt: codeRow.activated_at || nowIso,
+        });
+
         return json({
           ok: true,
           message: "هذا الكود مفعّل مسبقًا على نفس الحساب.",
           email: sessionEmail,
           activated: true,
+          sheet_sync_ok: sheetSync.ok,
+          sheet_sync_message: sheetSync.message,
         });
       }
 
@@ -131,7 +141,7 @@ export async function onRequestPost(context) {
 
     if (changes < 1) {
       const retryRow = await env.DB.prepare(
-        "SELECT status, email FROM codes WHERE code = ? LIMIT 1"
+        "SELECT status, email, activated_at FROM codes WHERE code = ? LIMIT 1"
       )
         .bind(code)
         .first();
@@ -147,11 +157,21 @@ export async function onRequestPost(context) {
           .bind(sessionEmail)
           .run();
 
+        const sheetSync = await syncCodeToSheet({
+          code,
+          status: "USED",
+          email: sessionEmail,
+          deviceKey,
+          activatedAt: retryRow.activated_at || nowIso,
+        });
+
         return json({
           ok: true,
           message: "تم تفعيل الحساب بنجاح.",
           email: sessionEmail,
           activated: true,
+          sheet_sync_ok: sheetSync.ok,
+          sheet_sync_message: sheetSync.message,
         });
       }
 
@@ -182,12 +202,22 @@ export async function onRequestPost(context) {
         .run();
     }
 
+    const sheetSync = await syncCodeToSheet({
+      code,
+      status: "USED",
+      email: sessionEmail,
+      deviceKey,
+      activatedAt: nowIso,
+    });
+
     return json({
       ok: true,
       message: "تم تفعيل اللعبة بنجاح.",
       email: sessionEmail,
       activated: true,
       code,
+      sheet_sync_ok: sheetSync.ok,
+      sheet_sync_message: sheetSync.message,
     });
   } catch (error) {
     return json(
@@ -198,6 +228,52 @@ export async function onRequestPost(context) {
       },
       500
     );
+  }
+}
+
+async function syncCodeToSheet({ code, status, email, deviceKey, activatedAt }) {
+  const SHEET_SYNC_URL =
+    "https://script.google.com/macros/s/AKfycbwtSHF43afcz2BRSBcOv19u8V9Fhg6XU4zThzvtG1-hhVu9xBAM-pwGt9M2Zf-TNcSz/exec";
+
+  const SHEET_SYNC_SECRET = "BDON_KALAM_SYNC_2026";
+
+  try {
+    const response = await fetch(SHEET_SYNC_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        secret: SHEET_SYNC_SECRET,
+        code,
+        status,
+        email,
+        deviceKey: deviceKey || "",
+        activatedAt,
+      }),
+    });
+
+    let data = {};
+    try {
+      data = await response.json();
+    } catch (_) {}
+
+    if (!response.ok) {
+      return {
+        ok: false,
+        message: data?.message || `HTTP ${response.status}`,
+      };
+    }
+
+    return {
+      ok: !!data?.ok,
+      message: data?.message || "Sheet sync done",
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: String(error && error.message ? error.message : error),
+    };
   }
 }
 

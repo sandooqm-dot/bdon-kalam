@@ -55,7 +55,7 @@ export async function onRequestGet(context) {
     let boundActivatedAt = "";
 
     const activationRow = await env.DB.prepare(`
-      SELECT code, device_key, activated_at
+      SELECT id, code, device_key, activated_at
       FROM activations
       WHERE email = ?
       ORDER BY id DESC
@@ -64,7 +64,10 @@ export async function onRequestGet(context) {
       .bind(email)
       .first();
 
+    let activationId = null;
+
     if (activationRow) {
+      activationId = activationRow.id;
       boundCode = String(activationRow.code || "").trim();
       boundDeviceKey = normalizeDeviceKey(activationRow.device_key);
       boundActivatedAt = String(activationRow.activated_at || "");
@@ -89,11 +92,63 @@ export async function onRequestGet(context) {
     }
 
     const accountActivated = !!row.activated;
-    const sameDevice =
+
+    let sameDevice =
       !!accountActivated &&
       !!deviceKey &&
       !!boundDeviceKey &&
       deviceKey === boundDeviceKey;
+
+    const canMigrateLegacyDeviceKey =
+      !!accountActivated &&
+      !!deviceKey &&
+      isStableDeviceKey(deviceKey) &&
+      (
+        !boundDeviceKey ||
+        !isStableDeviceKey(boundDeviceKey)
+      );
+
+    if (!sameDevice && canMigrateLegacyDeviceKey) {
+      if (activationId) {
+        await env.DB.prepare(`
+          UPDATE activations
+          SET device_key = ?
+          WHERE id = ?
+        `)
+          .bind(deviceKey, activationId)
+          .run();
+      } else {
+        const existingActivation = await env.DB.prepare(`
+          SELECT id
+          FROM activations
+          WHERE email = ?
+          LIMIT 1
+        `)
+          .bind(email)
+          .first();
+
+        if (existingActivation) {
+          await env.DB.prepare(`
+            UPDATE activations
+            SET device_key = ?
+            WHERE id = ?
+          `)
+            .bind(deviceKey, existingActivation.id)
+            .run();
+        }
+      }
+
+      await env.DB.prepare(`
+        UPDATE codes
+        SET device_key = ?
+        WHERE email = ? AND status = 'USED'
+      `)
+        .bind(deviceKey, email)
+        .run();
+
+      boundDeviceKey = deviceKey;
+      sameDevice = true;
+    }
 
     const activated = accountActivated && sameDevice;
     const deviceLocked = accountActivated && !sameDevice;
@@ -147,13 +202,18 @@ function getBearerToken(request) {
 function getDeviceKey(request) {
   return String(
     request.headers.get("X-Device-Id") ||
-      request.headers.get("x-device-id") ||
-      ""
+    request.headers.get("x-device-id") ||
+    ""
   ).trim();
 }
 
 function normalizeDeviceKey(value) {
   return String(value || "").trim();
+}
+
+function isStableDeviceKey(value) {
+  const v = normalizeDeviceKey(value);
+  return /^bdk_/i.test(v);
 }
 
 function normalizeEmail(value) {

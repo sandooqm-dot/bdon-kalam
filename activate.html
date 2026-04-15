@@ -745,7 +745,7 @@
       const sh = Math.max(screen.width || 0, screen.height || 0);
 
       const fingerprint = [
-        "bdk-v3",
+        "bdk-v2",
         normalizeUA(navigator.userAgent || ""),
         navigator.platform || "",
         navigator.language || "",
@@ -1002,7 +1002,10 @@
           return;
         }
 
+        const token = pickToken(result.data);
         const resolvedEmail = normalizeEmail(pickEmail(result.data) || email);
+
+        if (token) setToken(token);
         if (resolvedEmail) setStoredEmail(resolvedEmail);
 
         const me = await apiRequest(API.me, { method: "GET" });
@@ -1055,7 +1058,10 @@
           return;
         }
 
+        const token = pickToken(result.data);
         const resolvedEmail = normalizeEmail(pickEmail(result.data) || email);
+
+        if (token) setToken(token);
         if (resolvedEmail) setStoredEmail(resolvedEmail);
 
         const me = await apiRequest(API.me, { method: "GET" });

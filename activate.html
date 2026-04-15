@@ -566,18 +566,33 @@
       activate: `${API_BASE}/api/activate`
     };
 
-    const STORAGE = {
-      token: "bdonKalam_token_v1",
-      email: "bdonKalam_email_v1",
-      deviceId: "bdonKalam_device_id_v1"
-    };
+    const TOKEN_KEYS = [
+      "bdonKalam_token_v1",
+      "bdonKalam_token",
+      "sandooq_token_v1",
+      "sandooq_token",
+      "token"
+    ];
+
+    const EMAIL_KEYS = [
+      "bdonKalam_email_v1",
+      "bdonKalam_email",
+      "sandooq_email",
+      "user_email",
+      "email"
+    ];
 
     const DEVICE_KEYS = [
       "bdonKalam_device_id_v1",
       "bdonKalam_device_id",
       "bdonKalam_device_key_v1",
       "bdonKalam_device_key",
+      "sandooq_device_id_v1",
+      "sandooq_device_id",
+      "sandooq_device_key_v1",
+      "sandooq_device_key",
       "deviceId",
+      "device_id",
       "device_key"
     ];
 
@@ -611,17 +626,34 @@
     const statusBanner = document.getElementById("statusBanner");
     const bottomHint = document.getElementById("bottomHint");
 
-    let currentMode = "login";
+    function readCookie(name) {
+      try {
+        const cookie = document.cookie || "";
+        const parts = cookie.split(";");
+        for (const part of parts) {
+          const [k, ...rest] = part.trim().split("=");
+          if (k === name) {
+            return decodeURIComponent(rest.join("=") || "");
+          }
+        }
+      } catch (_) {}
+      return "";
+    }
 
     function readStoredValue(key) {
       try {
         const value = localStorage.getItem(key);
         if (value && String(value).trim()) return String(value).trim();
       } catch (_) {}
+
       try {
         const value = sessionStorage.getItem(key);
         if (value && String(value).trim()) return String(value).trim();
       } catch (_) {}
+
+      const cookieValue = readCookie(key);
+      if (cookieValue && String(cookieValue).trim()) return String(cookieValue).trim();
+
       return "";
     }
 
@@ -660,58 +692,109 @@
       return "";
     }
 
-    function persistDeviceId(deviceId) {
-      if (!deviceId) return;
-      DEVICE_KEYS.forEach((key) => writeStoredValue(key, deviceId));
-      writeCookie("bdonKalam_device_id_v1", deviceId);
-      writeCookie("bdonKalam_device_key_v1", deviceId);
+    function writeMany(keys, value) {
+      if (!value) return;
+      keys.forEach((key) => {
+        writeStoredValue(key, value);
+        writeCookie(key, value);
+      });
+    }
+
+    function clearMany(keys) {
+      keys.forEach((key) => {
+        deleteStoredValue(key);
+        clearCookie(key);
+      });
+    }
+
+    function normalizeUA(ua) {
+      return String(ua || "")
+        .replace(/CriOS\/[^\s)]+/gi, "")
+        .replace(/FxiOS\/[^\s)]+/gi, "")
+        .replace(/EdgiOS\/[^\s)]+/gi, "")
+        .replace(/OPiOS\/[^\s)]+/gi, "")
+        .replace(/YaBrowser\/[^\s)]+/gi, "")
+        .replace(/Chrome\/[^\s)]+/gi, "")
+        .replace(/Firefox\/[^\s)]+/gi, "")
+        .replace(/Edg\/[^\s)]+/gi, "")
+        .replace(/OPR\/[^\s)]+/gi, "")
+        .replace(/Version\/[^\s)]+/gi, "")
+        .replace(/Safari\/[^\s)]+/gi, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function hashString(str) {
+      let h1 = 0xdeadbeef ^ str.length;
+      let h2 = 0x41c6ce57 ^ str.length;
+
+      for (let i = 0; i < str.length; i++) {
+        const ch = str.charCodeAt(i);
+        h1 = Math.imul(h1 ^ ch, 2654435761);
+        h2 = Math.imul(h2 ^ ch, 1597334677);
+      }
+
+      h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+      h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+
+      return ((h2 >>> 0).toString(36) + (h1 >>> 0).toString(36));
+    }
+
+    function buildStableDeviceId() {
+      const sw = Math.min(screen.width || 0, screen.height || 0);
+      const sh = Math.max(screen.width || 0, screen.height || 0);
+
+      const fingerprint = [
+        "bdk-v3",
+        normalizeUA(navigator.userAgent || ""),
+        navigator.platform || "",
+        navigator.language || "",
+        Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+        `${sw}x${sh}`,
+        String(screen.colorDepth || ""),
+        String(window.devicePixelRatio || ""),
+        String(navigator.maxTouchPoints || ""),
+        String(navigator.hardwareConcurrency || "")
+      ].join("|");
+
+      return "bdk_" + hashString(fingerprint);
     }
 
     function getDeviceId() {
       let deviceId = readAny(DEVICE_KEYS);
-      if (!deviceId) {
-        deviceId = "bdk-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
+
+      if (!deviceId || !/^bdk_/i.test(deviceId)) {
+        deviceId = buildStableDeviceId();
       }
-      persistDeviceId(deviceId);
+
+      writeMany(DEVICE_KEYS, deviceId);
       return deviceId;
     }
 
     function getToken() {
-      return readStoredValue(STORAGE.token);
+      return readAny(TOKEN_KEYS);
     }
 
     function setToken(token) {
       if (!token) return;
-      writeStoredValue(STORAGE.token, token);
-      writeStoredValue("sandooq_token_v1", token);
-      writeStoredValue("sandooq_token", token);
-      writeCookie("bdonKalam_token_v1", token);
-      writeCookie("sandooq_token_v1", token);
+      writeMany(TOKEN_KEYS, token);
     }
 
     function clearToken() {
-      deleteStoredValue(STORAGE.token);
-      deleteStoredValue("sandooq_token_v1");
-      deleteStoredValue("sandooq_token");
-      clearCookie("bdonKalam_token_v1");
-      clearCookie("sandooq_token_v1");
+      clearMany(TOKEN_KEYS);
     }
 
     function getStoredEmail() {
-      return readStoredValue(STORAGE.email);
+      return readAny(EMAIL_KEYS);
     }
 
     function setStoredEmail(email) {
       if (!email) return;
-      writeStoredValue(STORAGE.email, email);
-      writeStoredValue("sandooq_email", email);
-      writeCookie("bdonKalam_email_v1", email);
+      writeMany(EMAIL_KEYS, email);
     }
 
     function clearStoredEmail() {
-      deleteStoredValue(STORAGE.email);
-      deleteStoredValue("sandooq_email");
-      clearCookie("bdonKalam_email_v1");
+      clearMany(EMAIL_KEYS);
     }
 
     function normalizeEmail(value) {
@@ -737,7 +820,6 @@
     }
 
     function setMode(mode) {
-      currentMode = mode;
       const isLogin = mode === "login";
 
       loginTabBtn.classList.toggle("active", isLogin);
@@ -837,7 +919,8 @@
         method: options.method || "POST",
         headers,
         body: options.body ? JSON.stringify(options.body) : undefined,
-        cache: "no-store"
+        cache: "no-store",
+        credentials: "include"
       });
 
       let data = {};
@@ -845,13 +928,17 @@
         data = await response.json();
       } catch (_) {}
 
+      const newToken = pickToken(data);
+      const newEmail = normalizeEmail(pickEmail(data) || "");
+
+      if (newToken) setToken(newToken);
+      if (newEmail) setStoredEmail(newEmail);
+
       return { ok: response.ok, status: response.status, data };
     }
 
     async function hydrateFromSession() {
-      const token = getToken();
       const email = getStoredEmail();
-
       if (email) {
         loginEmail.value = email;
         registerEmail.value = email;
@@ -859,6 +946,7 @@
 
       getDeviceId();
 
+      const token = getToken();
       if (!token) {
         setMode("login");
         return;
@@ -914,10 +1002,7 @@
           return;
         }
 
-        const token = pickToken(result.data);
         const resolvedEmail = normalizeEmail(pickEmail(result.data) || email);
-
-        if (token) setToken(token);
         if (resolvedEmail) setStoredEmail(resolvedEmail);
 
         const me = await apiRequest(API.me, { method: "GET" });
@@ -970,10 +1055,7 @@
           return;
         }
 
-        const token = pickToken(result.data);
         const resolvedEmail = normalizeEmail(pickEmail(result.data) || email);
-
-        if (token) setToken(token);
         if (resolvedEmail) setStoredEmail(resolvedEmail);
 
         const me = await apiRequest(API.me, { method: "GET" });

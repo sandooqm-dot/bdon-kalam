@@ -35,7 +35,7 @@ export async function onRequestPost(context) {
     }
 
     const user = await env.DB.prepare(
-      "SELECT email, password_hash, activated FROM users WHERE email = ? LIMIT 1"
+      "SELECT email, password_hash, activated, created_at FROM users WHERE email = ? LIMIT 1"
     )
       .bind(email)
       .first();
@@ -56,6 +56,8 @@ export async function onRequestPost(context) {
     }
 
     const token = generateToken();
+    const activated = !!user.activated;
+    const needsActivation = !activated;
 
     await env.DB.prepare(
       "INSERT INTO sessions (token, email) VALUES (?, ?)"
@@ -65,10 +67,21 @@ export async function onRequestPost(context) {
 
     return json({
       ok: true,
-      message: "تم تسجيل الدخول بنجاح.",
+      message: activated
+        ? "تم تسجيل الدخول بنجاح."
+        : "تم تسجيل الدخول بنجاح. هذا الحساب يحتاج تفعيل.",
       email,
       token,
-      activated: !!user.activated,
+      activated,
+      needs_activation: needsActivation,
+      user: {
+        email,
+        activated,
+        created_at: user.created_at || null,
+      },
+      session: {
+        token,
+      },
     });
   } catch (error) {
     return json(

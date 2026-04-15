@@ -47,19 +47,78 @@ export async function onRequestGet(context) {
       );
     }
 
+    const email = normalizeEmail(row.email);
+    const deviceKey = normalizeDeviceKey(getDeviceKey(request));
+
+    let boundCode = "";
+    let boundDeviceKey = "";
+    let boundActivatedAt = "";
+
+    const activationRow = await env.DB.prepare(`
+      SELECT code, device_key, activated_at
+      FROM activations
+      WHERE email = ?
+      ORDER BY id DESC
+      LIMIT 1
+    `)
+      .bind(email)
+      .first();
+
+    if (activationRow) {
+      boundCode = String(activationRow.code || "").trim();
+      boundDeviceKey = normalizeDeviceKey(activationRow.device_key);
+      boundActivatedAt = String(activationRow.activated_at || "");
+    }
+
+    if (!boundDeviceKey) {
+      const codeRow = await env.DB.prepare(`
+        SELECT code, device_key, activated_at
+        FROM codes
+        WHERE email = ? AND status = 'USED'
+        ORDER BY activated_at DESC
+        LIMIT 1
+      `)
+        .bind(email)
+        .first();
+
+      if (codeRow) {
+        boundCode = boundCode || String(codeRow.code || "").trim();
+        boundDeviceKey = normalizeDeviceKey(codeRow.device_key);
+        boundActivatedAt = boundActivatedAt || String(codeRow.activated_at || "");
+      }
+    }
+
+    const accountActivated = !!row.activated;
+    const sameDevice =
+      !!accountActivated &&
+      !!deviceKey &&
+      !!boundDeviceKey &&
+      deviceKey === boundDeviceKey;
+
+    const activated = accountActivated && sameDevice;
+    const deviceLocked = accountActivated && !sameDevice;
+
     return json({
       ok: true,
-      email: row.email,
-      activated: !!row.activated,
+      email,
+      activated,
       token: row.token,
+      device_locked: deviceLocked,
+      needs_activation: deviceLocked,
       user: {
-        email: row.email,
-        activated: !!row.activated,
+        email,
+        activated,
         created_at: row.user_created_at,
       },
       session: {
         email: row.session_email,
         created_at: row.session_created_at,
+      },
+      activation: {
+        code: boundCode || null,
+        device_key: boundDeviceKey || null,
+        activated_at: boundActivatedAt || null,
+        same_device: sameDevice,
       },
     });
   } catch (error) {
@@ -83,6 +142,22 @@ function getBearerToken(request) {
   const prefix = "Bearer ";
   if (!auth.startsWith(prefix)) return "";
   return auth.slice(prefix.length).trim();
+}
+
+function getDeviceKey(request) {
+  return String(
+    request.headers.get("X-Device-Id") ||
+      request.headers.get("x-device-id") ||
+      ""
+  ).trim();
+}
+
+function normalizeDeviceKey(value) {
+  return String(value || "").trim();
+}
+
+function normalizeEmail(value) {
+  return String(value || "").trim().toLowerCase();
 }
 
 function corsHeaders() {

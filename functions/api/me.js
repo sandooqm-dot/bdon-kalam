@@ -150,8 +150,10 @@ export async function onRequestGet(context) {
       sameDevice = true;
     }
 
-    const activated = accountActivated && sameDevice;
-    const deviceLocked = accountActivated && !sameDevice;
+    // التفعيل الآن يعتمد على الحساب نفسه، وليس على تطابق deviceKey
+    const activated = accountActivated;
+    const deviceLocked = false;
+    const needsActivation = !accountActivated;
 
     return json({
       ok: true,
@@ -159,7 +161,7 @@ export async function onRequestGet(context) {
       activated,
       token: row.token,
       device_locked: deviceLocked,
-      needs_activation: deviceLocked,
+      needs_activation: needsActivation,
       user: {
         email,
         activated,

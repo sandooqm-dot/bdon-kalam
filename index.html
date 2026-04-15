@@ -30,6 +30,17 @@
         "email"
       ];
 
+      const DEVICE_KEY_KEYS = [
+        "bdonKalam_device_key_v1",
+        "bdonKalam_device_key",
+        "sandooq_device_key_v1",
+        "sandooq_device_key",
+        "sandooq_device_id_v1",
+        "sandooq_device_id",
+        "device_key",
+        "deviceId"
+      ];
+
       function readAny(keys) {
         for (const key of keys) {
           try {
@@ -46,6 +57,34 @@
         try { sessionStorage.setItem(key, value); } catch (_) {}
       }
 
+      function writeDeviceKeyEverywhere(value) {
+        if (!value) return;
+        writeSafe("bdonKalam_device_key_v1", value);
+        writeSafe("bdonKalam_device_key", value);
+        writeSafe("device_key", value);
+      }
+
+      function generateDeviceKey() {
+        try {
+          const bytes = crypto.getRandomValues(new Uint8Array(16));
+          return Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
+        } catch (_) {
+          return "bdk_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
+        }
+      }
+
+      function getOrCreateDeviceKey() {
+        const existing = readAny(DEVICE_KEY_KEYS);
+        if (existing) {
+          writeDeviceKeyEverywhere(existing);
+          return existing;
+        }
+
+        const created = generateDeviceKey();
+        writeDeviceKeyEverywhere(created);
+        return created;
+      }
+
       function revealPage() {
         const gateStyle = document.getElementById(HIDE_STYLE_ID);
         if (gateStyle) gateStyle.remove();
@@ -57,6 +96,8 @@
 
       async function checkAuthGate() {
         const token = readAny(TOKEN_KEYS);
+        const deviceKey = getOrCreateDeviceKey();
+
         if (!token) {
           redirectToActivate();
           return;
@@ -66,7 +107,8 @@
           const response = await fetch(API_ME_URL, {
             method: "GET",
             headers: {
-              Authorization: "Bearer " + token
+              Authorization: "Bearer " + token,
+              "X-Device-Id": deviceKey
             },
             cache: "no-store"
           });

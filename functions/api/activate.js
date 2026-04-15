@@ -57,6 +57,13 @@ export async function onRequestPost(context) {
       );
     }
 
+    if (!deviceKey) {
+      return json(
+        { ok: false, message: "تعذر التعرّف على هذا الجهاز. أعد المحاولة." },
+        400
+      );
+    }
+
     if (bodyEmail && bodyEmail !== sessionEmail) {
       return json(
         { ok: false, message: "الإيميل لا يطابق الحساب الحالي." },
@@ -87,37 +94,64 @@ export async function onRequestPost(context) {
 
     if (codeStatus === "USED") {
       if (usedBy === sessionEmail) {
-        await markUserActivated(env.DB, sessionEmail);
+        if (codeDeviceKey === deviceKey) {
+          await markUserActivated(env.DB, sessionEmail);
 
-        await ensureActivationRecord(env.DB, {
-          code,
-          email: sessionEmail,
-          deviceKey: deviceKey || codeDeviceKey,
-          activatedAt,
-        });
+          await ensureActivationRecord(env.DB, {
+            code,
+            email: sessionEmail,
+            deviceKey,
+            activatedAt,
+          });
 
-        const sheetSync = await syncCodeToSheet({
-          code,
-          status: "USED",
-          email: sessionEmail,
-          deviceKey: deviceKey || codeDeviceKey || "",
-          activatedAt,
-        });
+          const sheetSync = await syncCodeToSheet({
+            code,
+            status: "USED",
+            email: sessionEmail,
+            deviceKey,
+            activatedAt,
+          });
 
-        return json({
-          ok: true,
-          message: "هذا الكود مرتبط بهذا الحساب مسبقًا وتم استعادة التفعيل بنجاح.",
-          email: sessionEmail,
-          activated: true,
-          needs_activation: false,
-          code,
-          sheet_sync_ok: sheetSync.ok,
-          sheet_sync_message: sheetSync.message,
-        });
+          return json({
+            ok: true,
+            message: "هذا الكود مفعّل مسبقًا على هذا الجهاز.",
+            email: sessionEmail,
+            activated: true,
+            needs_activation: false,
+            device_locked: false,
+            code,
+            sheet_sync_ok: sheetSync.ok,
+            sheet_sync_message: sheetSync.message,
+          });
+        }
+
+        return json(
+          {
+            ok: false,
+            message:
+              "هذا الإيميل مرتبط بجهاز آخر بهذا التفعيل. إذا تريد تشغيل اللعبة على هذا الجهاز، أدخل كود تفعيل جديد.",
+            needs_activation: true,
+            device_locked: true,
+            activated: false,
+          },
+          409
+        );
       }
 
       return json(
-        { ok: false, message: "هذا الكود مستخدم بالفعل." },
+        {
+          ok: false,
+          message: "هذا الكود مستخدم بالفعل.",
+          needs_activation: true,
+          activated: false,
+        },
+        409
+      );
+    }
+
+    if (codeStatus !== "NEW") {
+      return json(
+        { ok: false, message: "لا يمكن استخدام هذا الكود." },
         409
       );
     }
@@ -131,7 +165,7 @@ export async function onRequestPost(context) {
         activated_at = ?
       WHERE code = ? AND status = 'NEW'
     `)
-      .bind(sessionEmail, deviceKey || "", nowIso, code)
+      .bind(sessionEmail, deviceKey, nowIso, code)
       .run();
 
     const changes =
@@ -156,13 +190,13 @@ export async function onRequestPost(context) {
       const retryDeviceKey = normalizeDeviceKey(retryRow?.device_key);
       const retryActivatedAt = String(retryRow?.activated_at || nowIso);
 
-      if (retryStatus === "USED" && retryEmail === sessionEmail) {
+      if (retryStatus === "USED" && retryEmail === sessionEmail && retryDeviceKey === deviceKey) {
         await markUserActivated(env.DB, sessionEmail);
 
         await ensureActivationRecord(env.DB, {
           code,
           email: sessionEmail,
-          deviceKey: deviceKey || retryDeviceKey,
+          deviceKey,
           activatedAt: retryActivatedAt,
         });
 
@@ -170,20 +204,35 @@ export async function onRequestPost(context) {
           code,
           status: "USED",
           email: sessionEmail,
-          deviceKey: deviceKey || retryDeviceKey || "",
+          deviceKey,
           activatedAt: retryActivatedAt,
         });
 
         return json({
           ok: true,
-          message: "تم تفعيل الحساب بنجاح.",
+          message: "تم تفعيل اللعبة بنجاح.",
           email: sessionEmail,
           activated: true,
           needs_activation: false,
+          device_locked: false,
           code,
           sheet_sync_ok: sheetSync.ok,
           sheet_sync_message: sheetSync.message,
         });
+      }
+
+      if (retryStatus === "USED" && retryEmail === sessionEmail && retryDeviceKey !== deviceKey) {
+        return json(
+          {
+            ok: false,
+            message:
+              "هذا الإيميل مرتبط بجهاز آخر بهذا التفعيل. إذا تريد تشغيل اللعبة على هذا الجهاز، أدخل كود تفعيل جديد.",
+            needs_activation: true,
+            device_locked: true,
+            activated: false,
+          },
+          409
+        );
       }
 
       return json(
@@ -205,7 +254,7 @@ export async function onRequestPost(context) {
       code,
       status: "USED",
       email: sessionEmail,
-      deviceKey: deviceKey || "",
+      deviceKey,
       activatedAt: nowIso,
     });
 
@@ -215,6 +264,7 @@ export async function onRequestPost(context) {
       email: sessionEmail,
       activated: true,
       needs_activation: false,
+      device_locked: false,
       code,
       sheet_sync_ok: sheetSync.ok,
       sheet_sync_message: sheetSync.message,
@@ -242,46 +292,22 @@ async function markUserActivated(db, email) {
 }
 
 async function ensureActivationRecord(db, { code, email, deviceKey, activatedAt }) {
-  const cleanDeviceKey = normalizeDeviceKey(deviceKey);
-
-  if (cleanDeviceKey) {
-    const existingSameDevice = await db.prepare(`
-      SELECT id
-      FROM activations
-      WHERE code = ? AND email = ? AND device_key = ?
-      LIMIT 1
-    `)
-      .bind(code, email, cleanDeviceKey)
-      .first();
-
-    if (existingSameDevice) return;
-
-    await db.prepare(`
-      INSERT INTO activations (code, email, device_key, activated_at)
-      VALUES (?, ?, ?, ?)
-    `)
-      .bind(code, email, cleanDeviceKey, activatedAt)
-      .run();
-
-    return;
-  }
-
-  const existingAny = await db.prepare(`
+  const existing = await db.prepare(`
     SELECT id
     FROM activations
-    WHERE code = ? AND email = ?
+    WHERE code = ? AND email = ? AND device_key = ?
     LIMIT 1
   `)
-    .bind(code, email)
+    .bind(code, email, deviceKey)
     .first();
 
-  if (existingAny) return;
+  if (existing) return;
 
   await db.prepare(`
     INSERT INTO activations (code, email, device_key, activated_at)
     VALUES (?, ?, ?, ?)
   `)
-    .bind(code, email, "", activatedAt)
+    .bind(code, email, deviceKey, activatedAt)
     .run();
 }
 

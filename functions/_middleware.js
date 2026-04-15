@@ -32,7 +32,11 @@ function shouldProtect(request, pathname) {
   const lower = pathname.toLowerCase();
 
   if (lower.startsWith("/api/")) return false;
-  if (lower === "/activate.html" || lower === "/activate") return false;
+
+  // الجذر وصفحة التفعيل لازم تكون عامة
+  if (lower === "/" || lower === "/activate" || lower === "/activate.html") {
+    return false;
+  }
 
   const publicFiles = [
     ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".ico",
@@ -43,7 +47,7 @@ function shouldProtect(request, pathname) {
 
   if (publicFiles.some(ext => lower.endsWith(ext))) return false;
 
-  if (lower === "/" || lower.endsWith(".html")) return true;
+  if (lower.endsWith(".html")) return true;
 
   return false;
 }

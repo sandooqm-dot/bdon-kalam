@@ -30,7 +30,7 @@ export async function onRequestGet(context) {
         sessions.email AS session_email,
         sessions.created_at AS session_created_at,
         users.email AS email,
-        users.activated AS activated,
+        users.activated AS user_activated,
         users.created_at AS user_created_at
       FROM sessions
       INNER JOIN users ON users.email = sessions.email
@@ -50,12 +50,35 @@ export async function onRequestGet(context) {
     const email = normalizeEmail(row.email);
     const deviceKey = normalizeDeviceKey(getDeviceKey(request));
 
-    let boundCode = "";
-    let boundDeviceKey = "";
-    let boundActivatedAt = "";
+    let currentDeviceActivation = null;
+    let currentDeviceCode = null;
 
-    const activationRow = await env.DB.prepare(`
-      SELECT id, code, device_key, activated_at
+    if (deviceKey) {
+      currentDeviceActivation = await env.DB.prepare(`
+        SELECT code, device_key, activated_at
+        FROM activations
+        WHERE email = ? AND device_key = ?
+        ORDER BY id DESC
+        LIMIT 1
+      `)
+        .bind(email, deviceKey)
+        .first();
+
+      if (!currentDeviceActivation) {
+        currentDeviceCode = await env.DB.prepare(`
+          SELECT code, device_key, activated_at
+          FROM codes
+          WHERE email = ? AND device_key = ? AND status = 'USED'
+          ORDER BY activated_at DESC
+          LIMIT 1
+        `)
+          .bind(email, deviceKey)
+          .first();
+      }
+    }
+
+    const anyActivation = await env.DB.prepare(`
+      SELECT code, device_key, activated_at
       FROM activations
       WHERE email = ?
       ORDER BY id DESC
@@ -64,118 +87,71 @@ export async function onRequestGet(context) {
       .bind(email)
       .first();
 
-    let activationId = null;
+    const anyCode = await env.DB.prepare(`
+      SELECT code, device_key, activated_at
+      FROM codes
+      WHERE email = ? AND status = 'USED'
+      ORDER BY activated_at DESC
+      LIMIT 1
+    `)
+      .bind(email)
+      .first();
 
-    if (activationRow) {
-      activationId = activationRow.id;
-      boundCode = String(activationRow.code || "").trim();
-      boundDeviceKey = normalizeDeviceKey(activationRow.device_key);
-      boundActivatedAt = String(activationRow.activated_at || "");
-    }
+    const matchedRecord = currentDeviceActivation || currentDeviceCode || null;
+    const latestRecord = anyActivation || anyCode || null;
 
-    if (!boundDeviceKey) {
-      const codeRow = await env.DB.prepare(`
-        SELECT code, device_key, activated_at
-        FROM codes
-        WHERE email = ? AND status = 'USED'
-        ORDER BY activated_at DESC
-        LIMIT 1
-      `)
-        .bind(email)
-        .first();
+    const accountHasActivation =
+      !!latestRecord || !!row.user_activated;
 
-      if (codeRow) {
-        boundCode = boundCode || String(codeRow.code || "").trim();
-        boundDeviceKey = normalizeDeviceKey(codeRow.device_key);
-        boundActivatedAt = boundActivatedAt || String(codeRow.activated_at || "");
-      }
-    }
+    const deviceActivated = !!matchedRecord;
+    const deviceLocked = !!accountHasActivation && !deviceActivated;
+    const needsActivation = !deviceActivated;
+    const activated = deviceActivated;
 
-    const accountActivated = !!row.activated;
+    const activationCode = String(
+      (matchedRecord && matchedRecord.code) ||
+      (latestRecord && latestRecord.code) ||
+      ""
+    ).trim();
 
-    let sameDevice =
-      !!accountActivated &&
-      !!deviceKey &&
-      !!boundDeviceKey &&
-      deviceKey === boundDeviceKey;
+    const activationDeviceKey = normalizeDeviceKey(
+      (matchedRecord && matchedRecord.device_key) ||
+      (latestRecord && latestRecord.device_key) ||
+      ""
+    );
 
-    const canMigrateLegacyDeviceKey =
-      !!accountActivated &&
-      !!deviceKey &&
-      isStableDeviceKey(deviceKey) &&
-      (
-        !boundDeviceKey ||
-        !isStableDeviceKey(boundDeviceKey)
-      );
-
-    if (!sameDevice && canMigrateLegacyDeviceKey) {
-      if (activationId) {
-        await env.DB.prepare(`
-          UPDATE activations
-          SET device_key = ?
-          WHERE id = ?
-        `)
-          .bind(deviceKey, activationId)
-          .run();
-      } else {
-        const existingActivation = await env.DB.prepare(`
-          SELECT id
-          FROM activations
-          WHERE email = ?
-          LIMIT 1
-        `)
-          .bind(email)
-          .first();
-
-        if (existingActivation) {
-          await env.DB.prepare(`
-            UPDATE activations
-            SET device_key = ?
-            WHERE id = ?
-          `)
-            .bind(deviceKey, existingActivation.id)
-            .run();
-        }
-      }
-
-      await env.DB.prepare(`
-        UPDATE codes
-        SET device_key = ?
-        WHERE email = ? AND status = 'USED'
-      `)
-        .bind(deviceKey, email)
-        .run();
-
-      boundDeviceKey = deviceKey;
-      sameDevice = true;
-    }
-
-    // التفعيل الآن يعتمد على الحساب نفسه، وليس على تطابق deviceKey
-    const activated = accountActivated;
-    const deviceLocked = false;
-    const needsActivation = !accountActivated;
+    const activationActivatedAt = String(
+      (matchedRecord && matchedRecord.activated_at) ||
+      (latestRecord && latestRecord.activated_at) ||
+      ""
+    ).trim();
 
     return json({
       ok: true,
       email,
-      activated,
       token: row.token,
-      device_locked: deviceLocked,
+
+      activated,
       needs_activation: needsActivation,
+      device_locked: deviceLocked,
+      account_has_activation: accountHasActivation,
+
       user: {
         email,
         activated,
         created_at: row.user_created_at,
       },
+
       session: {
         email: row.session_email,
         created_at: row.session_created_at,
       },
+
       activation: {
-        code: boundCode || null,
-        device_key: boundDeviceKey || null,
-        activated_at: boundActivatedAt || null,
-        same_device: sameDevice,
+        code: activationCode || null,
+        device_key: activationDeviceKey || null,
+        activated_at: activationActivatedAt || null,
+        same_device: deviceActivated,
       },
     });
   } catch (error) {
@@ -211,11 +187,6 @@ function getDeviceKey(request) {
 
 function normalizeDeviceKey(value) {
   return String(value || "").trim();
-}
-
-function isStableDeviceKey(value) {
-  const v = normalizeDeviceKey(value);
-  return /^bdk_/i.test(v);
 }
 
 function normalizeEmail(value) {

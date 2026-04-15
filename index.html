@@ -33,6 +33,10 @@
       const DEVICE_KEY_KEYS = [
         "bdonKalam_device_key_v1",
         "bdonKalam_device_key",
+        "bdonKalam_device_id_v1",
+        "bdonKalam_device_id",
+        "bdonKalam_deviceId_v1",
+        "bdonKalam_deviceId",
         "sandooq_device_key_v1",
         "sandooq_device_key",
         "sandooq_device_id_v1",
@@ -57,32 +61,16 @@
         try { sessionStorage.setItem(key, value); } catch (_) {}
       }
 
-      function writeDeviceKeyEverywhere(value) {
+      function saveDeviceKeyEverywhere(value) {
         if (!value) return;
         writeSafe("bdonKalam_device_key_v1", value);
         writeSafe("bdonKalam_device_key", value);
+        writeSafe("bdonKalam_device_id_v1", value);
+        writeSafe("bdonKalam_device_id", value);
+        writeSafe("bdonKalam_deviceId_v1", value);
+        writeSafe("bdonKalam_deviceId", value);
         writeSafe("device_key", value);
-      }
-
-      function generateDeviceKey() {
-        try {
-          const bytes = crypto.getRandomValues(new Uint8Array(16));
-          return Array.from(bytes).map((b) => b.toString(16).padStart(2, "0")).join("");
-        } catch (_) {
-          return "bdk_" + Math.random().toString(16).slice(2) + Date.now().toString(16);
-        }
-      }
-
-      function getOrCreateDeviceKey() {
-        const existing = readAny(DEVICE_KEY_KEYS);
-        if (existing) {
-          writeDeviceKeyEverywhere(existing);
-          return existing;
-        }
-
-        const created = generateDeviceKey();
-        writeDeviceKeyEverywhere(created);
-        return created;
+        writeSafe("deviceId", value);
       }
 
       function revealPage() {
@@ -96,12 +84,19 @@
 
       async function checkAuthGate() {
         const token = readAny(TOKEN_KEYS);
-        const deviceKey = getOrCreateDeviceKey();
+        const deviceKey = readAny(DEVICE_KEY_KEYS);
 
         if (!token) {
           redirectToActivate();
           return;
         }
+
+        if (!deviceKey) {
+          redirectToActivate();
+          return;
+        }
+
+        saveDeviceKeyEverywhere(deviceKey);
 
         try {
           const response = await fetch(API_ME_URL, {

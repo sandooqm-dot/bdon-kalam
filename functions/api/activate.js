@@ -47,7 +47,7 @@ export async function onRequestPost(context) {
     const code = normalizeCode(body.code);
     const bodyEmail = normalizeEmail(body.email);
     const sessionEmail = normalizeEmail(session.email);
-    const deviceKey = getDeviceKey(request);
+    const deviceKey = normalizeDeviceKey(getDeviceKey(request));
     const nowIso = new Date().toISOString();
 
     if (!code) {
@@ -57,20 +57,18 @@ export async function onRequestPost(context) {
       );
     }
 
+    if (!deviceKey) {
+      return json(
+        { ok: false, message: "تعذر التعرّف على الجهاز. أعد المحاولة من نفس الجهاز." },
+        400
+      );
+    }
+
     if (bodyEmail && bodyEmail !== sessionEmail) {
       return json(
         { ok: false, message: "الإيميل لا يطابق الحساب الحالي." },
         403
       );
-    }
-
-    if (session.activated) {
-      return json({
-        ok: true,
-        message: "الحساب مفعّل بالفعل.",
-        email: sessionEmail,
-        activated: true,
-      });
     }
 
     const codeRow = await env.DB.prepare(
@@ -86,32 +84,68 @@ export async function onRequestPost(context) {
       );
     }
 
+    const usedBy = normalizeEmail(codeRow.email);
+    const codeDeviceKey = normalizeDeviceKey(codeRow.device_key);
+
+    const activationRow = await env.DB.prepare(
+      "SELECT id, device_key, activated_at FROM activations WHERE code = ? AND email = ? ORDER BY id ASC LIMIT 1"
+    )
+      .bind(code, sessionEmail)
+      .first();
+
+    const activationDeviceKey = normalizeDeviceKey(activationRow?.device_key);
+    const boundDeviceKey = codeDeviceKey || activationDeviceKey;
+
     if (String(codeRow.status || "").toUpperCase() === "USED") {
-      const usedBy = normalizeEmail(codeRow.email);
-
       if (usedBy && usedBy === sessionEmail) {
-        await env.DB.prepare(
-          "UPDATE users SET activated = 1 WHERE email = ?"
-        )
-          .bind(sessionEmail)
-          .run();
+        if (boundDeviceKey && boundDeviceKey === deviceKey) {
+          await env.DB.prepare(
+            "UPDATE users SET activated = 1 WHERE email = ?"
+          )
+            .bind(sessionEmail)
+            .run();
 
-        const sheetSync = await syncCodeToSheet({
-          code,
-          status: "USED",
-          email: sessionEmail,
-          deviceKey,
-          activatedAt: codeRow.activated_at || nowIso,
-        });
+          const existingActivationSameDevice = await env.DB.prepare(
+            "SELECT id FROM activations WHERE code = ? AND email = ? AND device_key = ? LIMIT 1"
+          )
+            .bind(code, sessionEmail, deviceKey)
+            .first();
 
-        return json({
-          ok: true,
-          message: "هذا الكود مفعّل مسبقًا على نفس الحساب.",
-          email: sessionEmail,
-          activated: true,
-          sheet_sync_ok: sheetSync.ok,
-          sheet_sync_message: sheetSync.message,
-        });
+          if (!existingActivationSameDevice) {
+            await env.DB.prepare(`
+              INSERT INTO activations (code, email, device_key, activated_at)
+              VALUES (?, ?, ?, ?)
+            `)
+              .bind(code, sessionEmail, deviceKey, codeRow.activated_at || nowIso)
+              .run();
+          }
+
+          const sheetSync = await syncCodeToSheet({
+            code,
+            status: "USED",
+            email: sessionEmail,
+            deviceKey,
+            activatedAt: codeRow.activated_at || nowIso,
+          });
+
+          return json({
+            ok: true,
+            message: "هذا الكود مفعّل مسبقًا على نفس الجهاز.",
+            email: sessionEmail,
+            activated: true,
+            sheet_sync_ok: sheetSync.ok,
+            sheet_sync_message: sheetSync.message,
+          });
+        }
+
+        return json(
+          {
+            ok: false,
+            message:
+              "هذا الكود مرتبط بجهاز آخر. لاستخدام اللعبة على هذا الجهاز تحتاج كود تفعيل جديد.",
+          },
+          409
+        );
       }
 
       return json(
@@ -129,7 +163,7 @@ export async function onRequestPost(context) {
         activated_at = ?
       WHERE code = ? AND status = 'NEW'
     `)
-      .bind(sessionEmail, deviceKey || null, nowIso, code)
+      .bind(sessionEmail, deviceKey, nowIso, code)
       .run();
 
     const changes =
@@ -141,38 +175,67 @@ export async function onRequestPost(context) {
 
     if (changes < 1) {
       const retryRow = await env.DB.prepare(
-        "SELECT status, email, activated_at FROM codes WHERE code = ? LIMIT 1"
+        "SELECT status, email, device_key, activated_at FROM codes WHERE code = ? LIMIT 1"
       )
         .bind(code)
         .first();
 
+      const retryEmail = normalizeEmail(retryRow?.email);
+      const retryDeviceKey = normalizeDeviceKey(retryRow?.device_key);
+
       if (
         retryRow &&
         String(retryRow.status || "").toUpperCase() === "USED" &&
-        normalizeEmail(retryRow.email) === sessionEmail
+        retryEmail === sessionEmail
       ) {
-        await env.DB.prepare(
-          "UPDATE users SET activated = 1 WHERE email = ?"
-        )
-          .bind(sessionEmail)
-          .run();
+        if (retryDeviceKey && retryDeviceKey === deviceKey) {
+          await env.DB.prepare(
+            "UPDATE users SET activated = 1 WHERE email = ?"
+          )
+            .bind(sessionEmail)
+            .run();
 
-        const sheetSync = await syncCodeToSheet({
-          code,
-          status: "USED",
-          email: sessionEmail,
-          deviceKey,
-          activatedAt: retryRow.activated_at || nowIso,
-        });
+          const existingActivationSameDevice = await env.DB.prepare(
+            "SELECT id FROM activations WHERE code = ? AND email = ? AND device_key = ? LIMIT 1"
+          )
+            .bind(code, sessionEmail, deviceKey)
+            .first();
 
-        return json({
-          ok: true,
-          message: "تم تفعيل الحساب بنجاح.",
-          email: sessionEmail,
-          activated: true,
-          sheet_sync_ok: sheetSync.ok,
-          sheet_sync_message: sheetSync.message,
-        });
+          if (!existingActivationSameDevice) {
+            await env.DB.prepare(`
+              INSERT INTO activations (code, email, device_key, activated_at)
+              VALUES (?, ?, ?, ?)
+            `)
+              .bind(code, sessionEmail, deviceKey, retryRow.activated_at || nowIso)
+              .run();
+          }
+
+          const sheetSync = await syncCodeToSheet({
+            code,
+            status: "USED",
+            email: sessionEmail,
+            deviceKey,
+            activatedAt: retryRow.activated_at || nowIso,
+          });
+
+          return json({
+            ok: true,
+            message: "تم تفعيل الحساب بنجاح.",
+            email: sessionEmail,
+            activated: true,
+            sheet_sync_ok: sheetSync.ok,
+            sheet_sync_message: sheetSync.message,
+          });
+        }
+
+        return json(
+          {
+            ok: false,
+            message:
+              "هذا الكود مرتبط بجهاز آخر. لاستخدام اللعبة على هذا الجهاز تحتاج كود تفعيل جديد.",
+          },
+          409
+        );
       }
 
       return json(
@@ -187,18 +250,18 @@ export async function onRequestPost(context) {
       .bind(sessionEmail)
       .run();
 
-    const existingActivation = await env.DB.prepare(
-      "SELECT id FROM activations WHERE code = ? AND email = ? LIMIT 1"
+    const existingActivationSameDevice = await env.DB.prepare(
+      "SELECT id FROM activations WHERE code = ? AND email = ? AND device_key = ? LIMIT 1"
     )
-      .bind(code, sessionEmail)
+      .bind(code, sessionEmail, deviceKey)
       .first();
 
-    if (!existingActivation) {
+    if (!existingActivationSameDevice) {
       await env.DB.prepare(`
         INSERT INTO activations (code, email, device_key, activated_at)
         VALUES (?, ?, ?, ?)
       `)
-        .bind(code, sessionEmail, deviceKey || null, nowIso)
+        .bind(code, sessionEmail, deviceKey, nowIso)
         .run();
     }
 
@@ -319,6 +382,10 @@ function getDeviceKey(request) {
       request.headers.get("x-device-id") ||
       ""
   ).trim();
+}
+
+function normalizeDeviceKey(value) {
+  return String(value || "").trim();
 }
 
 function normalizeEmail(value) {

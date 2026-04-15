@@ -533,7 +533,7 @@
             <button id="activateBtn" class="main-btn" type="button">تفعيل الكود</button>
             <button id="logoutBtn1" class="secondary-btn" type="button">تسجيل الخروج</button>
 
-            <p class="hint">هذا الحساب غير مفعّل بعد. أدخل الكود مرة واحدة فقط لإكمال التفعيل.</p>
+            <p id="activateHint" class="hint">هذا الحساب غير مفعّل بعد. أدخل الكود مرة واحدة فقط لإكمال التفعيل.</p>
           </section>
 
           <section id="readyStep" class="form-box hidden">
@@ -615,6 +615,7 @@
     const linkedEmail = document.getElementById("linkedEmail");
     const activateCode = document.getElementById("activateCode");
     const readyEmail = document.getElementById("readyEmail");
+    const activateHint = document.getElementById("activateHint");
 
     const loginBtn = document.getElementById("loginBtn");
     const registerBtn = document.getElementById("registerBtn");
@@ -832,6 +833,7 @@
       readyStep.classList.add("hidden");
       authTabs.style.display = "grid";
       bottomHint.style.display = "block";
+      activateHint.textContent = "هذا الحساب غير مفعّل بعد. أدخل الكود مرة واحدة فقط لإكمال التفعيل.";
       hideBanner();
 
       const savedEmail = getStoredEmail();
@@ -841,15 +843,22 @@
       }
     }
 
-    function showActivateStep(email, message = "") {
+    function showActivateStep(email, message = "", options = {}) {
+      const {
+        bannerType = "info",
+        hintText = "هذا الحساب غير مفعّل بعد. أدخل الكود مرة واحدة فقط لإكمال التفعيل."
+      } = options;
+
       authTabs.style.display = "none";
       loginForm.classList.add("hidden");
       registerForm.classList.add("hidden");
       readyStep.classList.add("hidden");
       activateStep.classList.remove("hidden");
       linkedEmail.value = email || getStoredEmail() || "";
+      activateHint.textContent = hintText;
       bottomHint.style.display = "block";
-      if (message) showBanner(message, "success");
+
+      if (message) showBanner(message, bannerType);
       else hideBanner();
     }
 
@@ -907,8 +916,41 @@
       );
     }
 
+    function isDeviceLocked(data) {
+      return !!(
+        data?.device_locked === true ||
+        data?.deviceLocked === true
+      );
+    }
+
+    function hasAccountActivation(data) {
+      return !!(
+        data?.account_has_activation === true ||
+        data?.accountHasActivation === true
+      );
+    }
+
     function getErrorMessage(data, fallback) {
       return data?.message || data?.error || data?.detail || fallback;
+    }
+
+    function getActivationStepConfig(state) {
+      const locked = !!state?.deviceLocked;
+      const hadActivation = !!state?.accountHasActivation;
+
+      if (locked && hadActivation) {
+        return {
+          bannerType: "info",
+          message: "هذا الإيميل مرتبط بجهاز آخر. إذا تريد تشغيل اللعبة على هذا الجهاز، أدخل كود تفعيل جديد.",
+          hintText: "هذا الحساب لديه تفعيل سابق على جهاز آخر. لتشغيل اللعبة هنا أدخل كود تفعيل جديد مستقل لهذا الجهاز."
+        };
+      }
+
+      return {
+        bannerType: "success",
+        message: "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.",
+        hintText: "هذا الحساب غير مفعّل بعد. أدخل الكود مرة واحدة فقط لإكمال التفعيل."
+      };
     }
 
     async function apiRequest(url, options = {}) {
@@ -968,6 +1010,8 @@
         email: resolvedEmail,
         activated: isActivated(result.data),
         needsActivation: needsActivation(result.data),
+        deviceLocked: isDeviceLocked(result.data),
+        accountHasActivation: hasAccountActivation(result.data),
         data: result.data
       };
     }
@@ -1000,12 +1044,19 @@
           return;
         }
 
-        if (state.needsActivation) {
-          showActivateStep(state.email, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
+        if (state.deviceLocked || state.needsActivation) {
+          const config = getActivationStepConfig(state);
+          showActivateStep(state.email, config.message, {
+            bannerType: config.bannerType,
+            hintText: config.hintText
+          });
           return;
         }
 
-        showActivateStep(state.email, "أكمل تفعيل الحساب بإدخال كود اللعبة.");
+        showActivateStep(state.email, "أكمل تفعيل الحساب بإدخال كود اللعبة.", {
+          bannerType: "info",
+          hintText: "أدخل كود اللعبة لإكمال التفعيل على هذا الجهاز."
+        });
       } catch (_) {
         setMode("login");
       }
@@ -1056,7 +1107,11 @@
           return;
         }
 
-        showActivateStep(state.email || resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
+        const config = getActivationStepConfig(state);
+        showActivateStep(state.email || resolvedEmail, config.message, {
+          bannerType: config.bannerType,
+          hintText: config.hintText
+        });
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {
@@ -1117,7 +1172,10 @@
           return;
         }
 
-        showActivateStep(state.email || resolvedEmail, "تم إنشاء الحساب بنجاح ✅ الآن أدخل كود اللعبة.");
+        showActivateStep(state.email || resolvedEmail, "تم إنشاء الحساب بنجاح ✅ الآن أدخل كود اللعبة.", {
+          bannerType: "success",
+          hintText: "هذا الحساب غير مفعّل بعد. أدخل الكود مرة واحدة فقط لإكمال التفعيل."
+        });
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {

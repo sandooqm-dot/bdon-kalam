@@ -33,11 +33,17 @@ function shouldProtect(request, pathname) {
 
   if (lower.startsWith("/api/")) return false;
 
-  // الجذر وصفحة التفعيل لازم تكون عامة
-  if (lower === "/" || lower === "/activate" || lower === "/activate.html") {
+  // صفحات عامة بدون حماية
+  if (
+    lower === "/activate.html" ||
+    lower === "/activate" ||
+    lower === "/reveal.html" ||
+    lower === "/reveal"
+  ) {
     return false;
   }
 
+  // ملفات الصور/الخطوط/الوسائط/الستايل/السكريبتات تبقى عامة
   const publicFiles = [
     ".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg", ".ico",
     ".css", ".js", ".mjs", ".map", ".json", ".txt", ".xml",
@@ -47,7 +53,10 @@ function shouldProtect(request, pathname) {
 
   if (publicFiles.some(ext => lower.endsWith(ext))) return false;
 
-  if (lower.endsWith(".html")) return true;
+  // أي ملفات داخل images تبقى عامة أيضًا
+  if (lower.startsWith("/images/")) return false;
+
+  if (lower === "/" || lower.endsWith(".html")) return true;
 
   return false;
 }

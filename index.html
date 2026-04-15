@@ -45,12 +45,34 @@
         "deviceId"
       ];
 
+      function readCookie(name) {
+        try {
+          const cookie = document.cookie || "";
+          const parts = cookie.split(";");
+          for (const part of parts) {
+            const [k, ...rest] = part.trim().split("=");
+            if (k === name) {
+              return decodeURIComponent(rest.join("=") || "");
+            }
+          }
+        } catch (_) {}
+        return "";
+      }
+
       function readAny(keys) {
         for (const key of keys) {
           try {
-            const value = localStorage.getItem(key) || sessionStorage.getItem(key);
-            if (value && String(value).trim()) return String(value).trim();
+            const local = localStorage.getItem(key);
+            if (local && String(local).trim()) return String(local).trim();
           } catch (_) {}
+
+          try {
+            const session = sessionStorage.getItem(key);
+            if (session && String(session).trim()) return String(session).trim();
+          } catch (_) {}
+
+          const cookieValue = readCookie(key);
+          if (cookieValue && String(cookieValue).trim()) return String(cookieValue).trim();
         }
         return "";
       }
@@ -61,16 +83,28 @@
         try { sessionStorage.setItem(key, value); } catch (_) {}
       }
 
+      function writeCookie(name, value, maxAgeSeconds = 2592000) {
+        try {
+          const secure = location.protocol === "https:" ? "; Secure" : "";
+          document.cookie =
+            `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax${secure}`;
+        } catch (_) {}
+      }
+
       function saveDeviceKeyEverywhere(value) {
         if (!value) return;
-        writeSafe("bdonKalam_device_key_v1", value);
-        writeSafe("bdonKalam_device_key", value);
-        writeSafe("bdonKalam_device_id_v1", value);
-        writeSafe("bdonKalam_device_id", value);
-        writeSafe("bdonKalam_deviceId_v1", value);
-        writeSafe("bdonKalam_deviceId", value);
-        writeSafe("device_key", value);
-        writeSafe("deviceId", value);
+        DEVICE_KEY_KEYS.forEach((key) => {
+          writeSafe(key, value);
+          writeCookie(key, value);
+        });
+      }
+
+      function saveEmailEverywhere(value) {
+        if (!value) return;
+        EMAIL_KEYS.forEach((key) => {
+          writeSafe(key, value);
+          writeCookie(key, value);
+        });
       }
 
       function revealPage() {
@@ -82,21 +116,77 @@
         location.replace(ACTIVATE_URL);
       }
 
+      function normalizeUA(ua) {
+        return String(ua || "")
+          .replace(/CriOS\/[^\s)]+/gi, "")
+          .replace(/FxiOS\/[^\s)]+/gi, "")
+          .replace(/EdgiOS\/[^\s)]+/gi, "")
+          .replace(/OPiOS\/[^\s)]+/gi, "")
+          .replace(/YaBrowser\/[^\s)]+/gi, "")
+          .replace(/Chrome\/[^\s)]+/gi, "")
+          .replace(/Firefox\/[^\s)]+/gi, "")
+          .replace(/Edg\/[^\s)]+/gi, "")
+          .replace(/OPR\/[^\s)]+/gi, "")
+          .replace(/Version\/[^\s)]+/gi, "")
+          .replace(/Safari\/[^\s)]+/gi, "")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function hashString(str) {
+        let h1 = 0xdeadbeef ^ str.length;
+        let h2 = 0x41c6ce57 ^ str.length;
+
+        for (let i = 0; i < str.length; i++) {
+          const ch = str.charCodeAt(i);
+          h1 = Math.imul(h1 ^ ch, 2654435761);
+          h2 = Math.imul(h2 ^ ch, 1597334677);
+        }
+
+        h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+        h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+
+        return ((h2 >>> 0).toString(36) + (h1 >>> 0).toString(36));
+      }
+
+      function buildStableDeviceId() {
+        const sw = Math.min(screen.width || 0, screen.height || 0);
+        const sh = Math.max(screen.width || 0, screen.height || 0);
+
+        const fingerprint = [
+          "bdk-v2",
+          normalizeUA(navigator.userAgent || ""),
+          navigator.platform || "",
+          navigator.language || "",
+          Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+          `${sw}x${sh}`,
+          String(screen.colorDepth || ""),
+          String(window.devicePixelRatio || ""),
+          String(navigator.maxTouchPoints || ""),
+          String(navigator.hardwareConcurrency || "")
+        ].join("|");
+
+        return "bdk_" + hashString(fingerprint);
+      }
+
+      function getOrCreateDeviceKey() {
+        let deviceKey = readAny(DEVICE_KEY_KEYS);
+        if (!deviceKey || !/^bdk_/i.test(deviceKey)) {
+          deviceKey = buildStableDeviceId();
+        }
+        saveDeviceKeyEverywhere(deviceKey);
+        return deviceKey;
+      }
+
       async function checkAuthGate() {
         const token = readAny(TOKEN_KEYS);
-        const deviceKey = readAny(DEVICE_KEY_KEYS);
 
         if (!token) {
           redirectToActivate();
           return;
         }
 
-        if (!deviceKey) {
-          redirectToActivate();
-          return;
-        }
-
-        saveDeviceKeyEverywhere(deviceKey);
+        const deviceKey = getOrCreateDeviceKey();
 
         try {
           const response = await fetch(API_ME_URL, {
@@ -105,7 +195,8 @@
               Authorization: "Bearer " + token,
               "X-Device-Id": deviceKey
             },
-            cache: "no-store"
+            cache: "no-store",
+            credentials: "include"
           });
 
           let data = {};
@@ -141,7 +232,7 @@
           ).trim().toLowerCase();
 
           if (email) {
-            writeSafe("bdonKalam_email_v1", email);
+            saveEmailEverywhere(email);
           }
 
           if (document.readyState === "loading") {

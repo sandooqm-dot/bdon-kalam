@@ -572,6 +572,15 @@
       deviceId: "bdonKalam_device_id_v1"
     };
 
+    const DEVICE_KEYS = [
+      "bdonKalam_device_id_v1",
+      "bdonKalam_device_id",
+      "bdonKalam_device_key_v1",
+      "bdonKalam_device_key",
+      "deviceId",
+      "device_key"
+    ];
+
     const loginTabBtn = document.getElementById("loginTabBtn");
     const registerTabBtn = document.getElementById("registerTabBtn");
     const authTabs = document.getElementById("authTabs");
@@ -604,37 +613,105 @@
 
     let currentMode = "login";
 
+    function readStoredValue(key) {
+      try {
+        const value = localStorage.getItem(key);
+        if (value && String(value).trim()) return String(value).trim();
+      } catch (_) {}
+      try {
+        const value = sessionStorage.getItem(key);
+        if (value && String(value).trim()) return String(value).trim();
+      } catch (_) {}
+      return "";
+    }
+
+    function writeStoredValue(key, value) {
+      if (!value) return;
+      try { localStorage.setItem(key, value); } catch (_) {}
+      try { sessionStorage.setItem(key, value); } catch (_) {}
+    }
+
+    function deleteStoredValue(key) {
+      try { localStorage.removeItem(key); } catch (_) {}
+      try { sessionStorage.removeItem(key); } catch (_) {}
+    }
+
+    function writeCookie(name, value, maxAgeSeconds = 2592000) {
+      try {
+        const secure = location.protocol === "https:" ? "; Secure" : "";
+        document.cookie =
+          `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax${secure}`;
+      } catch (_) {}
+    }
+
+    function clearCookie(name) {
+      try {
+        const secure = location.protocol === "https:" ? "; Secure" : "";
+        document.cookie =
+          `${name}=; Path=/; Max-Age=0; SameSite=Lax${secure}`;
+      } catch (_) {}
+    }
+
+    function readAny(keys) {
+      for (const key of keys) {
+        const value = readStoredValue(key);
+        if (value) return value;
+      }
+      return "";
+    }
+
+    function persistDeviceId(deviceId) {
+      if (!deviceId) return;
+      DEVICE_KEYS.forEach((key) => writeStoredValue(key, deviceId));
+      writeCookie("bdonKalam_device_id_v1", deviceId);
+      writeCookie("bdonKalam_device_key_v1", deviceId);
+    }
+
     function getDeviceId() {
-      let deviceId = localStorage.getItem(STORAGE.deviceId);
+      let deviceId = readAny(DEVICE_KEYS);
       if (!deviceId) {
         deviceId = "bdk-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
-        localStorage.setItem(STORAGE.deviceId, deviceId);
       }
+      persistDeviceId(deviceId);
       return deviceId;
     }
 
     function getToken() {
-      return localStorage.getItem(STORAGE.token) || "";
+      return readStoredValue(STORAGE.token);
     }
 
     function setToken(token) {
-      if (token) localStorage.setItem(STORAGE.token, token);
+      if (!token) return;
+      writeStoredValue(STORAGE.token, token);
+      writeStoredValue("sandooq_token_v1", token);
+      writeStoredValue("sandooq_token", token);
+      writeCookie("bdonKalam_token_v1", token);
+      writeCookie("sandooq_token_v1", token);
     }
 
     function clearToken() {
-      localStorage.removeItem(STORAGE.token);
+      deleteStoredValue(STORAGE.token);
+      deleteStoredValue("sandooq_token_v1");
+      deleteStoredValue("sandooq_token");
+      clearCookie("bdonKalam_token_v1");
+      clearCookie("sandooq_token_v1");
     }
 
     function getStoredEmail() {
-      return localStorage.getItem(STORAGE.email) || "";
+      return readStoredValue(STORAGE.email);
     }
 
     function setStoredEmail(email) {
-      if (email) localStorage.setItem(STORAGE.email, email);
+      if (!email) return;
+      writeStoredValue(STORAGE.email, email);
+      writeStoredValue("sandooq_email", email);
+      writeCookie("bdonKalam_email_v1", email);
     }
 
     function clearStoredEmail() {
-      localStorage.removeItem(STORAGE.email);
+      deleteStoredValue(STORAGE.email);
+      deleteStoredValue("sandooq_email");
+      clearCookie("bdonKalam_email_v1");
     }
 
     function normalizeEmail(value) {
@@ -655,6 +732,10 @@
       statusBanner.textContent = "";
     }
 
+    function redirectToGame() {
+      window.location.replace(GAME_ENTRY);
+    }
+
     function setMode(mode) {
       currentMode = mode;
       const isLogin = mode === "login";
@@ -670,6 +751,12 @@
       authTabs.style.display = "grid";
       bottomHint.style.display = "block";
       hideBanner();
+
+      const savedEmail = getStoredEmail();
+      if (savedEmail) {
+        loginEmail.value = savedEmail;
+        registerEmail.value = savedEmail;
+      }
     }
 
     function showActivateStep(email, message = "") {
@@ -711,12 +798,7 @@
     }
 
     function pickEmail(data) {
-      return (
-        data?.email ||
-        data?.user?.email ||
-        getStoredEmail() ||
-        ""
-      );
+      return data?.email || data?.user?.email || getStoredEmail() || "";
     }
 
     function isActivated(data) {
@@ -734,19 +816,16 @@
     }
 
     function getErrorMessage(data, fallback) {
-      return (
-        data?.message ||
-        data?.error ||
-        data?.detail ||
-        fallback
-      );
+      return data?.message || data?.error || data?.detail || fallback;
     }
 
     async function apiRequest(url, options = {}) {
       const token = getToken();
+      const deviceId = getDeviceId();
+
       const headers = {
         "Content-Type": "application/json",
-        "X-Device-Id": getDeviceId(),
+        "X-Device-Id": deviceId,
         ...(options.headers || {})
       };
 
@@ -757,7 +836,8 @@
       const response = await fetch(url, {
         method: options.method || "POST",
         headers,
-        body: options.body ? JSON.stringify(options.body) : undefined
+        body: options.body ? JSON.stringify(options.body) : undefined,
+        cache: "no-store"
       });
 
       let data = {};
@@ -772,6 +852,13 @@
       const token = getToken();
       const email = getStoredEmail();
 
+      if (email) {
+        loginEmail.value = email;
+        registerEmail.value = email;
+      }
+
+      getDeviceId();
+
       if (!token) {
         setMode("login");
         return;
@@ -782,22 +869,20 @@
 
         if (!result.ok) {
           clearToken();
-          clearStoredEmail();
           setMode("login");
           return;
         }
 
-        const resolvedEmail = pickEmail(result.data) || email;
-        setStoredEmail(resolvedEmail);
+        const resolvedEmail = normalizeEmail(pickEmail(result.data) || email);
+        if (resolvedEmail) setStoredEmail(resolvedEmail);
 
         if (isActivated(result.data)) {
-          showReadyStep(resolvedEmail);
-        } else {
-          showActivateStep(resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
+          redirectToGame();
+          return;
         }
+
+        showActivateStep(resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
       } catch (_) {
-        clearToken();
-        clearStoredEmail();
         setMode("login");
       }
     }
@@ -830,21 +915,19 @@
         }
 
         const token = pickToken(result.data);
-        const resolvedEmail = pickEmail(result.data) || email;
+        const resolvedEmail = normalizeEmail(pickEmail(result.data) || email);
 
         if (token) setToken(token);
-        setStoredEmail(resolvedEmail);
+        if (resolvedEmail) setStoredEmail(resolvedEmail);
 
-        try {
-          const me = await apiRequest(API.me, { method: "GET" });
-          if (me.ok && isActivated(me.data)) {
-            showReadyStep(resolvedEmail, "تم تسجيل الدخول بنجاح.");
-          } else {
-            showActivateStep(resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
-          }
-        } catch (_) {
-          showActivateStep(resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
+        const me = await apiRequest(API.me, { method: "GET" });
+
+        if (me.ok && isActivated(me.data)) {
+          redirectToGame();
+          return;
         }
+
+        showActivateStep(resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {
@@ -888,10 +971,18 @@
         }
 
         const token = pickToken(result.data);
-        const resolvedEmail = pickEmail(result.data) || email;
+        const resolvedEmail = normalizeEmail(pickEmail(result.data) || email);
 
         if (token) setToken(token);
-        setStoredEmail(resolvedEmail);
+        if (resolvedEmail) setStoredEmail(resolvedEmail);
+
+        const me = await apiRequest(API.me, { method: "GET" });
+
+        if (me.ok && isActivated(me.data)) {
+          redirectToGame();
+          return;
+        }
+
         showActivateStep(resolvedEmail, "تم إنشاء الحساب بنجاح ✅ الآن أدخل كود اللعبة.");
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
@@ -902,7 +993,7 @@
 
     activateBtn.addEventListener("click", async () => {
       const code = normalizeCode(activateCode.value);
-      const email = linkedEmail.value.trim() || getStoredEmail();
+      const email = normalizeEmail(linkedEmail.value.trim() || getStoredEmail());
 
       activateCode.value = code;
 
@@ -924,7 +1015,8 @@
           return;
         }
 
-        showReadyStep(email, result.data?.message || "تم تفعيل اللعبة بنجاح ✅");
+        if (email) setStoredEmail(email);
+        redirectToGame();
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {
@@ -949,7 +1041,7 @@
     logoutBtn2.addEventListener("click", doLogout);
 
     enterGameBtn.addEventListener("click", () => {
-      window.location.href = GAME_ENTRY;
+      redirectToGame();
     });
 
     hydrateFromSession();

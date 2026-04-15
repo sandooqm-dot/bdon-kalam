@@ -897,6 +897,16 @@
       );
     }
 
+    function needsActivation(data) {
+      if (isActivated(data)) return false;
+
+      return !!(
+        data?.needs_activation === true ||
+        data?.user?.activated === false ||
+        data?.activated === false
+      );
+    }
+
     function getErrorMessage(data, fallback) {
       return data?.message || data?.error || data?.detail || fallback;
     }
@@ -937,6 +947,31 @@
       return { ok: response.ok, status: response.status, data };
     }
 
+    async function resolveSessionState() {
+      const result = await apiRequest(API.me, { method: "GET" });
+
+      if (!result.ok) {
+        clearToken();
+        return {
+          ok: false,
+          requiresLogin: true,
+          email: ""
+        };
+      }
+
+      const resolvedEmail = normalizeEmail(pickEmail(result.data) || getStoredEmail());
+      if (resolvedEmail) setStoredEmail(resolvedEmail);
+
+      return {
+        ok: true,
+        requiresLogin: false,
+        email: resolvedEmail,
+        activated: isActivated(result.data),
+        needsActivation: needsActivation(result.data),
+        data: result.data
+      };
+    }
+
     async function hydrateFromSession() {
       const email = getStoredEmail();
       if (email) {
@@ -953,23 +988,24 @@
       }
 
       try {
-        const result = await apiRequest(API.me, { method: "GET" });
+        const state = await resolveSessionState();
 
-        if (!result.ok) {
-          clearToken();
+        if (!state.ok || state.requiresLogin) {
           setMode("login");
           return;
         }
 
-        const resolvedEmail = normalizeEmail(pickEmail(result.data) || email);
-        if (resolvedEmail) setStoredEmail(resolvedEmail);
-
-        if (isActivated(result.data)) {
+        if (state.activated) {
           redirectToGame();
           return;
         }
 
-        showActivateStep(resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
+        if (state.needsActivation) {
+          showActivateStep(state.email, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
+          return;
+        }
+
+        showActivateStep(state.email, "أكمل تفعيل الحساب بإدخال كود اللعبة.");
       } catch (_) {
         setMode("login");
       }
@@ -1008,14 +1044,19 @@
         if (token) setToken(token);
         if (resolvedEmail) setStoredEmail(resolvedEmail);
 
-        const me = await apiRequest(API.me, { method: "GET" });
+        const state = await resolveSessionState();
 
-        if (me.ok && isActivated(me.data)) {
+        if (!state.ok || state.requiresLogin) {
+          showBanner("فشل التحقق من الجلسة بعد تسجيل الدخول.", "error");
+          return;
+        }
+
+        if (state.activated) {
           redirectToGame();
           return;
         }
 
-        showActivateStep(resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
+        showActivateStep(state.email || resolvedEmail, "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.");
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {
@@ -1064,14 +1105,19 @@
         if (token) setToken(token);
         if (resolvedEmail) setStoredEmail(resolvedEmail);
 
-        const me = await apiRequest(API.me, { method: "GET" });
+        const state = await resolveSessionState();
 
-        if (me.ok && isActivated(me.data)) {
+        if (!state.ok || state.requiresLogin) {
+          showBanner("فشل التحقق من الجلسة بعد إنشاء الحساب.", "error");
+          return;
+        }
+
+        if (state.activated) {
           redirectToGame();
           return;
         }
 
-        showActivateStep(resolvedEmail, "تم إنشاء الحساب بنجاح ✅ الآن أدخل كود اللعبة.");
+        showActivateStep(state.email || resolvedEmail, "تم إنشاء الحساب بنجاح ✅ الآن أدخل كود اللعبة.");
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {
@@ -1104,7 +1150,15 @@
         }
 
         if (email) setStoredEmail(email);
-        redirectToGame();
+
+        const state = await resolveSessionState();
+
+        if (state.ok && state.activated) {
+          redirectToGame();
+          return;
+        }
+
+        showReadyStep(email, "تم تفعيل اللعبة بنجاح ✅");
       } catch (_) {
         showBanner("تعذر الاتصال بالخادم.", "error");
       } finally {

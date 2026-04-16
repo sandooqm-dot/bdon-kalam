@@ -708,64 +708,17 @@
       });
     }
 
-    function normalizeUA(ua) {
-      return String(ua || "")
-        .replace(/CriOS\/[^\s)]+/gi, "")
-        .replace(/FxiOS\/[^\s)]+/gi, "")
-        .replace(/EdgiOS\/[^\s)]+/gi, "")
-        .replace(/OPiOS\/[^\s)]+/gi, "")
-        .replace(/YaBrowser\/[^\s)]+/gi, "")
-        .replace(/Chrome\/[^\s)]+/gi, "")
-        .replace(/Firefox\/[^\s)]+/gi, "")
-        .replace(/Edg\/[^\s)]+/gi, "")
-        .replace(/OPR\/[^\s)]+/gi, "")
-        .replace(/Version\/[^\s)]+/gi, "")
-        .replace(/Safari\/[^\s)]+/gi, "")
-        .replace(/\s+/g, " ")
-        .trim();
-    }
-
-    function hashString(str) {
-      let h1 = 0xdeadbeef ^ str.length;
-      let h2 = 0x41c6ce57 ^ str.length;
-
-      for (let i = 0; i < str.length; i++) {
-        const ch = str.charCodeAt(i);
-        h1 = Math.imul(h1 ^ ch, 2654435761);
-        h2 = Math.imul(h2 ^ ch, 1597334677);
-      }
-
-      h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
-      h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
-
-      return ((h2 >>> 0).toString(36) + (h1 >>> 0).toString(36));
-    }
-
-    function buildStableDeviceId() {
-      const sw = Math.min(screen.width || 0, screen.height || 0);
-      const sh = Math.max(screen.width || 0, screen.height || 0);
-
-      const fingerprint = [
-        "bdk-v2",
-        normalizeUA(navigator.userAgent || ""),
-        navigator.platform || "",
-        navigator.language || "",
-        Intl.DateTimeFormat().resolvedOptions().timeZone || "",
-        `${sw}x${sh}`,
-        String(screen.colorDepth || ""),
-        String(window.devicePixelRatio || ""),
-        String(navigator.maxTouchPoints || ""),
-        String(navigator.hardwareConcurrency || "")
-      ].join("|");
-
-      return "bdk_" + hashString(fingerprint);
-    }
-
     function getDeviceId() {
       let deviceId = readAny(DEVICE_KEYS);
 
-      if (!deviceId || !/^bdk_/i.test(deviceId)) {
-        deviceId = buildStableDeviceId();
+      if (!deviceId) {
+        try {
+          deviceId = (globalThis.crypto && crypto.randomUUID)
+            ? ("bdk_rand_" + crypto.randomUUID())
+            : ("bdk_rand_" + String(Math.random()).slice(2) + Date.now());
+        } catch (_) {
+          deviceId = "bdk_rand_" + String(Math.random()).slice(2) + Date.now();
+        }
       }
 
       writeMany(DEVICE_KEYS, deviceId);
@@ -930,22 +883,18 @@
       );
     }
 
+    function canEnterGame(stateOrData) {
+      return !!(
+        isActivated(stateOrData) ||
+        hasAccountActivation(stateOrData)
+      );
+    }
+
     function getErrorMessage(data, fallback) {
       return data?.message || data?.error || data?.detail || fallback;
     }
 
-    function getActivationStepConfig(state) {
-      const locked = !!state?.deviceLocked;
-      const hadActivation = !!state?.accountHasActivation;
-
-      if (locked && hadActivation) {
-        return {
-          bannerType: "info",
-          message: "هذا الإيميل مرتبط بجهاز آخر. لتشغيل اللعبة على هذا الجهاز أدخل نفس كود التفعيل المرتبط بهذا الحساب.",
-          hintText: "هذا الحساب لديه تفعيل سابق على جهاز آخر. إذا أردت تشغيل اللعبة هنا فأدخل نفس كود التفعيل المرتبط بهذا الحساب."
-        };
-      }
-
+    function getActivationStepConfig() {
       return {
         bannerType: "success",
         message: "تم تسجيل الدخول بنجاح. أكمل التفعيل بإدخال الكود.",
@@ -1039,23 +988,15 @@
           return;
         }
 
-        if (state.activated) {
+        if (canEnterGame(state)) {
           redirectToGame();
           return;
         }
 
-        if (state.deviceLocked || state.needsActivation) {
-          const config = getActivationStepConfig(state);
-          showActivateStep(state.email, config.message, {
-            bannerType: config.bannerType,
-            hintText: config.hintText
-          });
-          return;
-        }
-
-        showActivateStep(state.email, "أكمل تفعيل الحساب بإدخال كود اللعبة.", {
-          bannerType: "info",
-          hintText: "أدخل كود اللعبة لإكمال التفعيل على هذا الجهاز."
+        const config = getActivationStepConfig();
+        showActivateStep(state.email, config.message, {
+          bannerType: config.bannerType,
+          hintText: config.hintText
         });
       } catch (_) {
         setMode("login");
@@ -1102,12 +1043,12 @@
           return;
         }
 
-        if (state.activated) {
+        if (canEnterGame(state)) {
           redirectToGame();
           return;
         }
 
-        const config = getActivationStepConfig(state);
+        const config = getActivationStepConfig();
         showActivateStep(state.email || resolvedEmail, config.message, {
           bannerType: config.bannerType,
           hintText: config.hintText
@@ -1167,7 +1108,7 @@
           return;
         }
 
-        if (state.activated) {
+        if (canEnterGame(state)) {
           redirectToGame();
           return;
         }
@@ -1211,7 +1152,7 @@
 
         const state = await resolveSessionState();
 
-        if (state.ok && state.activated) {
+        if (state.ok && canEnterGame(state)) {
           redirectToGame();
           return;
         }

@@ -55,10 +55,10 @@ export async function onRequestGet(context) {
 
     if (deviceKey) {
       currentDeviceActivation = await env.DB.prepare(`
-        SELECT code, device_key, activated_at
+        SELECT id, code, email, device_key, activated_at
         FROM activations
         WHERE email = ? AND device_key = ?
-        ORDER BY id DESC
+        ORDER BY activated_at DESC, id DESC
         LIMIT 1
       `)
         .bind(email, deviceKey)
@@ -66,10 +66,10 @@ export async function onRequestGet(context) {
 
       if (!currentDeviceActivation) {
         currentDeviceCode = await env.DB.prepare(`
-          SELECT code, device_key, activated_at
+          SELECT id, code, email, device_key, activated_at
           FROM codes
           WHERE email = ? AND device_key = ? AND status = 'USED'
-          ORDER BY activated_at DESC
+          ORDER BY activated_at DESC, id DESC
           LIMIT 1
         `)
           .bind(email, deviceKey)
@@ -77,28 +77,104 @@ export async function onRequestGet(context) {
       }
     }
 
-    const anyActivation = await env.DB.prepare(`
-      SELECT code, device_key, activated_at
+    let latestActivation = await env.DB.prepare(`
+      SELECT id, code, email, device_key, activated_at
       FROM activations
       WHERE email = ?
-      ORDER BY id DESC
+      ORDER BY activated_at DESC, id DESC
       LIMIT 1
     `)
       .bind(email)
       .first();
 
-    const anyCode = await env.DB.prepare(`
-      SELECT code, device_key, activated_at
+    let latestCode = await env.DB.prepare(`
+      SELECT id, code, email, device_key, activated_at
       FROM codes
       WHERE email = ? AND status = 'USED'
-      ORDER BY activated_at DESC
+      ORDER BY activated_at DESC, id DESC
       LIMIT 1
     `)
       .bind(email)
       .first();
 
-    const matchedRecord = currentDeviceActivation || currentDeviceCode || null;
-    const latestRecord = anyActivation || anyCode || null;
+    let matchedRecord = currentDeviceActivation || currentDeviceCode || null;
+    let latestRecord = pickLatestRecord(latestActivation, latestCode);
+
+    let migratedLegacyDevice = false;
+    const latestBoundDeviceKey = normalizeDeviceKey(latestRecord?.device_key);
+
+    const canMigrateLegacyDevice =
+      !matchedRecord &&
+      !!deviceKey &&
+      isStableDeviceKey(deviceKey) &&
+      isLegacyRandomDeviceKey(latestBoundDeviceKey);
+
+    if (canMigrateLegacyDevice) {
+      await env.DB.prepare(`
+        UPDATE activations
+        SET device_key = ?
+        WHERE email = ? AND device_key = ?
+      `)
+        .bind(deviceKey, email, latestBoundDeviceKey)
+        .run();
+
+      await env.DB.prepare(`
+        UPDATE codes
+        SET device_key = ?
+        WHERE email = ? AND device_key = ? AND status = 'USED'
+      `)
+        .bind(deviceKey, email, latestBoundDeviceKey)
+        .run();
+
+      migratedLegacyDevice = true;
+
+      currentDeviceActivation = await env.DB.prepare(`
+        SELECT id, code, email, device_key, activated_at
+        FROM activations
+        WHERE email = ? AND device_key = ?
+        ORDER BY activated_at DESC, id DESC
+        LIMIT 1
+      `)
+        .bind(email, deviceKey)
+        .first();
+
+      if (!currentDeviceActivation) {
+        currentDeviceCode = await env.DB.prepare(`
+          SELECT id, code, email, device_key, activated_at
+          FROM codes
+          WHERE email = ? AND device_key = ? AND status = 'USED'
+          ORDER BY activated_at DESC, id DESC
+          LIMIT 1
+        `)
+          .bind(email, deviceKey)
+          .first();
+      } else {
+        currentDeviceCode = null;
+      }
+
+      latestActivation = await env.DB.prepare(`
+        SELECT id, code, email, device_key, activated_at
+        FROM activations
+        WHERE email = ?
+        ORDER BY activated_at DESC, id DESC
+        LIMIT 1
+      `)
+        .bind(email)
+        .first();
+
+      latestCode = await env.DB.prepare(`
+        SELECT id, code, email, device_key, activated_at
+        FROM codes
+        WHERE email = ? AND status = 'USED'
+        ORDER BY activated_at DESC, id DESC
+        LIMIT 1
+      `)
+        .bind(email)
+        .first();
+
+      matchedRecord = currentDeviceActivation || currentDeviceCode || null;
+      latestRecord = pickLatestRecord(latestActivation, latestCode);
+    }
 
     const accountHasActivation =
       !!latestRecord || !!row.user_activated;
@@ -135,6 +211,7 @@ export async function onRequestGet(context) {
       needs_activation: needsActivation,
       device_locked: deviceLocked,
       account_has_activation: accountHasActivation,
+      migrated_legacy_device: migratedLegacyDevice,
 
       user: {
         email,
@@ -166,6 +243,20 @@ export async function onRequestGet(context) {
   }
 }
 
+function pickLatestRecord(a, b) {
+  if (a && b) {
+    const aTime = toMs(a.activated_at);
+    const bTime = toMs(b.activated_at);
+    return aTime >= bTime ? a : b;
+  }
+  return a || b || null;
+}
+
+function toMs(value) {
+  const ms = Date.parse(String(value || "").trim());
+  return Number.isFinite(ms) ? ms : 0;
+}
+
 function getBearerToken(request) {
   const auth =
     request.headers.get("Authorization") ||
@@ -187,6 +278,15 @@ function getDeviceKey(request) {
 
 function normalizeDeviceKey(value) {
   return String(value || "").trim();
+}
+
+function isLegacyRandomDeviceKey(value) {
+  return /^bdk_rand_/i.test(normalizeDeviceKey(value));
+}
+
+function isStableDeviceKey(value) {
+  const v = normalizeDeviceKey(value);
+  return /^bdk_/i.test(v) && !/^bdk_rand_/i.test(v);
 }
 
 function normalizeEmail(value) {

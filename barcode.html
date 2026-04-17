@@ -30,12 +30,48 @@
         "email"
       ];
 
+      const DEVICE_KEYS = [
+        "bdonKalam_device_id_v1",
+        "bdonKalam_device_id",
+        "bdonKalam_device_key_v1",
+        "bdonKalam_device_key",
+        "sandooq_device_id_v1",
+        "sandooq_device_id",
+        "sandooq_device_key_v1",
+        "sandooq_device_key",
+        "deviceId",
+        "device_id",
+        "device_key"
+      ];
+
+      function readCookie(name) {
+        try {
+          const cookie = document.cookie || "";
+          const parts = cookie.split(";");
+          for (const part of parts) {
+            const [k, ...rest] = part.trim().split("=");
+            if (k === name) {
+              return decodeURIComponent(rest.join("=") || "");
+            }
+          }
+        } catch (_) {}
+        return "";
+      }
+
       function readAny(keys) {
         for (const key of keys) {
           try {
-            const value = localStorage.getItem(key) || sessionStorage.getItem(key);
-            if (value && String(value).trim()) return String(value).trim();
+            const localValue = localStorage.getItem(key);
+            if (localValue && String(localValue).trim()) return String(localValue).trim();
           } catch (_) {}
+
+          try {
+            const sessionValue = sessionStorage.getItem(key);
+            if (sessionValue && String(sessionValue).trim()) return String(sessionValue).trim();
+          } catch (_) {}
+
+          const cookieValue = readCookie(key);
+          if (cookieValue && String(cookieValue).trim()) return String(cookieValue).trim();
         }
         return "";
       }
@@ -52,7 +88,13 @@
       }
 
       function redirectToActivate() {
-        location.replace(ACTIVATE_URL);
+        try {
+          const nextUrl = new URL(ACTIVATE_URL, location.href);
+          nextUrl.searchParams.set("next", location.pathname + location.search + location.hash);
+          location.replace(nextUrl.toString());
+        } catch (_) {
+          location.replace(ACTIVATE_URL);
+        }
       }
 
       function isActivated(data) {
@@ -69,18 +111,18 @@
 
       async function checkAuthGate() {
         const token = readAny(TOKEN_KEYS);
-        if (!token) {
-          redirectToActivate();
-          return;
-        }
+        const deviceId = readAny(DEVICE_KEYS);
 
         try {
+          const headers = {};
+          if (token) headers.Authorization = "Bearer " + token;
+          if (deviceId) headers["X-Device-Id"] = deviceId;
+
           const response = await fetch(API_ME_URL, {
             method: "GET",
-            headers: {
-              Authorization: "Bearer " + token
-            },
-            cache: "no-store"
+            headers,
+            cache: "no-store",
+            credentials: "include"
           });
 
           let data = {};
@@ -93,6 +135,19 @@
             return;
           }
 
+          const returnedToken = String(
+            data?.token ||
+            data?.access_token ||
+            data?.jwt ||
+            data?.session?.token ||
+            token ||
+            ""
+          ).trim();
+
+          if (returnedToken) {
+            TOKEN_KEYS.forEach((key) => writeSafe(key, returnedToken));
+          }
+
           const email = String(
             data?.email ||
             data?.user?.email ||
@@ -101,7 +156,7 @@
           ).trim().toLowerCase();
 
           if (email) {
-            writeSafe("bdonKalam_email_v1", email);
+            EMAIL_KEYS.forEach((key) => writeSafe(key, email));
           }
 
           if (document.readyState === "loading") {

@@ -14,6 +14,23 @@
       const API_ME_URL = window.location.origin + "/api/me";
       const HIDE_STYLE_ID = "auth-gate-style";
 
+      const SITE_GAME_ID = "bdon-kalam";
+      const SITE_TOKEN_COOKIE = "sandooq_site_token_v1";
+      const SITE_GAME_COOKIE = "sandooq_site_game_v1";
+
+      const SITE_TOKEN_QUERY_KEYS = [
+        "sg_token",
+        "sandooq_token",
+        "access_token",
+        "token"
+      ];
+
+      const SITE_GAME_QUERY_KEYS = [
+        "sg_game",
+        "game_id",
+        "game"
+      ];
+
       const TOKEN_KEYS = [
         "bdonKalam_token_v1",
         "bdonKalam_token",
@@ -83,11 +100,13 @@
         try { sessionStorage.setItem(key, value); } catch (_) {}
       }
 
-      function writeCookie(name, value, maxAgeSeconds = 2592000) {
+      function writeCookie(name, value, maxAgeSeconds) {
+        if (!value) return;
         try {
           const secure = location.protocol === "https:" ? "; Secure" : "";
+          const maxAge = Number.isFinite(maxAgeSeconds) ? `; Max-Age=${maxAgeSeconds}` : "";
           document.cookie =
-            `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax${secure}`;
+            `${name}=${encodeURIComponent(value)}; Path=/${maxAge}; SameSite=Lax${secure}`;
         } catch (_) {}
       }
 
@@ -95,7 +114,7 @@
         if (!value) return;
         DEVICE_KEY_KEYS.forEach((key) => {
           writeSafe(key, value);
-          writeCookie(key, value);
+          writeCookie(key, value, 2592000);
         });
       }
 
@@ -103,7 +122,7 @@
         if (!value) return;
         EMAIL_KEYS.forEach((key) => {
           writeSafe(key, value);
-          writeCookie(key, value);
+          writeCookie(key, value, 2592000);
         });
       }
 
@@ -112,8 +131,75 @@
         if (gateStyle) gateStyle.remove();
       }
 
+      function revealWhenReady() {
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", revealPage, { once: true });
+        } else {
+          revealPage();
+        }
+      }
+
       function redirectToActivate() {
         location.replace(ACTIVATE_URL);
+      }
+
+      function readFirstQueryValue(url, keys) {
+        for (const key of keys) {
+          const value = String(url.searchParams.get(key) || "").trim();
+          if (value) return value;
+        }
+        return "";
+      }
+
+      function normalizeGameId(value) {
+        const gameId = String(value || "").trim().toLowerCase();
+        return gameId === SITE_GAME_ID ? SITE_GAME_ID : "";
+      }
+
+      function hasNewSiteAccess() {
+        let currentUrl;
+        try {
+          currentUrl = new URL(window.location.href);
+        } catch (_) {
+          currentUrl = null;
+        }
+
+        const tokenFromQuery = currentUrl ? readFirstQueryValue(currentUrl, SITE_TOKEN_QUERY_KEYS) : "";
+        const tokenFromCookie = readCookie(SITE_TOKEN_COOKIE);
+        const token = tokenFromQuery || tokenFromCookie;
+
+        const gameFromQuery = currentUrl ? normalizeGameId(readFirstQueryValue(currentUrl, SITE_GAME_QUERY_KEYS)) : "";
+        const gameFromCookie = normalizeGameId(readCookie(SITE_GAME_COOKIE));
+        const gameId = gameFromQuery || gameFromCookie;
+
+        if (!token || gameId !== SITE_GAME_ID) return false;
+
+        if (tokenFromQuery) {
+          writeCookie(SITE_TOKEN_COOKIE, token);
+          try { sessionStorage.setItem(SITE_TOKEN_COOKIE, token); } catch (_) {}
+        }
+
+        if (gameFromQuery || !gameFromCookie) {
+          writeCookie(SITE_GAME_COOKIE, SITE_GAME_ID);
+          try { sessionStorage.setItem(SITE_GAME_COOKIE, SITE_GAME_ID); } catch (_) {}
+        }
+
+        try { sessionStorage.setItem("bdonKalam_site_access_v1", "1"); } catch (_) {}
+        try { sessionStorage.setItem("bdonKalam_access_ok_v1", "1"); } catch (_) {}
+
+        // تنظيف الرابط من التوكن بعد أن يحفظه الميدلوير/الصفحة ككوكي جلسة.
+        if (currentUrl && tokenFromQuery && window.history && window.history.replaceState) {
+          [
+            ...SITE_TOKEN_QUERY_KEYS,
+            ...SITE_GAME_QUERY_KEYS,
+            "sg_temp",
+            "temporary",
+            "is_temporary"
+          ].forEach((key) => currentUrl.searchParams.delete(key));
+          window.history.replaceState(null, document.title, currentUrl.toString());
+        }
+
+        return true;
       }
 
       function normalizeUA(ua) {
@@ -193,6 +279,13 @@
       }
 
       async function checkAuthGate() {
+        // دخول الموقع الجديد: الميدلوير تحقق من sg_token وملكية bdon-kalam.
+        // هنا نمنع سكربت التفعيل القديم من تحويل العميل إلى activate.html.
+        if (hasNewSiteAccess()) {
+          revealWhenReady();
+          return;
+        }
+
         const token = readAny(TOKEN_KEYS);
 
         if (!token) {
@@ -241,11 +334,7 @@
             saveEmailEverywhere(email);
           }
 
-          if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", revealPage, { once: true });
-          } else {
-            revealPage();
-          }
+          revealWhenReady();
         } catch (_) {
           redirectToActivate();
         }

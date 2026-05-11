@@ -156,6 +156,50 @@
         return gameId === SITE_GAME_ID ? SITE_GAME_ID : "";
       }
 
+      function readStoredSiteValue(key) {
+        try {
+          const local = localStorage.getItem(key);
+          if (local && String(local).trim()) return String(local).trim();
+        } catch (_) {}
+
+        try {
+          const session = sessionStorage.getItem(key);
+          if (session && String(session).trim()) return String(session).trim();
+        } catch (_) {}
+
+        const cookieValue = readCookie(key);
+        if (cookieValue && String(cookieValue).trim()) return String(cookieValue).trim();
+
+        return "";
+      }
+
+      function persistNewSiteAccess(token) {
+        if (!token) return;
+
+        writeCookie(SITE_TOKEN_COOKIE, token, 2592000);
+        writeCookie(SITE_GAME_COOKIE, SITE_GAME_ID, 2592000);
+
+        [
+          SITE_TOKEN_COOKIE,
+          "sandooq_auth_token_v1",
+          "sandooq_token_v1",
+          "sandooq_token",
+          "bdonKalam_site_token_v1"
+        ].forEach((key) => writeSafe(key, token));
+
+        [
+          SITE_GAME_COOKIE,
+          "sandooq_site_game_id_v1",
+          "bdonKalam_site_game_v1"
+        ].forEach((key) => writeSafe(key, SITE_GAME_ID));
+
+        [
+          "bdonKalam_site_access_v1",
+          "bdonKalam_access_ok_v1",
+          "sandooq_bdon_kalam_access_ok_v1"
+        ].forEach((key) => writeSafe(key, "1"));
+      }
+
       function hasNewSiteAccess() {
         let currentUrl;
         try {
@@ -165,29 +209,29 @@
         }
 
         const tokenFromQuery = currentUrl ? readFirstQueryValue(currentUrl, SITE_TOKEN_QUERY_KEYS) : "";
-        const tokenFromCookie = readCookie(SITE_TOKEN_COOKIE);
-        const token = tokenFromQuery || tokenFromCookie;
+        const tokenFromStorage =
+          readStoredSiteValue(SITE_TOKEN_COOKIE) ||
+          readStoredSiteValue("sandooq_auth_token_v1") ||
+          readStoredSiteValue("sandooq_token_v1") ||
+          readStoredSiteValue("sandooq_token") ||
+          readStoredSiteValue("bdonKalam_site_token_v1");
+
+        const token = tokenFromQuery || tokenFromStorage;
 
         const gameFromQuery = currentUrl ? normalizeGameId(readFirstQueryValue(currentUrl, SITE_GAME_QUERY_KEYS)) : "";
-        const gameFromCookie = normalizeGameId(readCookie(SITE_GAME_COOKIE));
-        const gameId = gameFromQuery || gameFromCookie;
+        const gameFromStorage =
+          normalizeGameId(readStoredSiteValue(SITE_GAME_COOKIE)) ||
+          normalizeGameId(readStoredSiteValue("sandooq_site_game_id_v1")) ||
+          normalizeGameId(readStoredSiteValue("bdonKalam_site_game_v1"));
+
+        // لأن هذا الدومين خاص بلعبة بدون كلام، إذا وجدنا توكن الموقع الجديد نعتبر اللعبة bdon-kalam.
+        const gameId = gameFromQuery || gameFromStorage || (token ? SITE_GAME_ID : "");
 
         if (!token || gameId !== SITE_GAME_ID) return false;
 
-        if (tokenFromQuery) {
-          writeCookie(SITE_TOKEN_COOKIE, token);
-          try { sessionStorage.setItem(SITE_TOKEN_COOKIE, token); } catch (_) {}
-        }
+        persistNewSiteAccess(token);
 
-        if (gameFromQuery || !gameFromCookie) {
-          writeCookie(SITE_GAME_COOKIE, SITE_GAME_ID);
-          try { sessionStorage.setItem(SITE_GAME_COOKIE, SITE_GAME_ID); } catch (_) {}
-        }
-
-        try { sessionStorage.setItem("bdonKalam_site_access_v1", "1"); } catch (_) {}
-        try { sessionStorage.setItem("bdonKalam_access_ok_v1", "1"); } catch (_) {}
-
-        // تنظيف الرابط من التوكن بعد أن يحفظه الميدلوير/الصفحة ككوكي جلسة.
+        // تنظيف الرابط من التوكن بعد حفظه داخل دومين اللعبة.
         if (currentUrl && tokenFromQuery && window.history && window.history.replaceState) {
           [
             ...SITE_TOKEN_QUERY_KEYS,
@@ -1690,6 +1734,68 @@
       "me"
     ];
 
+
+    const SITE_GAME_ID = "bdon-kalam";
+    const SITE_TOKEN_COOKIE = "sandooq_site_token_v1";
+    const SITE_GAME_COOKIE = "sandooq_site_game_v1";
+
+    const SITE_ACCESS_TOKEN_KEYS = [
+      SITE_TOKEN_COOKIE,
+      "sandooq_auth_token_v1",
+      "sandooq_token_v1",
+      "sandooq_token",
+      "bdonKalam_site_token_v1"
+    ];
+
+    function readCookieValue(name) {
+      try {
+        const cookie = document.cookie || "";
+        const parts = cookie.split(";");
+        for (const part of parts) {
+          const [k, ...rest] = part.trim().split("=");
+          if (k === name) return decodeURIComponent(rest.join("=") || "");
+        }
+      } catch (_) {}
+      return "";
+    }
+
+    function readSiteToken() {
+      for (const key of SITE_ACCESS_TOKEN_KEYS) {
+        const stored = String(readStoredValue(key) || "").trim();
+        if (stored) return stored;
+
+        const cookieValue = String(readCookieValue(key) || "").trim();
+        if (cookieValue) return cookieValue;
+      }
+      return "";
+    }
+
+    function writeSiteCookie(name, value) {
+      if (!value) return;
+      try {
+        const secure = location.protocol === "https:" ? "; Secure" : "";
+        document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=2592000; SameSite=Lax${secure}`;
+      } catch (_) {}
+    }
+
+    function buildSiteAccessUrl(path) {
+      const token = readSiteToken();
+      const target = new URL(path, window.location.href);
+
+      if (token) {
+        writeSiteCookie(SITE_TOKEN_COOKIE, token);
+        writeSiteCookie(SITE_GAME_COOKIE, SITE_GAME_ID);
+        try { sessionStorage.setItem(SITE_TOKEN_COOKIE, token); } catch (_) {}
+        try { sessionStorage.setItem(SITE_GAME_COOKIE, SITE_GAME_ID); } catch (_) {}
+
+        target.searchParams.set("sg_token", token);
+        target.searchParams.set("sg_game", SITE_GAME_ID);
+        target.searchParams.set("sg_temp", "1");
+      }
+
+      return target.pathname + target.search + target.hash;
+    }
+
     team1Input.value = sessionStorage.getItem("bdonKalam_team1") || "";
     team2Input.value = sessionStorage.getItem("bdonKalam_team2") || "";
 
@@ -1766,7 +1872,7 @@
       sessionStorage.setItem("bdonKalam_team2", team2);
       sessionStorage.setItem("bdonKalam_score1", "0");
       sessionStorage.setItem("bdonKalam_score2", "0");
-      window.location.href = "categories.html";
+      window.location.href = buildSiteAccessUrl("categories.html");
     }
 
     function readStoredValue(key) {

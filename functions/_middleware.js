@@ -113,7 +113,6 @@ async function checkNewSystemAccess(request, currentUrl) {
     cookies["bdonKalam_site_game_v1"]
   );
 
-  // لأن هذا الدومين خاص ببدون كلام، إذا وصل توكن الموقع الجديد ولم يصل game_id نعتبرها bdon-kalam.
   const gameId = gameFromQuery || gameFromCookie || NEW_GAME_ID;
 
   if (gameId !== NEW_GAME_ID) {

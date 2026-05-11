@@ -94,6 +94,9 @@ async function checkNewSystemAccess(request, currentUrl) {
   const tokenFromCookie = String(
     cookies[NEW_SITE_TOKEN_COOKIE] ||
     cookies["sandooq_auth_token_v1"] ||
+    cookies["sandooq_token_v1"] ||
+    cookies["sandooq_token"] ||
+    cookies["bdonKalam_site_token_v1"] ||
     ""
   ).trim();
 
@@ -104,23 +107,42 @@ async function checkNewSystemAccess(request, currentUrl) {
   }
 
   const gameFromQuery = normalizeGameId(readFirstQueryValue(currentUrl, NEW_GAME_QUERY_KEYS));
-  const gameFromCookie = normalizeGameId(cookies[NEW_SITE_GAME_COOKIE]);
+  const gameFromCookie = normalizeGameId(
+    cookies[NEW_SITE_GAME_COOKIE] ||
+    cookies["sandooq_site_game_id_v1"] ||
+    cookies["bdonKalam_site_game_v1"]
+  );
+
+  // لأن هذا الدومين خاص ببدون كلام، إذا وصل توكن الموقع الجديد ولم يصل game_id نعتبرها bdon-kalam.
   const gameId = gameFromQuery || gameFromCookie || NEW_GAME_ID;
 
   if (gameId !== NEW_GAME_ID) {
     return { allowed: false };
   }
 
-  const cookiesToSet = [];
+  const cookiesToSet = [
+    buildSessionCookie(NEW_SITE_TOKEN_COOKIE, token, currentUrl),
+    buildSessionCookie(NEW_SITE_GAME_COOKIE, NEW_GAME_ID, currentUrl),
+    buildSessionCookie("sandooq_auth_token_v1", token, currentUrl),
+    buildSessionCookie("bdonKalam_site_token_v1", token, currentUrl),
+    buildSessionCookie("bdonKalam_site_game_v1", NEW_GAME_ID, currentUrl)
+  ];
 
-  if (tokenFromQuery) {
-    cookiesToSet.push(buildSessionCookie(NEW_SITE_TOKEN_COOKIE, token, currentUrl));
+  const allowedByAccess = await verifyViaGameAccessEndpoint(token);
+  const allowedByAccount = allowedByAccess ? true : await verifyViaAccountMe(token);
+
+  if (allowedByAccess || allowedByAccount) {
+    return {
+      allowed: true,
+      cookies: cookiesToSet,
+      redirectCleanUrl: hasNewAccessQuery(currentUrl)
+    };
   }
 
-  if (gameFromQuery || !gameFromCookie) {
-    cookiesToSet.push(buildSessionCookie(NEW_SITE_GAME_COOKIE, NEW_GAME_ID, currentUrl));
-  }
+  return { allowed: false };
+}
 
+async function verifyViaGameAccessEndpoint(token) {
   try {
     const apiResponse = await fetch(`${NEW_AUTH_API_BASE}/api/game/access`, {
       method: "POST",
@@ -142,18 +164,115 @@ async function checkNewSystemAccess(request, currentUrl) {
       data = await apiResponse.json();
     } catch (_) {}
 
-    if (apiResponse.ok && data && data.allowed === true) {
-      return {
-        allowed: true,
-        cookies: cookiesToSet,
-        redirectCleanUrl: hasNewAccessQuery(currentUrl)
-      };
-    }
-
-    return { allowed: false };
+    return apiResponse.ok && isAllowedAccessResponse(data);
   } catch (_) {
-    return { allowed: false };
+    return false;
   }
+}
+
+async function verifyViaAccountMe(token) {
+  try {
+    const apiResponse = await fetch(`${NEW_AUTH_API_BASE}/api/account/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json; charset=utf-8",
+        "Authorization": `Bearer ${token}`
+      },
+      cache: "no-store"
+    });
+
+    let data = {};
+    try {
+      data = await apiResponse.json();
+    } catch (_) {}
+
+    if (!apiResponse.ok || !data || data.ok === false) return false;
+
+    const ownedIds = extractOwnedGameIds(data);
+    return ownedIds.has(NEW_GAME_ID);
+  } catch (_) {
+    return false;
+  }
+}
+
+function isAllowedAccessResponse(data) {
+  if (!data || typeof data !== "object") return false;
+
+  return (
+    data.allowed === true ||
+    data.access === true ||
+    data.can_play === true ||
+    data.canPlay === true ||
+    data.has_access === true ||
+    data.hasAccess === true ||
+    data.permitted === true ||
+    data?.access?.allowed === true ||
+    data?.game?.allowed === true ||
+    (
+      data.ok === true &&
+      data.allowed !== false &&
+      (
+        data.access === true ||
+        data.can_play === true ||
+        data.canPlay === true ||
+        data.has_access === true ||
+        data.hasAccess === true ||
+        data?.access?.allowed === true ||
+        data?.game?.allowed === true
+      )
+    )
+  );
+}
+
+function extractOwnedGameIds(data) {
+  const ids = new Set();
+
+  function addId(value) {
+    const id = String(value || "").trim().toLowerCase();
+    if (id) ids.add(id);
+  }
+
+  function readGameObject(game) {
+    if (!game || typeof game !== "object") return;
+
+    addId(game.id);
+    addId(game.slug);
+    addId(game.game_id);
+    addId(game.gameId);
+    addId(game.product_id);
+    addId(game.productId);
+    addId(game.key);
+  }
+
+  function readArray(list) {
+    if (!Array.isArray(list)) return;
+
+    list.forEach(item => {
+      if (!item) return;
+      if (typeof item === "string") addId(item);
+      else readGameObject(item);
+    });
+  }
+
+  if (!data || typeof data !== "object") return ids;
+
+  readArray(data.games);
+  readArray(data.owned_games);
+  readArray(data.ownedGames);
+  readArray(data.entitlements);
+  readArray(data.products);
+  readArray(data.library);
+
+  if (data.customer && typeof data.customer === "object") {
+    readArray(data.customer.games);
+    readArray(data.customer.owned_games);
+    readArray(data.customer.ownedGames);
+    readArray(data.customer.entitlements);
+    readArray(data.customer.products);
+    readArray(data.customer.library);
+  }
+
+  return ids;
 }
 
 function normalizeGameId(value) {
@@ -198,7 +317,7 @@ function createTemporaryDeviceToken() {
 
 function buildSessionCookie(name, value, currentUrl) {
   const secure = currentUrl.protocol === "https:" ? "; Secure" : "";
-  return `${name}=${encodeURIComponent(value)}; Path=/; SameSite=Lax${secure}`;
+  return `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=2592000; SameSite=Lax${secure}`;
 }
 
 function redirectToCleanUrl(currentUrl, cookiesToSet = []) {
@@ -216,6 +335,7 @@ function redirectToCleanUrl(currentUrl, cookiesToSet = []) {
   headers.set("Location", target.toString());
   headers.set("Cache-Control", "no-store");
   headers.set("Pragma", "no-cache");
+  headers.set("Vary", "Cookie, Authorization");
 
   cookiesToSet.forEach(cookie => headers.append("Set-Cookie", cookie));
 
@@ -230,6 +350,9 @@ function appendSetCookies(response, cookiesToSet = []) {
 
   const headers = new Headers(response.headers);
   cookiesToSet.forEach(cookie => headers.append("Set-Cookie", cookie));
+  headers.set("Cache-Control", "no-store");
+  headers.set("Pragma", "no-cache");
+  headers.set("Vary", "Cookie, Authorization");
 
   return new Response(response.body, {
     status: response.status,
@@ -342,6 +465,17 @@ function buildClientGatePage(url) {
     (function () {
       const ACTIVATE_URL = "/activate.html";
       const CURRENT_URL = ${JSON.stringify(currentPath)};
+      const SITE_GAME_ID = "bdon-kalam";
+      const SITE_TOKEN_COOKIE = "sandooq_site_token_v1";
+      const SITE_GAME_COOKIE = "sandooq_site_game_v1";
+
+      const SITE_TOKEN_KEYS = [
+        SITE_TOKEN_COOKIE,
+        "sandooq_auth_token_v1",
+        "sandooq_token_v1",
+        "sandooq_token",
+        "bdonKalam_site_token_v1"
+      ];
 
       const TOKEN_KEYS = [
         "bdonKalam_token_v1",
@@ -359,6 +493,18 @@ function buildClientGatePage(url) {
         "email"
       ];
 
+      function readCookie(name) {
+        try {
+          const cookie = document.cookie || "";
+          const parts = cookie.split(";");
+          for (const part of parts) {
+            const [k, ...rest] = part.trim().split("=");
+            if (k === name) return decodeURIComponent(rest.join("=") || "");
+          }
+        } catch (_) {}
+        return "";
+      }
+
       function readAny(keys) {
         for (const key of keys) {
           try {
@@ -370,6 +516,9 @@ function buildClientGatePage(url) {
             const session = sessionStorage.getItem(key);
             if (session && String(session).trim()) return String(session).trim();
           } catch (_) {}
+
+          const cookieValue = readCookie(key);
+          if (cookieValue && String(cookieValue).trim()) return String(cookieValue).trim();
         }
 
         return "";
@@ -401,7 +550,27 @@ function buildClientGatePage(url) {
         );
       }
 
+      function retryWithSiteToken() {
+        const siteToken = readAny(SITE_TOKEN_KEYS);
+        if (!siteToken) return false;
+
+        writeCookie(SITE_TOKEN_COOKIE, siteToken);
+        writeCookie(SITE_GAME_COOKIE, SITE_GAME_ID);
+
+        try { sessionStorage.setItem(SITE_TOKEN_COOKIE, siteToken); } catch (_) {}
+        try { sessionStorage.setItem(SITE_GAME_COOKIE, SITE_GAME_ID); } catch (_) {}
+
+        const target = new URL(CURRENT_URL || "/", location.origin);
+        target.searchParams.set("sg_token", siteToken);
+        target.searchParams.set("sg_game", SITE_GAME_ID);
+        target.searchParams.set("sg_temp", "1");
+        location.replace(target.toString());
+        return true;
+      }
+
       async function run() {
+        if (retryWithSiteToken()) return;
+
         const token = readAny(TOKEN_KEYS);
         const email = normalizeEmail(readAny(EMAIL_KEYS));
 

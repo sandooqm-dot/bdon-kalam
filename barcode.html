@@ -14,6 +14,31 @@
       const API_ME_URL = window.location.origin + "/api/me";
       const HIDE_STYLE_ID = "auth-gate-style";
 
+      const SITE_GAME_ID = "bdon-kalam";
+      const SITE_TOKEN_COOKIE = "sandooq_site_token_v1";
+      const SITE_GAME_COOKIE = "sandooq_site_game_v1";
+
+      const SITE_TOKEN_QUERY_KEYS = [
+        "sg_token",
+        "sandooq_token",
+        "access_token",
+        "token"
+      ];
+
+      const SITE_GAME_QUERY_KEYS = [
+        "sg_game",
+        "game_id",
+        "game"
+      ];
+
+      const SITE_TOKEN_STORAGE_KEYS = [
+        SITE_TOKEN_COOKIE,
+        "sandooq_auth_token_v1",
+        "sandooq_token_v1",
+        "sandooq_token",
+        "bdonKalam_site_token_v1"
+      ];
+
       const TOKEN_KEYS = [
         "bdonKalam_token_v1",
         "bdonKalam_token",
@@ -82,9 +107,89 @@
         try { sessionStorage.setItem(key, value); } catch (_) {}
       }
 
+      function writeCookie(name, value, maxAgeSeconds) {
+        if (!value) return;
+        try {
+          const secure = location.protocol === "https:" ? "; Secure" : "";
+          const maxAge = Number.isFinite(maxAgeSeconds) ? `; Max-Age=${maxAgeSeconds}` : "";
+          document.cookie =
+            `${name}=${encodeURIComponent(value)}; Path=/${maxAge}; SameSite=Lax${secure}`;
+        } catch (_) {}
+      }
+
+      function saveSiteTokenEverywhere(token) {
+        if (!token) return;
+        SITE_TOKEN_STORAGE_KEYS.forEach((key) => {
+          writeSafe(key, token);
+          writeCookie(key, token, 2592000);
+        });
+        writeSafe(SITE_GAME_COOKIE, SITE_GAME_ID);
+        writeCookie(SITE_GAME_COOKIE, SITE_GAME_ID, 2592000);
+        writeSafe("bdonKalam_site_game_v1", SITE_GAME_ID);
+        writeCookie("bdonKalam_site_game_v1", SITE_GAME_ID, 2592000);
+        try { sessionStorage.setItem("bdonKalam_site_access_v1", "1"); } catch (_) {}
+        try { sessionStorage.setItem("bdonKalam_access_ok_v1", "1"); } catch (_) {}
+      }
+
       function revealPage() {
         const gateStyle = document.getElementById(HIDE_STYLE_ID);
         if (gateStyle) gateStyle.remove();
+      }
+
+      function revealWhenReady() {
+        if (document.readyState === "loading") {
+          document.addEventListener("DOMContentLoaded", revealPage, { once: true });
+        } else {
+          revealPage();
+        }
+      }
+
+      function readFirstQueryValue(url, keys) {
+        for (const key of keys) {
+          const value = String(url.searchParams.get(key) || "").trim();
+          if (value) return value;
+        }
+        return "";
+      }
+
+      function normalizeGameId(value) {
+        const gameId = String(value || "").trim().toLowerCase();
+        return gameId === SITE_GAME_ID ? SITE_GAME_ID : "";
+      }
+
+      function hasNewSiteAccess() {
+        let currentUrl;
+        try {
+          currentUrl = new URL(window.location.href);
+        } catch (_) {
+          currentUrl = null;
+        }
+
+        const tokenFromQuery = currentUrl ? readFirstQueryValue(currentUrl, SITE_TOKEN_QUERY_KEYS) : "";
+        const tokenFromStorage = readAny(SITE_TOKEN_STORAGE_KEYS);
+        const token = tokenFromQuery || tokenFromStorage;
+
+        const gameFromQuery = currentUrl ? normalizeGameId(readFirstQueryValue(currentUrl, SITE_GAME_QUERY_KEYS)) : "";
+        const gameFromCookie = normalizeGameId(readCookie(SITE_GAME_COOKIE) || readCookie("bdonKalam_site_game_v1"));
+        const gameFromStorage = normalizeGameId(readAny([SITE_GAME_COOKIE, "bdonKalam_site_game_v1"]));
+        const gameId = gameFromQuery || gameFromCookie || gameFromStorage || SITE_GAME_ID;
+
+        if (!token || gameId !== SITE_GAME_ID) return false;
+
+        saveSiteTokenEverywhere(token);
+
+        if (currentUrl && tokenFromQuery && window.history && window.history.replaceState) {
+          [
+            ...SITE_TOKEN_QUERY_KEYS,
+            ...SITE_GAME_QUERY_KEYS,
+            "sg_temp",
+            "temporary",
+            "is_temporary"
+          ].forEach((key) => currentUrl.searchParams.delete(key));
+          window.history.replaceState(null, document.title, currentUrl.toString());
+        }
+
+        return true;
       }
 
       function redirectToActivate() {
@@ -110,6 +215,13 @@
       }
 
       async function checkAuthGate() {
+        // دخول الموقع الجديد: إذا وصلنا من موقع صندوق المسابقات بتوكن شراء صحيح،
+        // لا نستخدم فحص التفعيل القديم حتى لا يرجعنا إلى activate.html.
+        if (hasNewSiteAccess()) {
+          revealWhenReady();
+          return;
+        }
+
         const token = readAny(TOKEN_KEYS);
         const deviceId = readAny(DEVICE_KEYS);
 
@@ -159,11 +271,7 @@
             EMAIL_KEYS.forEach((key) => writeSafe(key, email));
           }
 
-          if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", revealPage, { once: true });
-          } else {
-            revealPage();
-          }
+          revealWhenReady();
         } catch (_) {
           redirectToActivate();
         }
@@ -1617,6 +1725,65 @@
     const backBtnPortrait = document.getElementById("backBtnPortrait");
     const questionBadge = document.getElementById("questionBadge");
 
+
+    const SITE_GAME_ID = "bdon-kalam";
+    const SITE_TOKEN_COOKIE = "sandooq_site_token_v1";
+    const SITE_GAME_COOKIE = "sandooq_site_game_v1";
+    const SITE_TOKEN_KEYS = [
+      SITE_TOKEN_COOKIE,
+      "sandooq_auth_token_v1",
+      "sandooq_token_v1",
+      "sandooq_token",
+      "bdonKalam_site_token_v1"
+    ];
+
+    function readCookieValue(name) {
+      try {
+        const cookie = document.cookie || "";
+        const parts = cookie.split(";");
+        for (const part of parts) {
+          const [k, ...rest] = part.trim().split("=");
+          if (k === name) return decodeURIComponent(rest.join("=") || "");
+        }
+      } catch (_) {}
+      return "";
+    }
+
+    function readAnySiteToken() {
+      for (const key of SITE_TOKEN_KEYS) {
+        try {
+          const localValue = localStorage.getItem(key);
+          if (localValue && String(localValue).trim()) return String(localValue).trim();
+        } catch (_) {}
+
+        try {
+          const sessionValue = sessionStorage.getItem(key);
+          if (sessionValue && String(sessionValue).trim()) return String(sessionValue).trim();
+        } catch (_) {}
+
+        const cookieValue = readCookieValue(key);
+        if (cookieValue && String(cookieValue).trim()) return String(cookieValue).trim();
+      }
+      return "";
+    }
+
+    function buildSiteAccessUrl(path) {
+      const token = readAnySiteToken();
+      const target = new URL(path, window.location.href);
+
+      if (token) {
+        target.searchParams.set("sg_token", token);
+        target.searchParams.set("sg_game", SITE_GAME_ID);
+        target.searchParams.set("sg_temp", "1");
+      }
+
+      return target.toString();
+    }
+
+    function goWithSiteAccess(path) {
+      window.location.href = buildSiteAccessUrl(path);
+    }
+
     let selectedDuration = Number(sessionStorage.getItem("bdonKalam_timerDuration") || 60);
     let remainingSeconds = selectedDuration;
     let timerInterval = null;
@@ -1972,10 +2139,10 @@
 
     function goBackTarget() {
       if (isRandomMode()) {
-        window.location.href = "categories.html";
+        goWithSiteAccess("categories.html");
         return;
       }
-      window.location.href = "numbers.html";
+      goWithSiteAccess("numbers.html");
     }
 
     function buildRevealUrl() {
@@ -2000,7 +2167,7 @@
 
     function advanceRandomRound() {
       if (!isRandomMode()) {
-        window.location.href = "numbers.html";
+        goWithSiteAccess("numbers.html");
         return;
       }
 
@@ -2040,7 +2207,7 @@
       }
 
       hardResetTimer(true);
-      window.location.href = "numbers.html";
+      goWithSiteAccess("numbers.html");
     }
 
     function bindDurationMenu(button, menu, options) {

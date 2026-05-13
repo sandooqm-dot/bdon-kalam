@@ -774,6 +774,36 @@
       border-radius:28px;
     }
 
+    .home-link{
+      width:min(100%, 320px);
+      min-height:68px;
+      margin:22px auto 0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:26px;
+      border:4px solid var(--line);
+      background:linear-gradient(180deg, #ff6f66 0%, #e6463d 100%);
+      color:#fff;
+      box-shadow:0 10px 0 var(--shadow);
+      font-size:clamp(28px, 4.2vw, 38px);
+      font-weight:700;
+      line-height:1;
+      text-decoration:none;
+      text-shadow:0 3px 0 rgba(0,0,0,.16);
+      cursor:pointer;
+      transition:transform .12s ease, box-shadow .12s ease, filter .12s ease;
+    }
+
+    .home-link:hover{
+      filter:saturate(1.08);
+    }
+
+    .home-link:active{
+      transform:translateY(3px);
+      box-shadow:0 6px 0 var(--shadow);
+    }
+
     .action-btn,
     .tool-btn,
     .close-btn,
@@ -1433,6 +1463,14 @@
         font-size:28px;
       }
 
+      .home-link{
+        width:260px;
+        min-height:58px;
+        margin-top:18px;
+        font-size:28px;
+        border-radius:22px;
+      }
+
       .tools{
         margin-top:18px;
       }
@@ -1566,6 +1604,8 @@
               </button>
             </div>
           </section>
+
+          <a class="home-link" href="https://sandooq-games.com/index.html?focus=bdon-kalam#games" aria-label="العودة إلى الصفحة الرئيسية">الرئيسية</a>
         </div>
       </main>
 
@@ -1975,5 +2015,6 @@
 
     renderAccountEmail();
   </script>
+  <!-- VERSION: bdon-kalam-index — red-bottom-home-button-v1 -->
 </body>
 </html>
